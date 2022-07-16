@@ -15,9 +15,9 @@ router.post("/", async (req, res) => {
       season,
     });
 
-    return res.status(201).json(activity.toJSON());
+    return res.status(201).json(activity);
   } catch (e) {
-    return res.status(404).send("Error en los datos de la actividad");
+    return res.status(404).send("Puede que la actividad ya exista");
   }
 });
 
