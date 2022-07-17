@@ -17,7 +17,7 @@ router.post("/", async (req, res) => {
 
     return res.status(201).json(activity);
   } catch (e) {
-    return res.status(404).send("Puede que la actividad ya exista");
+    return res.status(404).send("Error en los datos o la actividad ya existe");
   }
 });
 

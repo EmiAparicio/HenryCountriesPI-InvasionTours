@@ -1,29 +1,31 @@
 const { Router } = require("express");
 const { Country, Activity } = require("../db");
 const { Op } = require("sequelize");
-const axios = require("axios");
+const fetch = require("node-fetch");
 const router = Router();
 
 function validateStoredData(req, res, next) {
   Country.findByPk("ARG").then((storedData) => {
     if (!storedData) {
-      axios("https://restcountries.com/v3/all").then((res) => {
-        const countriesDB = res.data.map((c) => {
-          return {
-            id: c.cca3,
-            name: c.name.common,
-            flag: c.flags[0],
-            continent: c.continents[0],
-            capital: c.capital ? c.capital[0] : "No tiene",
-            subregion: c.subregion,
-            area: c.area,
-            population: c.population,
-          };
+      fetch("https://restcountries.com/v3/all")
+        .then((res) => res.json())
+        .then((res) => {
+          const countriesDB = res.map((c) => {
+            return {
+              id: c.cca3,
+              name: c.name.common,
+              flag: c.flags[0],
+              continent: c.continents[0],
+              capital: c.capital ? c.capital[0] : "No tiene",
+              subregion: c.subregion,
+              area: c.area,
+              population: c.population,
+            };
+          });
+          Country.bulkCreate(countriesDB).then(() => {
+            next();
+          });
         });
-        Country.bulkCreate(countriesDB).then(() => {
-          next();
-        });
-      });
     } else next();
   });
 }
@@ -38,6 +40,7 @@ router.get("/", validateStoredData, async (req, res) => {
             name: { [Op.iLike]: `%${name}%` },
           }
         : undefined,
+      include: Activity,
     });
 
     return res.status(200).json(countries);
