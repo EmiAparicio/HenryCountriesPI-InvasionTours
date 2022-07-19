@@ -41,6 +41,7 @@ router.get("/", validateStoredData, async (req, res) => {
           }
         : undefined,
       include: Activity,
+      attributes: ["name", "flag", "continent", "population"],
     });
 
     return res.status(200).json(countries);

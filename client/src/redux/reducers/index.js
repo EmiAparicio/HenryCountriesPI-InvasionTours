@@ -1,11 +1,19 @@
-import { GET_COUNTRIES } from "../actions";
+import {
+  GET_COUNTRIES,
+  SET_FILTER_OPTIONS,
+  SET_ORDER_OPTIONS,
+} from "../actions";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 const initialState = {
   allCountries: [],
   selectedCountries: [],
-  page: 0,
+  orderConfig: [],
+  filterConfig: {
+    continent: "",
+    activity: "",
+  },
 };
 
 export default function rootReducer(state = initialState, action) {
@@ -14,6 +22,10 @@ export default function rootReducer(state = initialState, action) {
       if (action.payload.partial)
         return { ...state, selectedCountries: action.payload.countries };
       else return { ...state, allCountries: action.payload.countries };
+    case SET_ORDER_OPTIONS:
+      return { ...state, orderConfig: action.payload };
+    case SET_FILTER_OPTIONS:
+      return { ...state, filterConfig: action.payload };
     default:
       return state;
   }

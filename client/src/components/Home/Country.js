@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-export function Country({name, continent, flag}) {
+export function Country({ name, continent, flag, population }) {
   return (
     <div>
       <span>Nombre: {name}</span>
