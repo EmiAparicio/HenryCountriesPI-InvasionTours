@@ -40,6 +40,7 @@ export function Home() {
   // Initial info loading
   let renderCountries = useMemo(() => {
     if (!allCountries.length) dispatch(getCountries());
+    
     return selectCountry === ""
       ? shuffle(allCountries)
       : shuffle(selectedCountries);
@@ -376,6 +377,7 @@ export function Home() {
                   continent={country.continent}
                   // flag={country.flag}
                   population={country.population}
+                  id={country.id}
                 />
               </div>
             );
