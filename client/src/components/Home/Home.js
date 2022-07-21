@@ -8,7 +8,7 @@ import {
 } from "../../redux/actions";
 import { Country } from "./Country";
 
-import { shuffle, alphabeticOrder } from "../../controllers";
+import { shuffle, alphabeticOrder, validateLetters } from "../../controllers";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -40,7 +40,7 @@ export function Home() {
   // Initial info loading
   let renderCountries = useMemo(() => {
     if (!allCountries.length) dispatch(getCountries());
-    
+
     return selectCountry === ""
       ? shuffle(allCountries)
       : shuffle(selectedCountries);
@@ -57,21 +57,21 @@ export function Home() {
       activities = [];
     renderCountries.forEach((c) => {
       if (!continents.includes(c.continent)) continents.push(c.continent);
+
+      // allCountries.forEach((c) => {
+      //   c.Activities?.forEach((a) => {
+      //     if (!activities.includes(a.name)) activities.push(a.name);
+      //   });
+      // });
       if (c.Activities.season && !activities.includes(c.Activities.season))
         activities.push(c.Activities.season);
     });
+
     return {
       continents: alphabeticOrder(continents, "asc"),
       activities: alphabeticOrder(activities, "asc"),
     };
   }, [renderCountries]);
-
-  function validate(input) {
-    let errors = {};
-    if (!/^[a-zA-Z\s]+$/.test(input) && input.length)
-      errors.input = "Ingresar solo letras y/o espacios";
-    return errors;
-  }
 
   function handleInputChange(e) {
     const input = e.target.value;
@@ -82,7 +82,7 @@ export function Home() {
       const newState =
         !/^[a-zA-Z\s]+$/.test(input) && input !== "" ? prev : input;
 
-      setErrors(validate(input));
+      setErrors(validateLetters(input));
       return newState;
     });
   }
@@ -223,7 +223,7 @@ export function Home() {
         onChange={handleInputChange}
         value={selectCountry}
       />
-      {errors.input && <p>{errors.input}</p>}
+      {errors.err && <p>{errors.err}</p>}
 
       <label htmlFor="continent" onClick={handleSingleClear}>
         Continente:{" "}
@@ -231,7 +231,7 @@ export function Home() {
       <select
         name="continent"
         onChange={handleFilter}
-        disabled={filters.continents.length === 1}
+        disabled={filters.continents.length < 1}
         defaultValue={
           filterConfig.continent
             ? filterConfig.continent
@@ -247,13 +247,17 @@ export function Home() {
               : "Todos"
             : filters.continents[0]}
         </option>
-        {filters.continents.map((c, id) => {
-          return (
-            <option value={c} key={id}>
-              {c}
-            </option>
-          );
-        })}
+        {filters.continents.length > 1 ? (
+          filters.continents.map((c, id) => {
+            return (
+              <option value={c} key={id}>
+                {c}
+              </option>
+            );
+          })
+        ) : (
+          <></>
+        )}
       </select>
 
       <label htmlFor="activity" onClick={handleSingleClear}>

@@ -3,6 +3,7 @@ import {
   SET_FILTER_OPTIONS,
   SET_ORDER_OPTIONS,
   GET_COUNTRY_DETAIL,
+  CREATE_ACTIVITY,
 } from "../actions";
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -16,6 +17,7 @@ const initialState = {
     continent: "",
     activity: "",
   },
+  createdActivity: {},
 };
 
 export default function rootReducer(state = initialState, action) {
@@ -30,6 +32,8 @@ export default function rootReducer(state = initialState, action) {
       return { ...state, orderConfig: action.payload };
     case SET_FILTER_OPTIONS:
       return { ...state, filterConfig: action.payload };
+    case CREATE_ACTIVITY:
+      return { ...state, createdActivity: action.payload };
     default:
       return state;
   }

@@ -14,6 +14,11 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
       unique: "activity",
+      set(value) {
+        let firstLetter = value.charAt(0).toUpperCase();
+        let word = value.slice(1).toLowerCase();
+        this.setDataValue("name", firstLetter + word);
+      },
     },
     difficulty: {
       type: DataTypes.INTEGER,
