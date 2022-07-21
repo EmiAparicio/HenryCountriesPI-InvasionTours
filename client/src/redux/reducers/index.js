@@ -4,6 +4,7 @@ import {
   SET_ORDER_OPTIONS,
   GET_COUNTRY_DETAIL,
   CREATE_ACTIVITY,
+  SET_ALL_ACTIVITIES_TYPES,
 } from "../actions";
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -11,13 +12,14 @@ import {
 const initialState = {
   allCountries: [],
   selectedCountries: [],
-  countryDetail: { hola: "hola" },
+  countryDetail: {},
   orderConfig: [],
   filterConfig: {
     continent: "",
     activity: "",
   },
   createdActivity: {},
+  allActivitiesTypes: [],
 };
 
 export default function rootReducer(state = initialState, action) {
@@ -34,6 +36,8 @@ export default function rootReducer(state = initialState, action) {
       return { ...state, filterConfig: action.payload };
     case CREATE_ACTIVITY:
       return { ...state, createdActivity: action.payload };
+    case SET_ALL_ACTIVITIES_TYPES:
+      return { ...state, allActivitiesTypes: action.payload };
     default:
       return state;
   }

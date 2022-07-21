@@ -4,7 +4,8 @@ export const GET_COUNTRIES = "GET_COUNTRIES",
   SET_ORDER_OPTIONS = "SET_ORDER_OPTIONS",
   SET_FILTER_OPTIONS = "SET_FILTER_OPTIONS",
   GET_COUNTRY_DETAIL = "GET_COUNTRY_DETAIL",
-  CREATE_ACTIVITY = "CREATE_ACTIVITY";
+  CREATE_ACTIVITY = "CREATE_ACTIVITY",
+  SET_ALL_ACTIVITIES_TYPES = "SET_ALL_ACTIVITIES_TYPES";
 
 export function getCountries(name = "?") {
   return function (dispatch) {
@@ -58,4 +59,8 @@ export function createActivity(activity) {
           });
       }
     : { type: CREATE_ACTIVITY, payload: {} };
+}
+
+export function setAllActivitiesTypes(activities) {
+  return { type: SET_ALL_ACTIVITIES_TYPES, payload: activities };
 }

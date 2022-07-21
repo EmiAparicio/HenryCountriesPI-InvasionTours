@@ -6,6 +6,7 @@ import {
   setOrderOptions,
   setFilterOptions,
   createActivity,
+  setAllActivitiesTypes,
 } from "../../redux/actions";
 
 import { alphabeticOrder, validateLetters } from "../../controllers";
@@ -40,6 +41,7 @@ export function Activities() {
     "name"
   );
   const createdActivity = useSelector((state) => state.createdActivity);
+  const allActivitiesTypes = useSelector((state) => state.allActivitiesTypes);
 
   let countryOptions = useMemo(() => {
     if (!allCountries.length) dispatch(getCountries());
@@ -56,13 +58,17 @@ export function Activities() {
       })
     );
     localStorage.removeItem("selectCountry");
+
+    return () => {
+      dispatch(setAllActivitiesTypes(existingActivities));
+    };
   });
 
   useEffect(() => {
     dispatch(getCountries(selectCountry));
   }, [selectCountry, dispatch]);
 
-  let [dummyAct, setDummyAct] = useState([]);
+  let [dummyAct, setDummyAct] = useState(allActivitiesTypes);
   const existingActivities = useMemo(() => {
     let activities = [...dummyAct];
 

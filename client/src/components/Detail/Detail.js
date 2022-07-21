@@ -18,6 +18,8 @@ export function Detail() {
     return dispatch(getCountryDetail());
   }, [countryId, dispatch]);
 
+  console.log(country?.Activities);
+
   return (
     <>
       {country ? (
@@ -32,8 +34,8 @@ export function Detail() {
           <span>Población: {country?.population}</span>
           <span>Continente: {country?.continent}</span>
           <div>
-            <span>Turismo: {!country.Activity ? "Sin actividades" : ""}</span>
-            {country?.Activity?.map((a, id) => {
+            <span>Turismo: {!country.Activities ? "Sin actividades" : ""}</span>
+            {country?.Activities?.map((a, id) => {
               return (
                 <div key={id}>
                   <Activity

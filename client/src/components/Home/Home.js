@@ -5,6 +5,7 @@ import {
   getCountries,
   setOrderOptions,
   setFilterOptions,
+  setAllActivitiesTypes,
 } from "../../redux/actions";
 import { Country } from "./Country";
 
@@ -19,6 +20,7 @@ export function Home() {
   const selectedCountries = useSelector((state) => state.selectedCountries); // Countries selected by query "name"
   let orderConfig = useSelector((state) => state.orderConfig);
   let filterConfig = useSelector((state) => state.filterConfig);
+  const allActivitiesTypes = useSelector((state) => state.allActivitiesTypes);
 
   if (!localStorage.getItem("selectCountry"))
     localStorage.setItem("selectCountry", "");
@@ -37,66 +39,36 @@ export function Home() {
 
   const [errors, setErrors] = useState({});
 
+  ////////////////////////////////////////////////////////////////////
   // Initial info loading
-  let renderCountries = useMemo(() => {
+  const [renderCountries, setRenderCountries] = useState([]);
+  useEffect(() => {
+    let activities = [...allActivitiesTypes];
     if (!allCountries.length) dispatch(getCountries());
 
-    return selectCountry === ""
-      ? shuffle(allCountries)
-      : shuffle(selectedCountries);
-  }, [allCountries, selectedCountries]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    dispatch(getCountries(selectCountry));
-    localStorage.setItem("selectCountry", selectCountry);
-  }, [selectCountry, dispatch]);
-
-  // Options for continent and activity filters
-  let filters = useMemo(() => {
-    let continents = [],
-      activities = [];
-    renderCountries.forEach((c) => {
-      if (!continents.includes(c.continent)) continents.push(c.continent);
-
-      // allCountries.forEach((c) => {
-      //   c.Activities?.forEach((a) => {
-      //     if (!activities.includes(a.name)) activities.push(a.name);
-      //   });
-      // });
-      if (c.Activities.season && !activities.includes(c.Activities.season))
-        activities.push(c.Activities.season);
+    allCountries.forEach((c) => {
+      c.Activities?.forEach((a) => {
+        if (!activities.includes(a.name)) activities.push(a.name);
+      });
     });
 
-    return {
-      continents: alphabeticOrder(continents, "asc"),
-      activities: alphabeticOrder(activities, "asc"),
-    };
-  }, [renderCountries]);
+    setAllActivitiesTypes(() => activities);
 
-  function handleInputChange(e) {
-    const input = e.target.value;
+    setRenderCountries(() =>
+      selectCountry === "" ? shuffle(allCountries) : shuffle(selectedCountries)
+    );
+  }, [allCountries, selectedCountries, allActivitiesTypes]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    setPage(0);
+  // const renderCountries = useMemo(() => {
+  //   if (!allCountries.length) dispatch(getCountries());
 
-    setSelectCountry((prev) => {
-      const newState =
-        !/^[a-zA-Z\s]+$/.test(input) && input !== "" ? prev : input;
+  //   return selectCountry === ""
+  //     ? shuffle(allCountries)
+  //     : shuffle(selectedCountries);
+  // }, [allCountries, selectedCountries]); // eslint-disable-line react-hooks/exhaustive-deps
+  /////////////////////////////////////////////////////////////////////
 
-      setErrors(validateLetters(input));
-      return newState;
-    });
-  }
-
-  function handlePage(e) {
-    const page = Number(e.target.innerText) - 1;
-
-    setPage((prev) => {
-      localStorage.setItem("page", page);
-      return page;
-    });
-  }
-
-  let configuredCountries = useMemo(() => {
+  const configuredCountries = useMemo(() => {
     const filteredRender = renderCountries.filter((c) =>
       filterConfig.continent.length
         ? c.continent === filterConfig.continent
@@ -131,6 +103,96 @@ export function Home() {
 
     return configuredRender;
   }, [orderConfig, filterConfig, renderCountries]);
+
+  ////////////////////////////////////////////////////////////////////
+  // const [filters, setDummyFilter] = useState({
+  //   continents: [],
+  //   activities: [...allActivitiesTypes],
+  // });
+
+  const filters = useMemo(() => {
+    // let continents = [],
+    //   activities = [...filters];
+
+    let [continents, activities] = [[], [...allActivitiesTypes]];
+    let partialActivities = [];
+
+    configuredCountries.forEach((c) => {
+      if (!continents.includes(c.continent)) continents.push(c.continent);
+
+      if (configuredCountries.length !== allCountries.length) {
+        c.Activities?.forEach((a) => {
+          if (!activities.includes(a.name)) partialActivities.push(a.name);
+        });
+        activities = partialActivities;
+      }
+    });
+
+    return {
+      continents: alphabeticOrder(continents, "asc"),
+      activities: alphabeticOrder(activities, "asc"),
+    };
+    // setDummyFilter(() => ({
+    //   continents: alphabeticOrder(continents, "asc"),
+    //   activities: alphabeticOrder(activities, "asc"),
+    // }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [configuredCountries]);
+
+  // Options for continent and activity filters
+
+  // const createdActivity = useSelector((state) => state.createdActivity);
+  // let [dummyFilter, setDummyFilter] = useState(
+  //   JSON.parse(localStorage.getItem("changedAct"))
+  // );
+
+  // const filters = useMemo(() => {
+  //   let continents = [],
+  //     activities = [...dummyFilter];
+
+  //   renderCountries.forEach((c) => {
+  //     if (!continents.includes(c.continent)) continents.push(c.continent);
+
+  //     c.Activities?.forEach((a) => {
+  //       if (!activities.includes(a.season)) activities.push(a.season);
+  //     });
+  //   });
+
+  //   setDummyFilter(() => alphabeticOrder(activities, "asc"));
+  //   console.log(activities);
+  //   return {
+  //     continents: alphabeticOrder(continents, "asc"),
+  //     activities: alphabeticOrder(activities, "asc"),
+  //   };
+  // }, [renderCountries, dummyFilter]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    dispatch(getCountries(selectCountry));
+    localStorage.setItem("selectCountry", selectCountry);
+  }, [selectCountry, dispatch]);
+
+  function handleInputChange(e) {
+    const input = e.target.value;
+
+    setPage(0);
+
+    setSelectCountry((prev) => {
+      const newState =
+        !/^[a-zA-Z\s]+$/.test(input) && input !== "" ? prev : input;
+
+      setErrors(validateLetters(input));
+      return newState;
+    });
+  }
+
+  function handlePage(e) {
+    const page = Number(e.target.innerText) - 1;
+
+    setPage((prev) => {
+      localStorage.setItem("page", page);
+      return page;
+    });
+  }
 
   function handleOrder(e) {
     const orderElement = e.target.name,
