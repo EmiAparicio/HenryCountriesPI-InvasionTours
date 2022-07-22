@@ -1,13 +1,16 @@
+// Requires
 const { DataTypes, Model } = require("sequelize");
 // Exportamos una funcion que define el modelo
 // Luego le injectamos la conexion a sequelize.
 
+// Define model as class
 class Country extends Model {}
 
+// Export function that will define model
+// when injected with sequelize db connection
+// in ../db.js
 module.exports = (sequelize) => {
-  // defino el modelo
-  // sequelize.define('Country', {});
-
+  // Replacing sequelize.define('Country', {});
   return Country.init(
     {
       id: {

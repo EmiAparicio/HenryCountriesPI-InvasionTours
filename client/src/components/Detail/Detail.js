@@ -18,8 +18,6 @@ export function Detail() {
     return dispatch(getCountryDetail());
   }, [countryId, dispatch]);
 
-  console.log(country?.Activities);
-
   return (
     <>
       {country ? (

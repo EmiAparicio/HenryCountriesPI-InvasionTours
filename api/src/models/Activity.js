@@ -1,9 +1,10 @@
+// Requires
 const { DataTypes } = require("sequelize");
-// Exportamos una funcion que define el modelo
-// Luego le injectamos la conexion a sequelize.
 
+// Export function that will define model
+// when injected with sequelize db connection
+// in ../db.js
 module.exports = (sequelize) => {
-  // defino el modelo
   sequelize.define("Activity", {
     id: {
       type: DataTypes.INTEGER,
@@ -15,6 +16,7 @@ module.exports = (sequelize) => {
       allowNull: false,
       unique: "activity",
       set(value) {
+        // Set a "name" as "Name"
         let firstLetter = value.charAt(0).toUpperCase();
         let word = value.slice(1).toLowerCase();
         this.setDataValue("name", firstLetter + word);
