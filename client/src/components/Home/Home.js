@@ -125,7 +125,7 @@ export function Home() {
     }
 
     return configuredRender;
-  }, [orderConfig, filterConfig, renderCountries]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [orderConfig, filterConfig, renderCountries]);
 
   /////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////

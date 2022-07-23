@@ -268,7 +268,7 @@ export function Activities() {
         countries: `${creationEffect} ${join}: ${addedCountries}`,
       };
     } else return { active: false };
-  }, [createdActivity]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [createdActivity]);
 
   useEffect(() => {
     allCountries.forEach((c) => {

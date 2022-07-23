@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 
@@ -14,11 +15,12 @@ export function CreatedActivities({
 
   function handleClose() {
     dispatch(createActivity());
+    localStorage.removeItem("countriesId");
   }
 
   useEffect(() => {
     return () => handleClose();
-  });
+  },[]);
 
   return (
     <div>
