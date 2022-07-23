@@ -2,7 +2,11 @@ import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
-import { setOrderOptions, setFilterOptions } from "../../redux/actions";
+import {
+  setNameSelection,
+  setOrderOptions,
+  setFilterOptions,
+} from "../../redux/actions";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -17,7 +21,7 @@ export function LandingPage() {
         activity: "",
       })
     );
-    localStorage.removeItem("selectCountry");
+    dispatch(setNameSelection());
   });
 
   const handleKeyboard = (e) => {

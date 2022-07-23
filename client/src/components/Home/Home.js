@@ -3,78 +3,101 @@ import { useSelector, useDispatch } from "react-redux";
 
 import {
   getCountries,
+  setNameSelection,
   setOrderOptions,
   setFilterOptions,
   setAllActivitiesTypes,
 } from "../../redux/actions";
 import { Country } from "./Country";
 
-import { shuffle, alphabeticOrder, validateLetters } from "../../controllers";
+import { alphabeticOrder, validateLetters } from "../../controllers";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 export function Home() {
   const dispatch = useDispatch();
 
-  const allCountries = useSelector((state) => state.allCountries); // All countries from API
-  const selectedCountries = useSelector((state) => state.selectedCountries); // Countries selected by query "name"
-  let orderConfig = useSelector((state) => state.orderConfig);
-  let filterConfig = useSelector((state) => state.filterConfig);
-  const allActivitiesTypes = useSelector((state) => state.allActivitiesTypes);
-
-  if (!localStorage.getItem("selectCountry"))
-    localStorage.setItem("selectCountry", "");
-
-  const [selectCountry, setSelectCountry] = useState(
-    localStorage.getItem("selectCountry")
-  ); // Input for country selection by name
-
+  ////////////////////////////////////////////////////////////////////
+  // Pages handling
+  ////////////////////////////////////////////////////////////////////
   if (!localStorage.getItem("page")) localStorage.setItem("page", 0);
-
   const [page, setPage] = useState(localStorage.getItem("page"));
 
   useEffect(() => {
     if (page === 0) localStorage.setItem("page", 0);
   }, [page]);
 
-  const [errors, setErrors] = useState({});
+  function handlePage(e) {
+    const page = Number(e.target.innerText) - 1;
+
+    setPage(() => {
+      localStorage.setItem("page", page);
+      return page;
+    });
+  }
 
   ////////////////////////////////////////////////////////////////////
-  // Initial info loading
-  const [renderCountries, setRenderCountries] = useState([]);
+  // Data loading
+  ////////////////////////////////////////////////////////////////////
+  // Initial countries loading
+  const allCountries = useSelector((state) => state.allCountries);
+
   useEffect(() => {
-    let activities = [...allActivitiesTypes];
     if (!allCountries.length) dispatch(getCountries());
+  }, [allCountries, dispatch]);
 
-    allCountries.forEach((c) => {
-      c.Activities?.forEach((a) => {
-        if (!activities.includes(a.name)) activities.push(a.name);
-      });
-    });
+  // Render countries: all of selected if case
+  const selectedCountries = useSelector((state) => state.selectedCountries);
+  const [renderCountries, setRenderCountries] = useState([]);
 
-    setAllActivitiesTypes(() => activities);
-
+  useEffect(() => {
     setRenderCountries(() =>
-      selectCountry === "" ? shuffle(allCountries) : shuffle(selectedCountries)
+      selectCountry === "" ? allCountries : selectedCountries
     );
-  }, [allCountries, selectedCountries, allActivitiesTypes]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [allCountries, selectedCountries]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // const renderCountries = useMemo(() => {
-  //   if (!allCountries.length) dispatch(getCountries());
+  // Load selected countries by name from input
+  const nameSelection = useSelector((state) => state.nameSelection);
+  const [selectCountry, setSelectCountry] = useState(nameSelection);
 
-  //   return selectCountry === ""
-  //     ? shuffle(allCountries)
-  //     : shuffle(selectedCountries);
-  // }, [allCountries, selectedCountries]); // eslint-disable-line react-hooks/exhaustive-deps
-  /////////////////////////////////////////////////////////////////////
+  useEffect(() => {
+    dispatch(getCountries(selectCountry));
+    dispatch(setNameSelection(selectCountry));
+  }, [selectCountry, dispatch]);
+
+  const [errors, setErrors] = useState({});
+
+  function handleInputChange(e) {
+    const input = e.target.value;
+
+    setPage(0);
+
+    setSelectCountry((prev) => {
+      const newState =
+        !/^[a-zA-Z\s]+$/.test(input) && input !== "" ? prev : input;
+
+      setErrors(validateLetters(input));
+      return newState;
+    });
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  // Data manipulation
+  ////////////////////////////////////////////////////////////////////
+  const orderConfig = useSelector((state) => state.orderConfig);
+  const filterConfig = useSelector((state) => state.filterConfig);
 
   const configuredCountries = useMemo(() => {
-    const filteredRender = renderCountries.filter((c) =>
-      filterConfig.continent.length
-        ? c.continent === filterConfig.continent
-        : true && filterConfig.activity.length
-        ? c.Activities.season === filterConfig.activity
-        : true
+    const filteredRender = renderCountries.filter(
+      (c) =>
+        (filterConfig.continent.length
+          ? c.continent === filterConfig.continent
+          : true) &&
+        (filterConfig.activity.length
+          ? c.Activities.reduce((bool, act) => {
+              return bool || act.name === filterConfig.activity;
+            }, false)
+          : true)
     );
 
     let configuredRender = filteredRender;
@@ -102,31 +125,72 @@ export function Home() {
     }
 
     return configuredRender;
-  }, [orderConfig, filterConfig, renderCountries]);
+  }, [orderConfig, filterConfig, renderCountries]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  /////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////
+
+  const allActivitiesTypes = useSelector((state) => state.allActivitiesTypes);
+  useEffect(() => {
+    let activities = [...allActivitiesTypes];
+
+    // if (
+    //   localStorage.getItem("totalActivities") &&
+    //   localStorage.getItem("totalActivities") > activities.length
+    // ) {
+    allCountries.forEach((c) => {
+      c.Activities?.forEach((a) => {
+        if (!activities.includes(a.name)) activities.push(a.name);
+      });
+    });
+    dispatch(setAllActivitiesTypes(activities));
+    // console.log("dispatched");
+    // }
+
+    // localStorage.setItem("totalActivities", activities.length);
+
+    //
+  }, [allCountries]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // const renderCountries = useMemo(() => {
+  //   if (!allCountries.length) dispatch(getCountries());
+
+  //   return nameSelection === ""
+  //     ? shuffle(allCountries)
+  //     : shuffle(selectedCountries);
+  // }, [allCountries, selectedCountries]); // eslint-disable-line react-hooks/exhaustive-deps
+  /////////////////////////////////////////////////////////////////////
 
   ////////////////////////////////////////////////////////////////////
   // const [filters, setDummyFilter] = useState({
   //   continents: [],
   //   activities: [...allActivitiesTypes],
   // });
-
+  const [partialActivities, setPartialActivities] = useState([]);
   const filters = useMemo(() => {
     // let continents = [],
     //   activities = [...filters];
 
+    //CAMBIAR: SI ELIJO CONTINENTE AFRICA, Y ESCRIBO UN NOMBRE ME LO FILTRA, PERO CUANDO BORRO UNA LETRA DEL PAIS, EL FILTRO DE CONTINENTE VUELVE A "TODOS" Y DEBERÍA QUEDARSE EN AFRICA
+
     let [continents, activities] = [[], [...allActivitiesTypes]];
-    let partialActivities = [];
 
-    configuredCountries.forEach((c) => {
-      if (!continents.includes(c.continent)) continents.push(c.continent);
+    if (configuredCountries.length)
+      renderCountries.forEach((c) => {
+        if (!continents.includes(c.continent)) continents.push(c.continent);
 
-      if (configuredCountries.length !== allCountries.length) {
-        c.Activities?.forEach((a) => {
-          if (!activities.includes(a.name)) partialActivities.push(a.name);
-        });
-        activities = partialActivities;
-      }
-    });
+        if (renderCountries.length !== allCountries.length) {
+          c.Activities?.forEach((a) => {
+            if (!activities.includes(a.name))
+              setPartialActivities((prev) => [...prev, a.name]);
+          });
+          activities = partialActivities;
+        }
+      });
+    else activities = [];
 
     return {
       continents: alphabeticOrder(continents, "asc"),
@@ -137,7 +201,7 @@ export function Home() {
     //   activities: alphabeticOrder(activities, "asc"),
     // }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [configuredCountries]);
+  }, [renderCountries, allActivitiesTypes, configuredCountries]);
 
   // Options for continent and activity filters
 
@@ -166,33 +230,12 @@ export function Home() {
   //   };
   // }, [renderCountries, dummyFilter]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  useEffect(() => {
-    dispatch(getCountries(selectCountry));
-    localStorage.setItem("selectCountry", selectCountry);
-  }, [selectCountry, dispatch]);
-
-  function handleInputChange(e) {
-    const input = e.target.value;
-
-    setPage(0);
-
-    setSelectCountry((prev) => {
-      const newState =
-        !/^[a-zA-Z\s]+$/.test(input) && input !== "" ? prev : input;
-
-      setErrors(validateLetters(input));
-      return newState;
-    });
-  }
-
-  function handlePage(e) {
-    const page = Number(e.target.innerText) - 1;
-
-    setPage((prev) => {
-      localStorage.setItem("page", page);
-      return page;
-    });
-  }
+  /////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////
 
   function handleOrder(e) {
     const orderElement = e.target.name,
@@ -202,10 +245,9 @@ export function Home() {
       alphabeticOrderRef.current.selected = true;
     if (orderElement === "alphabet") populationOrderRef.current.selected = true;
 
-    orderValue === ""
-      ? (orderConfig = [])
-      : (orderConfig = [orderElement, orderValue]);
-    dispatch(setOrderOptions(orderConfig));
+    dispatch(
+      setOrderOptions(orderValue === "" ? [] : [orderElement, orderValue])
+    );
 
     setPage(0);
   }
@@ -214,9 +256,9 @@ export function Home() {
     const filterElement = e.target.name,
       filterValue = e.target.value;
 
-    filterConfig = { ...filterConfig, [filterElement]: filterValue };
-
-    dispatch(setFilterOptions(filterConfig));
+    dispatch(
+      setFilterOptions({ ...filterConfig, [filterElement]: filterValue })
+    );
 
     setPage(0);
   }
@@ -224,8 +266,7 @@ export function Home() {
   const continentFilterRef = useRef(),
     activityFilterRef = useRef(),
     alphabeticOrderRef = useRef(),
-    populationOrderRef = useRef(),
-    nameFilterRef = useRef();
+    populationOrderRef = useRef();
 
   function handleSingleClear(e) {
     const element = e.target.htmlFor;
@@ -262,7 +303,7 @@ export function Home() {
   }
 
   function handleClearOrder() {
-    dispatch(setOrderOptions({ alphabet: "", population: "" }));
+    dispatch(setOrderOptions([]));
     alphabeticOrderRef.current.selected = true;
     populationOrderRef.current.selected = true;
 
@@ -273,17 +314,16 @@ export function Home() {
     handleClearFilters();
     handleClearOrder();
     setSelectCountry("");
-    nameFilterRef.current.value = "";
   }
 
   return (
     <>
       <input
-        ref={nameFilterRef}
         type="search"
         placeholder="Buscar país"
         onChange={handleInputChange}
         value={selectCountry}
+        onBlur={() => setErrors((prev) => ({ err: "" }))}
       />
       {errors.err && <p>{errors.err}</p>}
 
@@ -312,7 +352,7 @@ export function Home() {
         {filters.continents.length > 1 ? (
           filters.continents.map((c, id) => {
             return (
-              <option value={c} key={id}>
+              <option value={c} key={c}>
                 {c}
               </option>
             );
@@ -342,7 +382,7 @@ export function Home() {
         </option>
         {filters.activities.map((a, id) => {
           return (
-            <option value={a} key={id}>
+            <option value={a} key={a}>
               {a}
             </option>
           );
@@ -410,7 +450,7 @@ export function Home() {
           !orderConfig.length &&
           filterConfig.continent === "" &&
           filterConfig.activity === "" &&
-          selectCountry === ""
+          nameSelection === ""
         }
       >
         Limpiar todo

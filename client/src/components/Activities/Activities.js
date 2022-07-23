@@ -1,8 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import {
   getCountries,
+  setNameSelection,
   setOrderOptions,
   setFilterOptions,
   createActivity,
@@ -47,7 +49,7 @@ export function Activities() {
     if (!allCountries.length) dispatch(getCountries());
 
     return selectCountry === "" ? allCountries : selectedCountries;
-  }, [allCountries, selectedCountries]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [allCountries, selectedCountries]);
 
   useEffect(() => {
     dispatch(setOrderOptions([]));
@@ -57,12 +59,10 @@ export function Activities() {
         activity: "",
       })
     );
-    localStorage.removeItem("selectCountry");
+    dispatch(setNameSelection());
 
-    return () => {
-      dispatch(setAllActivitiesTypes(existingActivities));
-    };
-  });
+    return () => {};
+  }, []);
 
   useEffect(() => {
     dispatch(getCountries(selectCountry));
@@ -88,7 +88,11 @@ export function Activities() {
 
     setDummyAct(() => alphabeticOrder(activities, "asc"));
     return alphabeticOrder(activities, "asc");
-  }, [allCountries, createdActivity]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [allCountries, createdActivity]);
+
+  useEffect(() => {
+    dispatch(setAllActivitiesTypes(existingActivities));
+  }, [existingActivities]);
 
   function handleCountryChange(e) {
     const input = e.target.value;
@@ -341,6 +345,7 @@ export function Activities() {
           onChange={handleCountryChange}
           onBlur={handleBlur}
           value={selectCountry}
+          autoComplete="off"
         />
         {errors.country.err && <p>{errors.country.err}</p>}
 

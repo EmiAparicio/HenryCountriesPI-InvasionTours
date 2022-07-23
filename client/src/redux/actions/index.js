@@ -1,6 +1,7 @@
 import axios from "axios";
 
 export const GET_COUNTRIES = "GET_COUNTRIES",
+  SELECT_COUNTRIES = "SELECT_COUNTRIES",
   SET_ORDER_OPTIONS = "SET_ORDER_OPTIONS",
   SET_FILTER_OPTIONS = "SET_FILTER_OPTIONS",
   GET_COUNTRY_DETAIL = "GET_COUNTRY_DETAIL",
@@ -27,6 +28,10 @@ export function getCountries(name = "?") {
         });
       });
   };
+}
+
+export function setNameSelection(name = "") {
+  return { type: SELECT_COUNTRIES, payload: name };
 }
 
 export function setOrderOptions(order) {
