@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -24,7 +25,7 @@ export function LandingPage() {
     );
     dispatch(setNameSelection());
     dispatch(setStoredPage(1));
-  });
+  }, []);
 
   const handleKeyboard = (e) => {
     e.preventDefault();

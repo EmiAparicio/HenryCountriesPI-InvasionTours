@@ -11,6 +11,12 @@ import {
   // HOME
   SET_PAGE,
   SHUFFLE_COUNTRIES,
+
+  // ACTIVITIES
+  SET_COUNTRIES_ID,
+
+  // GENERAL
+  SET_CLEAR_SEARCH,
 } from "../actions";
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -33,6 +39,10 @@ const initialState = {
 
   // HOME
   page: localStorage.getItem("page") ? Number(localStorage.getItem("page")) : 1, // Actual page of countries shown
+  // ACTIVITIES
+  countriesId: [],
+  // GENERAL
+  clearSearch: false,
 };
 
 export default function rootReducer(state = initialState, action) {
@@ -57,6 +67,8 @@ export default function rootReducer(state = initialState, action) {
             },
           }
         : { ...state, filterConfig: action.payload };
+    case SET_COUNTRIES_ID:
+      return { ...state, countriesId: action.payload };
     case CREATE_ACTIVITY:
       return { ...state, createdActivity: action.payload };
     case SET_ALL_ACTIVITIES_TYPES:
@@ -64,11 +76,12 @@ export default function rootReducer(state = initialState, action) {
         ...state,
         allActivitiesTypes: action.payload,
       };
-
     case SET_PAGE:
       return { ...state, page: action.payload };
     case SHUFFLE_COUNTRIES:
       return { ...state, allCountries: action.payload };
+    case SET_CLEAR_SEARCH:
+      return { ...state, clearSearch: action.payload };
     default:
       return state;
   }

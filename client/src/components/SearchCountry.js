@@ -1,19 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { validateLetters } from "../controllers";
 import {
   getCountries,
+  setClearSearch,
   setNameSelection,
-  setStoredPage,
 } from "../redux/actions";
 
 export function SearchCountry() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+
   const [errors, setErrors] = useState({});
 
+  const clearSearch = useSelector((state) => state.clearSearch);
   const nameSelection = useSelector((state) => state.nameSelection);
   const [selectCountry, setSelectCountry] = useState(nameSelection);
 
@@ -22,10 +22,14 @@ export function SearchCountry() {
     dispatch(setNameSelection(selectCountry));
   }, [selectCountry, dispatch]);
 
-  function handleInputChange(e) {
-    dispatch(setStoredPage(1));
-    navigate("/home?page=1", { replace: true });
+  useEffect(() => {
+    if (clearSearch) {
+      setSelectCountry("");
+      dispatch(setClearSearch(false));
+    }
+  }, [clearSearch]);
 
+  function handleInputChange(e) {
     const input = e.target.value;
 
     setSelectCountry((prev) => {
@@ -40,6 +44,7 @@ export function SearchCountry() {
   return (
     <div>
       <input
+        autoComplete="off"
         type="search"
         placeholder="Buscar país"
         onChange={handleInputChange}

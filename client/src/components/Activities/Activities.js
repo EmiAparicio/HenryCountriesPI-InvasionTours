@@ -4,46 +4,24 @@ import { useSelector, useDispatch } from "react-redux";
 
 import {
   getCountries,
-  setNameSelection,
   setOrderOptions,
   setFilterOptions,
   createActivity,
   setAllActivitiesTypes,
+  setStoredPage,
+  setCountriesId,
 } from "../../redux/actions";
 
-import { alphabeticOrder, validateLetters } from "../../controllers";
+import { alphabeticOrder } from "../../controllers";
 
 import { CreatedActivities } from "./CreatedActivities";
+import { SearchCountry } from "../SearchCountry";
+import { Form } from "./Form";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 export function Activities() {
   const dispatch = useDispatch();
-  const [errors, setErrors] = useState({
-    country: {},
-    activity: {},
-    difficulty: {},
-    duration: {},
-  });
-  const [selectCountry, setSelectCountry] = useState("");
-  const [selectActivity, setSelectActivity] = useState("");
-  const [selectDifficulty, setSelectDifficulty] = useState(1);
-  const [selectDuration, setSelectDuration] = useState(1);
-  const [selectSeason, setSelectSeason] = useState("Verano");
-  const [countriesId, setCountriesId] = useState([]);
-
-  const allCountries = useSelector((state) => state.allCountries);
-  const selectedCountries = useSelector((state) => state.selectedCountries);
-  const createdActivity = useSelector((state) => state.createdActivity);
-  const allActivitiesTypes = useSelector((state) => state.allActivitiesTypes);
-
-  let countryOptions = useMemo(() => {
-    if (!allCountries.length) dispatch(getCountries());
-
-    return selectCountry === ""
-      ? alphabeticOrder(allCountries, "asc", "name")
-      : alphabeticOrder(selectedCountries, "asc", "name");
-  }, [allCountries, selectedCountries]);
 
   useEffect(() => {
     dispatch(setOrderOptions([]));
@@ -53,12 +31,23 @@ export function Activities() {
         activity: "",
       })
     );
-    dispatch(setNameSelection());
+    dispatch(setStoredPage(1));
   }, []);
 
-  useEffect(() => {
-    dispatch(getCountries(selectCountry));
-  }, [selectCountry, dispatch]);
+  const countriesId = useSelector((state) => state.countriesId);
+  const allCountries = useSelector((state) => state.allCountries);
+  const selectedCountries = useSelector((state) => state.selectedCountries);
+  const nameSelection = useSelector((state) => state.nameSelection);
+  const createdActivity = useSelector((state) => state.createdActivity);
+  const allActivitiesTypes = useSelector((state) => state.allActivitiesTypes);
+
+  const countryOptions = useMemo(() => {
+    if (!allCountries.length) dispatch(getCountries());
+
+    return nameSelection === ""
+      ? alphabeticOrder([...allCountries], "asc", "name")
+      : alphabeticOrder([...selectedCountries], "asc", "name");
+  }, [allCountries, selectedCountries]);
 
   let [dummyAct, setDummyAct] = useState(allActivitiesTypes);
   const existingActivities = useMemo(() => {
@@ -86,110 +75,34 @@ export function Activities() {
     dispatch(setAllActivitiesTypes(existingActivities));
   }, [existingActivities]);
 
-  function handleCountryChange(e) {
-    const input = e.target.value;
-
-    setSelectCountry((prev) => {
-      const newState =
-        !/^[a-zA-Z\s]+$/.test(input) && input !== "" ? prev : input;
-
-      setErrors((prev) => ({ ...prev, country: validateLetters(input) }));
-      return newState;
-    });
-  }
-
-  function handleActivityChange(e) {
-    const input = e.target.value;
-
-    setSelectActivity((prev) => {
-      const newState =
-        !/^[a-zA-Z\s]+$/.test(input) && input !== "" ? prev : input;
-
-      setErrors((prev) => ({ ...prev, activity: validateLetters(input) }));
-      return newState;
-    });
-  }
-
-  function handleBlur(e) {
-    const element = e.target.name;
-    setErrors((prev) => ({
-      ...prev,
-      [element]: {},
-    }));
-  }
-
-  function handleDifficultyChange(e) {
-    const input = Number(e.target.value);
-    let errors = "";
-    let newState;
-
-    setSelectDifficulty((prev) => {
-      if (input < 1 || input > 5 || parseInt(input) !== Math.floor(input)) {
-        errors = "La dificultad debe estar entre 1 y 5";
-
-        newState = prev;
-      } else newState = input;
-
-      setErrors((prev) => ({
-        ...prev,
-        difficulty: errors.length ? { err: errors } : {},
-      }));
-      return newState;
-    });
-  }
-
-  //CAMBIAR QUE PUEDA BORRAR EL NÚMERO PARA ESCRIBIR 20 O 30
-  function handleDurationChange(e) {
-    const input = Number(e.target.value);
-    let errors = "";
-    let newState;
-
-    setSelectDuration((prev) => {
-      if (input < 1 || input > 30 || parseInt(input) !== Math.floor(input)) {
-        errors = "La duración debe estar entre 1 y 30 días";
-
-        newState = prev;
-      } else newState = input;
-
-      setErrors((prev) => ({
-        ...prev,
-        duration: errors.length ? { err: errors } : {},
-      }));
-      return newState;
-    });
-  }
-
-  function handleSeasonChange(e) {
-    const season = e.target.value;
-
-    setSelectSeason(season);
-  }
-
   function handleCheckAll(e) {
     e.preventDefault();
 
     const boolean = selectAll === "Seleccionar todo" ? true : false;
-
+    let cId = [...countriesId];
     countryOptions.forEach((c) => {
       // Check or uncheck all depending on 'boolean'
       document.getElementById(c.id).firstChild.checked = boolean;
 
       // Add or remove country id to activity
-      boolean
-        ? setCountriesId((prev) => [...prev, c.id])
-        : setCountriesId((prev) => prev.filter((p) => p !== c.id));
+
+      cId = boolean
+        ? !cId.find((pc) => pc === c.id)
+          ? [...cId, c.id]
+          : cId
+        : cId.filter((p) => p !== c.id);
+
+      dispatch(setCountriesId(cId));
     });
   }
 
   function handleNewCountryActivity(e) {
     const checkbox = e.target;
+    let cId = [...countriesId];
+    if (checkbox.checked) cId = [...cId, checkbox.parentElement.id];
+    else cId = cId.filter((c) => c !== checkbox.parentElement.id);
 
-    if (checkbox.checked)
-      setCountriesId((prev) => [...prev, checkbox.parentElement.id]);
-    else
-      setCountriesId((prev) =>
-        prev.filter((c) => c !== checkbox.parentElement.id)
-      );
+    dispatch(setCountriesId(cId));
   }
 
   // Set "Select all" button value
@@ -207,35 +120,9 @@ export function Activities() {
         }, 0) === countryOptions.length
       ? "Deseleccionar todo"
       : "Seleccionar todo";
-  }, [countriesId, countryOptions]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [countriesId, countryOptions]);
 
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    const activity = {
-      name: selectActivity,
-      difficulty: selectDifficulty,
-      duration: selectDuration,
-      season: selectSeason,
-      countriesId,
-    };
-
-    dispatch(createActivity(activity));
-    setSelectActivity("");
-    setSelectDifficulty(1);
-    setSelectDuration(1);
-    setSelectSeason("Verano");
-    setSelectCountry("");
-    localStorage.setItem("countriesId", JSON.stringify(countriesId));
-    setCountriesId([]);
-
-    allCountries.forEach((c) => {
-      if (document.getElementById(c.id))
-        document.getElementById(c.id).firstChild.checked = false;
-    });
-  }
-
-  const createdComponent = useMemo(() => {
+  const createdActivityComponent = useMemo(() => {
     if (createdActivity.activity) {
       const creationEffect = createActivity.created
         ? "Creada y añadida"
@@ -286,103 +173,51 @@ export function Activities() {
         <></>
       )}
 
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="activity">Nombre: </label>
-        <input
-          type="search"
-          name="activity"
-          placeholder='"Actividad"'
-          autoComplete="off"
-          onChange={handleActivityChange}
-          onBlur={handleBlur}
-          value={selectActivity}
-        />
-        {errors.activity.err && <p>{errors.activity.err}</p>}
+      <Form countriesId={countriesId} />
 
-        <label htmlFor="difficulty">Dificultad: </label>
-        <input
-          type="number"
-          name="difficulty"
-          placeholder="1-5"
-          autoComplete="off"
-          onChange={handleDifficultyChange}
-          onBlur={handleBlur}
-          value={selectDifficulty}
-        />
-        {errors.difficulty.err && <p>{errors.difficulty.err}</p>}
+      <SearchCountry />
 
-        <label htmlFor="duration">Duración (días): </label>
-        <input
-          type="number"
-          name="duration"
-          placeholder="1-30"
-          autoComplete="off"
-          onChange={handleDurationChange}
-          onBlur={handleBlur}
-          value={selectDuration}
-        />
-        {errors.duration.err && <p>{errors.duration.err}</p>}
+      <button onClick={handleCheckAll} disabled={!countryOptions.length}>
+        {selectAll}
+      </button>
 
-        <label htmlFor="season">Temporada: </label>
-        <select name="season" onChange={handleSeasonChange}>
-          <option value="Verano">Verano</option>
-          <option value="Otoño">Otoño</option>
-          <option value="Invierno">Invierno</option>
-          <option value="Primavera">Primavera</option>
-        </select>
-
-        <input
-          type="search"
-          name="country"
-          placeholder="Buscar país"
-          onChange={handleCountryChange}
-          onBlur={handleBlur}
-          value={selectCountry}
-          autoComplete="off"
-        />
-        {errors.country.err && <p>{errors.country.err}</p>}
-
-        <button onClick={handleCheckAll} disabled={!countryOptions.length}>
-          {selectAll}
-        </button>
-
-        <input
-          type="submit"
-          disabled={!countriesId.length || !selectActivity.length}
-          value="Añadir actividad"
-        />
-
-        <div>
-          <span>Países: </span>
-          {!countryOptions.length
-            ? "No hay opciones"
-            : countryOptions.map((c) => {
-                return (
-                  <div key={c.id} id={c.id}>
-                    <input
-                      type="checkbox"
-                      value={c.name}
-                      name={c.name}
-                      onChange={handleNewCountryActivity}
-                    />
-                    <label htmlFor={c.name}>{c.name}</label>
-                  </div>
-                );
-              })}
-        </div>
-      </form>
-
-      {createdComponent.active ? (
+      {createdActivityComponent.active ? (
         <CreatedActivities
-          name={createdComponent.name}
-          difficulty={createdComponent.difficulty}
-          duration={createdComponent.duration}
-          season={createdComponent.season}
-          countries={createdComponent.countries}
+          name={createdActivityComponent.name}
+          difficulty={createdActivityComponent.difficulty}
+          duration={createdActivityComponent.duration}
+          season={createdActivityComponent.season}
+          countries={createdActivityComponent.countries}
         />
       ) : (
         <></>
       )}
+
+      <div>
+        <span>Países: </span>
+        {!countryOptions.length
+          ? "No hay opciones"
+          : countryOptions.map((c) => {
+              return (
+                <div key={c.id} id={c.id}>
+                  <input
+                    type="checkbox"
+                    value={c.name}
+                    name={c.name}
+                    onChange={handleNewCountryActivity}
+                  />
+                  <label
+                    onClick={() => {
+                      document.getElementById(c.id).firstChild.checked =
+                        !document.getElementById(c.id).firstChild.checked;
+                    }}
+                  >
+                    {c.name}
+                  </label>
+                </div>
+              );
+            })}
+      </div>
     </>
   );
 }

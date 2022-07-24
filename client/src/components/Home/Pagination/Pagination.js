@@ -1,11 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useMemo, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { setStoredPage } from "../../../redux/actions";
+import { setClearSearch, setStoredPage } from "../../../redux/actions";
 import { ShowCountries } from "./ShowCountries";
 
 export function Pagination({ showCountries }) {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   if (!localStorage.getItem("page")) localStorage.setItem("page", 1);
@@ -18,9 +19,7 @@ export function Pagination({ showCountries }) {
   const query = useQuery().get("page");
 
   const storedPage = useSelector((state) => state.page);
-  const [page, setPage] = useState(
-    query ? Number(query) : Number(storedPage)
-  );
+  const [page, setPage] = useState(query ? Number(query) : Number(storedPage));
 
   useEffect(() => setPage(() => storedPage), [storedPage]);
 
@@ -33,7 +32,7 @@ export function Pagination({ showCountries }) {
     const page = Number(e.target.innerText);
 
     localStorage.setItem("page", page);
-    setStoredPage(page);
+    dispatch(setStoredPage(page));
     setPage(() => page);
     navigate(`/home?page=${page}`, { replace: false });
   }
@@ -52,7 +51,7 @@ export function Pagination({ showCountries }) {
             if (id > 0)
               return id === 1 ||
                 id === paginationArray.length - 1 ||
-                (id <= page + 1 && id >= page -1) ? (
+                (id <= page + 1 && id >= page - 1) ? (
                 <div key={id}>
                   <button onClick={handlePage}>{p}</button>
                 </div>
@@ -64,7 +63,9 @@ export function Pagination({ showCountries }) {
             return <React.Fragment key={id}></React.Fragment>;
           })
         ) : (
-          <span>Sin resultados: Limpiar</span>
+          <button onClick={() => dispatch(setClearSearch(true))}>
+            Sin resultados: Limpiar
+          </button>
         )}
       </div>
       <ShowCountries showCountries={showCountries} page={page} />

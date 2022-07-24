@@ -19,13 +19,14 @@ export function ConfigRender({
   const configRef = useRef();
 
   const orderConfig = useSelector((state) => state.orderConfig);
+  const filterConfig = useSelector((state) => state.filterConfig);
 
   useEffect(() => {
     if (configType === "order") {
       if (!orderConfig.length || orderConfig[0] !== name)
         configRef.current.value = "";
-    }
-  }, [orderConfig]);
+    } else if (!filterConfig[name].length) configRef.current.value = "";
+  }, [filterConfig, orderConfig]);
 
   function handleConfig(e) {
     const configValue = e.target.value;

@@ -12,6 +12,12 @@ export const GET_COUNTRIES = "GET_COUNTRIES",
 export const SET_PAGE = "SET_PAGE",
   SHUFFLE_COUNTRIES = "SHUFFLE_COUNTRIES";
 
+// ACTIVITIES action types
+export const SET_COUNTRIES_ID = "SET_COUNTRIES_ID";
+
+// GENERAL action types
+export const SET_CLEAR_SEARCH = "SET_CLEAR_SEARCH";
+
 export function getCountries(name = "?") {
   return function (dispatch) {
     fetch(
@@ -81,4 +87,12 @@ export function setStoredPage(page) {
 
 export function shuffleCountries(countries) {
   return { type: SHUFFLE_COUNTRIES, payload: countries };
+}
+
+export function setClearSearch(bool) {
+  return { type: SET_CLEAR_SEARCH, payload: bool };
+}
+
+export function setCountriesId(ids) {
+  return { type: SET_COUNTRIES_ID, payload: ids };
 }
