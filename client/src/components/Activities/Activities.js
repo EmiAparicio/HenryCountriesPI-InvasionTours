@@ -32,23 +32,17 @@ export function Activities() {
   const [selectSeason, setSelectSeason] = useState("Verano");
   const [countriesId, setCountriesId] = useState([]);
 
-  const allCountries = alphabeticOrder(
-    useSelector((state) => state.allCountries),
-    "asc",
-    "name"
-  );
-  const selectedCountries = alphabeticOrder(
-    useSelector((state) => state.selectedCountries),
-    "asc",
-    "name"
-  );
+  const allCountries = useSelector((state) => state.allCountries);
+  const selectedCountries = useSelector((state) => state.selectedCountries);
   const createdActivity = useSelector((state) => state.createdActivity);
   const allActivitiesTypes = useSelector((state) => state.allActivitiesTypes);
 
   let countryOptions = useMemo(() => {
     if (!allCountries.length) dispatch(getCountries());
 
-    return selectCountry === "" ? allCountries : selectedCountries;
+    return selectCountry === ""
+      ? alphabeticOrder(allCountries, "asc", "name")
+      : alphabeticOrder(selectedCountries, "asc", "name");
   }, [allCountries, selectedCountries]);
 
   useEffect(() => {
@@ -60,8 +54,6 @@ export function Activities() {
       })
     );
     dispatch(setNameSelection());
-
-    return () => {};
   }, []);
 
   useEffect(() => {
@@ -146,6 +138,7 @@ export function Activities() {
     });
   }
 
+  //CAMBIAR QUE PUEDA BORRAR EL NÚMERO PARA ESCRIBIR 20 O 30
   function handleDurationChange(e) {
     const input = Number(e.target.value);
     let errors = "";

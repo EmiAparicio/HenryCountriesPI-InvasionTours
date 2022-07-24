@@ -7,9 +7,11 @@ import {
   GET_COUNTRY_DETAIL,
   CREATE_ACTIVITY,
   SET_ALL_ACTIVITIES_TYPES,
-} from "../actions";
 
-import { shuffle } from "../../controllers";
+  // HOME
+  SET_PAGE,
+  SHUFFLE_COUNTRIES,
+} from "../actions";
 
 ///////////////////////////////////////////////////////////////////////////////
 // Code
@@ -28,6 +30,9 @@ const initialState = {
   countryDetail: {}, // Selected country details from back: /countries/:id
   createdActivity: {}, // New created or assigned activity
   allActivitiesTypes: [], // All activities different names
+
+  // HOME
+  page: localStorage.getItem("page") ? Number(localStorage.getItem("page")) : 1, // Actual page of countries shown
 };
 
 export default function rootReducer(state = initialState, action) {
@@ -35,7 +40,7 @@ export default function rootReducer(state = initialState, action) {
     case GET_COUNTRIES:
       if (action.payload.partial)
         return { ...state, selectedCountries: action.payload.countries };
-      else return { ...state, allCountries: shuffle(action.payload.countries) };
+      else return { ...state, allCountries: action.payload.countries };
     case SELECT_COUNTRIES:
       return { ...state, nameSelection: action.payload };
     case GET_COUNTRY_DETAIL:
@@ -43,7 +48,15 @@ export default function rootReducer(state = initialState, action) {
     case SET_ORDER_OPTIONS:
       return { ...state, orderConfig: action.payload };
     case SET_FILTER_OPTIONS:
-      return { ...state, filterConfig: action.payload };
+      return action.payload.name
+        ? {
+            ...state,
+            filterConfig: {
+              ...state.filterConfig,
+              [action.payload.name]: action.payload[action.payload.name],
+            },
+          }
+        : { ...state, filterConfig: action.payload };
     case CREATE_ACTIVITY:
       return { ...state, createdActivity: action.payload };
     case SET_ALL_ACTIVITIES_TYPES:
@@ -51,6 +64,11 @@ export default function rootReducer(state = initialState, action) {
         ...state,
         allActivitiesTypes: action.payload,
       };
+
+    case SET_PAGE:
+      return { ...state, page: action.payload };
+    case SHUFFLE_COUNTRIES:
+      return { ...state, allCountries: action.payload };
     default:
       return state;
   }

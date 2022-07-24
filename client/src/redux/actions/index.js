@@ -8,6 +8,10 @@ export const GET_COUNTRIES = "GET_COUNTRIES",
   CREATE_ACTIVITY = "CREATE_ACTIVITY",
   SET_ALL_ACTIVITIES_TYPES = "SET_ALL_ACTIVITIES_TYPES";
 
+// HOME action types
+export const SET_PAGE = "SET_PAGE",
+  SHUFFLE_COUNTRIES = "SHUFFLE_COUNTRIES";
+
 export function getCountries(name = "?") {
   return function (dispatch) {
     fetch(
@@ -68,4 +72,13 @@ export function createActivity(activity) {
 
 export function setAllActivitiesTypes(activities) {
   return { type: SET_ALL_ACTIVITIES_TYPES, payload: activities };
+}
+
+export function setStoredPage(page) {
+  localStorage.setItem("page", page);
+  return { type: SET_PAGE, payload: page };
+}
+
+export function shuffleCountries(countries) {
+  return { type: SHUFFLE_COUNTRIES, payload: countries };
 }

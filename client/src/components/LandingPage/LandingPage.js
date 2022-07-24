@@ -6,6 +6,7 @@ import {
   setNameSelection,
   setOrderOptions,
   setFilterOptions,
+  setStoredPage,
 } from "../../redux/actions";
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -22,6 +23,7 @@ export function LandingPage() {
       })
     );
     dispatch(setNameSelection());
+    dispatch(setStoredPage(1));
   });
 
   const handleKeyboard = (e) => {
