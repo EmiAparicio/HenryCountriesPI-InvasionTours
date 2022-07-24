@@ -54,6 +54,7 @@ router.get("/", validateStoredData, async (req, res) => {
           }
         : undefined,
       include: Activity,
+      order: ["area"],
       attributes: ["name", "flag", "continent", "population", "id"],
     });
 
