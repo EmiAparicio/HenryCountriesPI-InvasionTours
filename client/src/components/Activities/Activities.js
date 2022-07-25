@@ -31,7 +31,6 @@ export function Activities() {
         activity: "",
       })
     );
-    dispatch(setStoredPage(1));
   }, []);
 
   const countriesId = useSelector((state) => state.countriesId);
@@ -96,13 +95,18 @@ export function Activities() {
     });
   }
 
-  function handleNewCountryActivity(e) {
-    const checkbox = e.target;
+  function handleNewCountryActivity(etarget) {
+    const checkbox = etarget;
     let cId = [...countriesId];
     if (checkbox.checked) cId = [...cId, checkbox.parentElement.id];
     else cId = cId.filter((c) => c !== checkbox.parentElement.id);
 
     dispatch(setCountriesId(cId));
+  }
+  function handleLabelClick(id) {
+    document.getElementById(id).firstChild.checked =
+      !document.getElementById(id).firstChild.checked;
+    handleNewCountryActivity(document.getElementById(id).firstChild);
   }
 
   // Set "Select all" button value
@@ -204,16 +208,9 @@ export function Activities() {
                     type="checkbox"
                     value={c.name}
                     name={c.name}
-                    onChange={handleNewCountryActivity}
+                    onChange={(e) => handleNewCountryActivity(e.target)}
                   />
-                  <label
-                    onClick={() => {
-                      document.getElementById(c.id).firstChild.checked =
-                        !document.getElementById(c.id).firstChild.checked;
-                    }}
-                  >
-                    {c.name}
-                  </label>
+                  <label onClick={() => handleLabelClick(c.id)}>{c.name}</label>
                 </div>
               );
             })}

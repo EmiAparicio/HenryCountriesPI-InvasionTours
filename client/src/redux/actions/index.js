@@ -10,7 +10,7 @@ export const GET_COUNTRIES = "GET_COUNTRIES",
 
 // HOME action types
 export const SET_PAGE = "SET_PAGE",
-  SHUFFLE_COUNTRIES = "SHUFFLE_COUNTRIES";
+  MODIFY_COUNTRIES = "MODIFY_COUNTRIES";
 
 // ACTIVITIES action types
 export const SET_COUNTRIES_ID = "SET_COUNTRIES_ID";
@@ -81,12 +81,12 @@ export function setAllActivitiesTypes(activities) {
 }
 
 export function setStoredPage(page) {
-  localStorage.setItem("page", page);
+  // localStorage.setItem("page", page);
   return { type: SET_PAGE, payload: page };
 }
 
-export function shuffleCountries(countries) {
-  return { type: SHUFFLE_COUNTRIES, payload: countries };
+export function modifyCountries(countries) {
+  return { type: MODIFY_COUNTRIES, payload: countries };
 }
 
 export function setClearSearch(bool) {

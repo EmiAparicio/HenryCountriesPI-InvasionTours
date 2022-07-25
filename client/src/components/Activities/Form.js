@@ -1,5 +1,11 @@
+////////////////////////////////////////////////////////////////////////////////
+// Imports
+////////////////////////////////////////////////////////////////////////////////
+// Packages
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
+// Application files
 import { validateLetters } from "../../controllers";
 import {
   createActivity,
@@ -7,36 +13,21 @@ import {
   setCountriesId,
 } from "../../redux/actions";
 
+////////////////////////////////////////////////////////////////////////////////
+// Code
+////////////////////////////////////////////////////////////////////////////////
+// Component: form to be filled in order to create/associate an activity
 export function Form() {
   const dispatch = useDispatch();
 
-  const diffRef = useRef();
-
-  const allCountries = useSelector((state) => state.allCountries);
-
-  const countriesId = useSelector((state) => state.countriesId);
-
-  const [selectActivity, setSelectActivity] = useState("");
-  const [selectDifficulty, setSelectDifficulty] = useState(1);
-  const [selectDuration, setSelectDuration] = useState(1);
-  const [selectSeason, setSelectSeason] = useState("Verano");
-  const [errors, setErrors] = useState({
-    activity: {},
-    difficulty: {},
-    duration: {},
-    season: {},
-  });
-  function handleActivityChange(e) {
-    const input = e.target.value;
-
-    setSelectActivity((prev) => {
-      const newState =
-        !/^[a-zA-Z\s]+$/.test(input) && input !== "" ? prev : input;
-
-      setErrors((prev) => ({ ...prev, activity: validateLetters(input) }));
-      return newState;
+  // Hide error message when losing focus
+  const [errors, setErrors] = // Error messages depending on input
+    useState({
+      activity: {},
+      difficulty: {},
+      duration: {},
+      season: {},
     });
-  }
 
   function handleBlur(e) {
     const element = e.target.name;
@@ -46,11 +37,34 @@ export function Form() {
     }));
   }
 
+  //////////////////////////////////////////////////////////////////////////////
+  // ACTIVITY NAME selection handler
+  const [selectActivity, setSelectActivity] = useState("");
+
+  function handleActivityChange(e) {
+    const input = e.target.value;
+
+    // Set new local state if input has no error
+    setSelectActivity((prev) => {
+      const newState =
+        !/^[a-zA-Z\s]+$/.test(input) && input !== "" ? prev : input;
+
+      setErrors((prev) => ({ ...prev, activity: validateLetters(input) }));
+
+      return newState;
+    });
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+  // DIFFICULTY selection handler
+  const [selectDifficulty, setSelectDifficulty] = useState(1);
+
   function handleDifficultyChange(e) {
     const input = Number(e.target.value);
     let errors = "";
     let newState;
 
+    // Set new local state if input has no error
     setSelectDifficulty((prev) => {
       if (input < 1 || input > 5 || parseInt(input) !== Math.floor(input)) {
         errors = "La dificultad debe estar entre 1 y 5";
@@ -62,15 +76,21 @@ export function Form() {
         ...prev,
         difficulty: errors.length ? { err: errors } : {},
       }));
+
       return newState;
     });
   }
+
+  //////////////////////////////////////////////////////////////////////////////
+  // DURATION selection handler
+  const [selectDuration, setSelectDuration] = useState(1);
 
   function handleDurationChange(e) {
     const input = Number(e.target.value);
     let errors = "";
     let newState;
 
+    // Set new local state if input has no error
     setSelectDuration((prev) => {
       if (input < 1 || input > 30 || parseInt(input) !== Math.floor(input)) {
         errors = "La duración debe estar entre 1 y 30 días";
@@ -82,15 +102,21 @@ export function Form() {
         ...prev,
         duration: errors.length ? { err: errors } : {},
       }));
+
       return newState;
     });
   }
+
+  //////////////////////////////////////////////////////////////////////////////
+  // SEASON selection handler
+  const [selectSeason, setSelectSeason] = useState("Verano");
 
   function handleSeasonChange(e) {
     const season = e.target.value;
     let newState;
     let errors = "";
 
+    // Set new local state if input has no error
     setSelectSeason((prev) => {
       if (
         season !== "Verano" &&
@@ -107,13 +133,22 @@ export function Form() {
         ...prev,
         season: errors.length ? { err: errors } : {},
       }));
+
       return newState;
     });
   }
 
+  //////////////////////////////////////////////////////////////////////////////
+  // SUBMIT handler
+  const diffRef = useRef(); // Difficulty 1 input reference
+  const allCountries = useSelector((state) => state.allCountries);
+  const countriesId = // Associated countries from Activities.js
+    useSelector((state) => state.countriesId);
+
   function handleSubmit(e) {
     e.preventDefault();
 
+    // Preparing req.body for POST query
     const activity = {
       name: selectActivity,
       difficulty: selectDifficulty,
@@ -123,23 +158,34 @@ export function Form() {
     };
 
     dispatch(createActivity(activity));
+
+    // Reset all used data
     setSelectActivity("");
     diffRef.current.checked = true;
     setSelectDuration(1);
     setSelectSeason("Verano");
     dispatch(setClearSearch(true));
-    localStorage.setItem("countriesId", JSON.stringify(countriesId));
     dispatch(setCountriesId([]));
 
+    // Uncheck all countries boxes
     allCountries.forEach((c) => {
       if (document.getElementById(c.id))
         document.getElementById(c.id).firstChild.checked = false;
     });
+
+    // Save related countries ID to be used by CreatedActivities.js
+    localStorage.setItem("countriesId", JSON.stringify(countriesId));
   }
 
+  //////////////////////////////////////////////////////////////////////////////
+  // Render
+  //////////////////////////////////////////////////////////////////////////////
   return (
     <>
       <form onSubmit={handleSubmit}>
+        {/* ---------------------------------------------------------------- */}
+        {/* Name */}
+        {/* ---------------------------------------------------------------- */}
         <label htmlFor="activity">Nombre: </label>
         <input
           type="search"
@@ -151,7 +197,9 @@ export function Form() {
           value={selectActivity}
         />
         {errors.activity.err && <p>{errors.activity.err}</p>}
-
+        {/* ---------------------------------------------------------------- */}
+        {/* Difficulty */}
+        {/* ---------------------------------------------------------------- */}
         <label htmlFor="difficulty">Dificultad: </label>
         <div name="difficulty" onChange={handleDifficultyChange}>
           <input
@@ -162,18 +210,20 @@ export function Form() {
             value={1}
             defaultChecked
           />
-          <label>Esparcimiento</label>
+          <label>Visita</label>
           <input type="radio" id="diff2" name="difficulty" value={2} />
-          <label>Básica</label>
+          <label>Esparcimiento</label>
           <input type="radio" id="diff3" name="difficulty" value={3} />
-          <label>Normal</label>
+          <label>Aventura</label>
           <input type="radio" id="diff4" name="difficulty" value={4} />
           <label>Profesional</label>
           <input type="radio" id="diff5" name="difficulty" value={5} />
           <label>Competitiva</label>
         </div>
         {errors.difficulty.err && <p>{errors.difficulty.err}</p>}
-
+        {/* ---------------------------------------------------------------- */}
+        {/* Duration */}
+        {/* ---------------------------------------------------------------- */}
         <label htmlFor="duration">
           Duración: {document.getElementById("duration")?.value} días{" "}
         </label>
@@ -189,7 +239,9 @@ export function Form() {
           value={selectDuration}
         />
         {errors.duration.err && <p>{errors.duration.err}</p>}
-
+        {/* ---------------------------------------------------------------- */}
+        {/* Season */}
+        {/* ---------------------------------------------------------------- */}
         <label htmlFor="season">Temporada: </label>
         <select name="season" onChange={handleSeasonChange} onBlur={handleBlur}>
           <option value="Verano">Verano</option>
@@ -198,7 +250,9 @@ export function Form() {
           <option value="Primavera">Primavera</option>
         </select>
         {errors.season.err && <p>{errors.season.err}</p>}
-
+        {/* ---------------------------------------------------------------- */}
+        {/* Submit Button */}
+        {/* ---------------------------------------------------------------- */}
         <input
           type="submit"
           disabled={!countriesId.length || !selectActivity.length}

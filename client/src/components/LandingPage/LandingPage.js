@@ -1,21 +1,33 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+////////////////////////////////////////////////////////////////////////////
+// Imports
+////////////////////////////////////////////////////////////////////////////
+// Packages
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
+// Application files
 import {
-  setNameSelection,
   setOrderOptions,
   setFilterOptions,
   setStoredPage,
+  setClearSearch,
+  getCountries,
 } from "../../redux/actions";
 
-////////////////////////////////////////////////////////////////////////////////
-
+////////////////////////////////////////////////////////////////////////////
+// Code
+////////////////////////////////////////////////////////////////////////////
+// Component: prepares data and leads to the main function Home
 export function LandingPage() {
   const dispatch = useDispatch();
 
+  const allCountries = useSelector((state) => state.allCountries);
+
+  // Reset filters, pagination, and gets data from db
   useEffect(() => {
+    if (!allCountries.length) dispatch(getCountries());
     dispatch(setOrderOptions([]));
     dispatch(
       setFilterOptions({
@@ -23,10 +35,11 @@ export function LandingPage() {
         activity: "",
       })
     );
-    dispatch(setNameSelection());
+    dispatch(setClearSearch(true));
     dispatch(setStoredPage(1));
   }, []);
 
+  // Alien surprise
   const handleKeyboard = (e) => {
     e.preventDefault();
     if (e.repeat) return;
@@ -41,6 +54,9 @@ export function LandingPage() {
     return () => document.removeEventListener("keydown", handleKeyboard);
   });
 
+  //////////////////////////////////////////////////////////////////////////
+  // Render
+  //////////////////////////////////////////////////////////////////////////
   return (
     <div>
       <Link to="/home">Home</Link>

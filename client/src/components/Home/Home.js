@@ -29,14 +29,8 @@ import { useNavigate } from "react-router-dom";
 
 export function Home() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const nameSelection = useSelector((state) => state.nameSelection);
-
-  useEffect(() => {
-    dispatch(setStoredPage(1));
-    navigate("/home?page=1", { replace: true });
-  }, [nameSelection]);
 
   const allCountries = useSelector((state) => state.allCountries);
   const selectedCountries = useSelector((state) => state.selectedCountries);
@@ -110,9 +104,9 @@ export function Home() {
     dispatch(setAllActivitiesTypes(activities));
   }, [renderCountries]);
 
-  const [partialActivities, setPartialActivities] = useState([]);
   const filters = useMemo(() => {
     let [continents, activities] = [[], [...allActivitiesTypes]];
+    let partialActivities = [];
 
     if (configuredCountries.length)
       renderCountries.forEach((c) => {
@@ -120,10 +114,10 @@ export function Home() {
 
         if (renderCountries.length !== allCountries.length) {
           c.Activities?.forEach((a) => {
-            if (!activities.includes(a.name))
-              setPartialActivities((prev) => [...prev, a.name]);
+            if (!partialActivities.includes(a.name))
+              partialActivities.push(a.name);
           });
-          activities = partialActivities;
+          activities = [...partialActivities];
         }
       });
     else activities = [];
@@ -132,7 +126,8 @@ export function Home() {
       continents: alphabeticOrder(continents, "asc"),
       activities: alphabeticOrder(activities, "asc"),
     };
-  }, [renderCountries, configuredCountries]);
+  }, [renderCountries, configuredCountries.length, nameSelection]);
+  // console.log(filters.activities.length);
 
   /////////////////////////////////////////
   /////////////////////////////////////////
@@ -172,7 +167,12 @@ export function Home() {
             ? "Sin opciones"
             : "Todo"
           : filters.continents[0],
-      activity: filters.activities.length ? "Todo" : "Sin opciones",
+      activity:
+        filters.activities.length !== 1
+          ? filters.activities.length === 0
+            ? "Sin opciones"
+            : "Todo"
+          : filters.activities[0],
       order: configuredCountries.length > 1 ? "Sin orden" : "Sin opciones",
     };
   }, [filters, configuredCountries]);
@@ -181,7 +181,7 @@ export function Home() {
     return {
       continent:
         filters.continents.length > 1 ? (
-          filters.continents.map((c, id) => {
+          filters.continents.map((c) => {
             return (
               <option value={c} key={c}>
                 {c}
@@ -191,13 +191,18 @@ export function Home() {
         ) : (
           <></>
         ),
-      activity: filters.activities.map((a, id) => {
-        return (
-          <option value={a} key={a}>
-            {a}
-          </option>
-        );
-      }),
+      activity:
+        filters.activities.length > 1 ? (
+          filters.activities.map((a) => {
+            return (
+              <option value={a} key={a}>
+                {a}
+              </option>
+            );
+          })
+        ) : (
+          <></>
+        ),
       order: (
         <>
           <option value="asc">Ascendente</option>
@@ -236,19 +241,19 @@ export function Home() {
       <SearchCountry />
 
       <ClearButton
-        clear="filter"
+        type="filter"
         disabled={disabledClearButton.filter}
         text="Limpiar filtros"
       />
 
       <ClearButton
-        clear="order"
+        type="order"
         disabled={disabledClearButton.order}
         text="Quitar orden"
       />
 
       <ClearButton
-        clear="all"
+        type="all"
         disabled={disabledClearButton.all}
         text="Limpiar todo"
       />
@@ -257,7 +262,7 @@ export function Home() {
         name="continent"
         label="Continente: "
         configType="filter"
-        disabled={filters.continents.length < 1}
+        disabled={filters.continents.length <= 1}
         defaultValue={defaultValues.continent}
         defaultOption={defaultOptions.continent}
         options={options.continent}
@@ -267,7 +272,7 @@ export function Home() {
         name="activity"
         label="Actividad turística: "
         configType="filter"
-        disabled={filters.activities.length < 1}
+        disabled={filters.activities.length <= 1}
         defaultValue={defaultValues.activity}
         defaultOption={defaultOptions.activity}
         options={options.activity}

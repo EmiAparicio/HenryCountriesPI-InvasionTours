@@ -10,7 +10,7 @@ import {
 
   // HOME
   SET_PAGE,
-  SHUFFLE_COUNTRIES,
+  MODIFY_COUNTRIES,
 
   // ACTIVITIES
   SET_COUNTRIES_ID,
@@ -78,7 +78,7 @@ export default function rootReducer(state = initialState, action) {
       };
     case SET_PAGE:
       return { ...state, page: action.payload };
-    case SHUFFLE_COUNTRIES:
+    case MODIFY_COUNTRIES:
       return { ...state, allCountries: action.payload };
     case SET_CLEAR_SEARCH:
       return { ...state, clearSearch: action.payload };

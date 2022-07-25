@@ -1,15 +1,41 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+/////////////////////////////////////////////////////////////////////////////////////
+// Imports
+/////////////////////////////////////////////////////////////////////////////////////
+// Packages
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { setClearSearch, setStoredPage } from "../../../redux/actions";
-import { ShowCountries } from "./ShowCountries";
 
+// Application files
+import { ShowCountries } from "./ShowCountries";
+import {
+  setClearSearch,
+  setFilterOptions,
+  setStoredPage,
+} from "../../../redux/actions";
+
+/////////////////////////////////////////////////////////////////////////////////////
+// Code
+/////////////////////////////////////////////////////////////////////////////////////
+// Component: divide shown countries in pages
 export function Pagination({ showCountries }) {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
-  if (!localStorage.getItem("page")) localStorage.setItem("page", 1);
+  ///////////////////////////////////////////////////////////////////////////////////
+  // Page changes reaction
+  const storedPage = useSelector((state) => state.page);
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    // Locally store initial page 1
+    // if (!localStorage.getItem("page")) localStorage.setItem("page", 1);
+
+    // Navigate when page in store state changes
+    navigate(`/home?page=${storedPage}`, { replace: true });
+  }, [storedPage]);
+
+  ///////////////////////////////////////////////////////////////////////////////////
 
   function useQuery() {
     const { search } = useLocation();
@@ -18,56 +44,82 @@ export function Pagination({ showCountries }) {
   }
   const query = useQuery().get("page");
 
-  const storedPage = useSelector((state) => state.page);
-  const [page, setPage] = useState(query ? Number(query) : Number(storedPage));
-
-  useEffect(() => setPage(() => storedPage), [storedPage]);
-
-  useEffect(() => {
-    if (query) setPage(Number(query));
-    else navigate(`/home?page=1`, { replace: true });
+  const page = useMemo(() => {
+    return query ? Number(query) : 1;
   }, [query]);
 
-  function handlePage(e) {
-    const page = Number(e.target.innerText);
+  // const [page, setPage] = useState(
+  //   query ? Number(query) : 1 //Number(localStorage.getItem("page"))
+  // );
 
-    localStorage.setItem("page", page);
-    dispatch(setStoredPage(page));
-    setPage(() => page);
-    navigate(`/home?page=${page}`, { replace: false });
+  // useEffect(() => setPage(() => storedPage), [storedPage]);
+
+  // useEffect(() => {
+  //   if (query) setPage(Number(query));
+  //   else navigate(`/home?page=1`, { replace: true });
+  // }, [query]);
+
+  function handlePage(e) {
+    const newPage = Number(e.target.innerText);
+
+    dispatch(setStoredPage(newPage));
+    // setPage(() => newPage);
+    // navigate(`/home?page=${newPage}`, { replace: false });
   }
 
+  function handleClear() {
+    dispatch(
+      setFilterOptions({
+        continent: "",
+        activity: "",
+      })
+    );
+    dispatch(setClearSearch(true));
+    dispatch(setStoredPage(1));
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////
+  // Pagination numbers array depending on showCountries length
   const paginationArray = Array.from(
     Array(Math.ceil((showCountries.length + 1) / 10) + 1).keys()
   );
 
+  ///////////////////////////////////////////////////////////////////////////////////
+  // Render
+  ///////////////////////////////////////////////////////////////////////////////////
   return (
     <div>
       <div>
         {page < 1 || page >= paginationArray.length ? (
-          <span>Página no válida</span>
+          <span>Página no válida</span> // When wrong page query in URL manually
         ) : showCountries.length ? (
+          // Pagination buttons
           paginationArray.map((p, id) => {
+            // Skip case "page 0"
             if (id > 0)
+              // Show first, last, actual and ±1 pages
               return id === 1 ||
                 id === paginationArray.length - 1 ||
                 (id <= page + 1 && id >= page - 1) ? (
                 <div key={id}>
+                  {/* Button with page number */}
                   <button onClick={handlePage}>{p}</button>
                 </div>
-              ) : id <= page + 2 && id >= page - 2 ? (
+              ) : id <= page + 2 && id >= page - 2 ? ( // Pages ±2 buttons with "..."
                 <div key={id}>...</div>
               ) : (
+                // Doesn't display other pages buttons
                 <React.Fragment key={id}></React.Fragment>
               );
             return <React.Fragment key={id}></React.Fragment>;
           })
         ) : (
-          <button onClick={() => dispatch(setClearSearch(true))}>
-            Sin resultados: Limpiar
-          </button>
+          // Button: clears filters when no results are found
+          <button onClick={handleClear}>Sin resultados: Limpiar</button>
         )}
       </div>
+
+      {/* Display countries */}
       <ShowCountries showCountries={showCountries} page={page} />
     </div>
   );

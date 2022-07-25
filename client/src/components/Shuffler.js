@@ -1,13 +1,22 @@
-import React from "react";
+/////////////////////////////////////////////////////////////////////
+// Imports
+/////////////////////////////////////////////////////////////////////
+// Packages
 import { useDispatch } from "react-redux";
-import { shuffle } from "../controllers";
-import { shuffleCountries } from "../redux/actions";
 
+// Application files
+import { shuffle } from "../controllers";
+import { modifyCountries } from "../redux/actions";
+
+/////////////////////////////////////////////////////////////////////
+// Code
+/////////////////////////////////////////////////////////////////////
+// Component: shuffles "allCountries" in the store state when clicked
 export function Shuffler({ countries }) {
   const dispatch = useDispatch();
 
   function handleClick() {
-    dispatch(shuffleCountries(shuffle(countries)));
+    dispatch(modifyCountries(shuffle(countries)));
   }
 
   return (

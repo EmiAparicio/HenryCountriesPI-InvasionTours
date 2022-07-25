@@ -1,12 +1,19 @@
+////////////////////////////////////////////////////////////////////////////////
+// Imports
+////////////////////////////////////////////////////////////////////////////////
+// Packages
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
+// Application files
 import { getCountryDetail } from "../../redux/actions";
 import { Activity } from "./Activity";
 
 ////////////////////////////////////////////////////////////////////////////////
-
+// Code
+////////////////////////////////////////////////////////////////////////////////
+// Component: shows all information from a selected country by params.id
 export function Detail() {
   const { countryId } = useParams();
   const dispatch = useDispatch();
@@ -15,14 +22,14 @@ export function Detail() {
 
   useEffect(() => {
     dispatch(getCountryDetail(countryId));
-    return dispatch(getCountryDetail());
+    return () => dispatch(getCountryDetail());
   }, [countryId, dispatch]);
 
+  // Render
   return (
     <>
       {country ? (
         <div>
-          {" "}
           <span>
             País: {country?.name} ({country?.id})
           </span>
@@ -33,6 +40,7 @@ export function Detail() {
           <span>Continente: {country?.continent}</span>
           <div>
             <span>Turismo: {!country.Activities ? "Sin actividades" : ""}</span>
+
             {country?.Activities?.map((a, id) => {
               return (
                 <div key={id}>

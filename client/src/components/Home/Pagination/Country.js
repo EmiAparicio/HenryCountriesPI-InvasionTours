@@ -1,5 +1,7 @@
+// Import packages
 import { Link } from "react-router-dom";
 
+// Component: country card for ShowCountries.js
 export function Country({ name, continent, flag, id }) {
   return (
     <div>

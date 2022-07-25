@@ -1,5 +1,10 @@
+/////////////////////////////////////////////////////////////////////////////
+// Imports
+/////////////////////////////////////////////////////////////////////////////
+// Packages
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+
+// Application files
 import {
   setClearSearch,
   setFilterOptions,
@@ -7,22 +12,27 @@ import {
   setStoredPage,
 } from "../../redux/actions";
 
-export function ClearButton({ clear, disabled, text }) {
-  const navigate = useNavigate();
+/////////////////////////////////////////////////////////////////////////////
+// Code
+/////////////////////////////////////////////////////////////////////////////
+// Component: clear all filters AND/OR order configurations depending on type
+export function ClearButton({ type, disabled, text }) {
   const dispatch = useDispatch();
 
+  // Clear selected configuration type input
   function handleClick() {
-    if (clear !== "order")
+    if (type !== "order")
       dispatch(setFilterOptions({ continent: "", activity: "" }));
-    if (clear !== "filter") dispatch(setOrderOptions([]));
-    if (clear === "all") {
+    if (type !== "filter") dispatch(setOrderOptions([]));
+    if (type === "all") {
       dispatch(setClearSearch(true));
     }
 
+    // Reset page after clear
     dispatch(setStoredPage(1));
-    navigate(`/home?page=1`);
   }
 
+  // Render
   return (
     <button disabled={disabled} onClick={handleClick}>
       {text}

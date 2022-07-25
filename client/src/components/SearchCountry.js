@@ -1,33 +1,47 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+///////////////////////////////////////////////////////////////////////////////
+// Imports
+///////////////////////////////////////////////////////////////////////////////
+// Packages
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
+// Application files
 import { validateLetters } from "../controllers";
 import {
   getCountries,
   setClearSearch,
   setNameSelection,
+  setStoredPage,
 } from "../redux/actions";
 
+///////////////////////////////////////////////////////////////////////////////
+// Code
+///////////////////////////////////////////////////////////////////////////////
+// Component: search input for filtering countries by name
 export function SearchCountry() {
   const dispatch = useDispatch();
 
-  const [errors, setErrors] = useState({});
-
-  const clearSearch = useSelector((state) => state.clearSearch);
   const nameSelection = useSelector((state) => state.nameSelection);
   const [selectCountry, setSelectCountry] = useState(nameSelection);
 
+  // Set store state: selected countries and
+  // selected name for options rendering in other components
   useEffect(() => {
     dispatch(getCountries(selectCountry));
     dispatch(setNameSelection(selectCountry));
   }, [selectCountry, dispatch]);
 
+  // Clear search input when store state commands
+  const clearSearch = useSelector((state) => state.clearSearch);
   useEffect(() => {
     if (clearSearch) {
       setSelectCountry("");
       dispatch(setClearSearch(false));
     }
-  }, [clearSearch]);
+  }, [clearSearch, dispatch]);
+
+  // Set selection or errors
+  const [errors, setErrors] = useState({});
 
   function handleInputChange(e) {
     const input = e.target.value;
@@ -39,8 +53,14 @@ export function SearchCountry() {
       setErrors(validateLetters(input));
       return newSelect;
     });
+
+    if (!/^[a-zA-Z\s]+$/.test(input) && input !== "")
+      dispatch(setStoredPage(1));
   }
 
+  /////////////////////////////////////////////////////////////////////////////
+  // Render
+  /////////////////////////////////////////////////////////////////////////////
   return (
     <div>
       <input
