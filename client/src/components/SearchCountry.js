@@ -4,6 +4,7 @@
 // Packages
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 
 // Application files
 import { validateLetters } from "../controllers";
@@ -42,6 +43,7 @@ export function SearchCountry() {
 
   // Set selection or errors
   const [errors, setErrors] = useState({});
+  const location = useLocation();
 
   function handleInputChange(e) {
     const input = e.target.value;
@@ -54,8 +56,10 @@ export function SearchCountry() {
       return newSelect;
     });
 
-    if (!/^[a-zA-Z\s]+$/.test(input) && input !== "")
+    // Change pagination only in home when valid inputs
+    if (/^[a-zA-Z\s]+$/.test(input) && location.pathname.includes("home")) {
       dispatch(setStoredPage(1));
+    }
   }
 
   /////////////////////////////////////////////////////////////////////////////

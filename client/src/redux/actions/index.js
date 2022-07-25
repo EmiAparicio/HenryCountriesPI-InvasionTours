@@ -81,7 +81,6 @@ export function setAllActivitiesTypes(activities) {
 }
 
 export function setStoredPage(page) {
-  // localStorage.setItem("page", page);
   return { type: SET_PAGE, payload: page };
 }
 

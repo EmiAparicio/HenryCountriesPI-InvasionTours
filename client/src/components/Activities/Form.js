@@ -5,13 +5,8 @@
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-// Application files
 import { validateLetters } from "../../controllers";
-import {
-  createActivity,
-  setClearSearch,
-  setCountriesId,
-} from "../../redux/actions";
+import { createActivity, setCountriesId } from "../../redux/actions";
 
 ////////////////////////////////////////////////////////////////////////////////
 // Code
@@ -164,7 +159,7 @@ export function Form() {
     diffRef.current.checked = true;
     setSelectDuration(1);
     setSelectSeason("Verano");
-    dispatch(setClearSearch(true));
+    // dispatch(setClearSearch(true)); // Clear country search when submit
     dispatch(setCountriesId([]));
 
     // Uncheck all countries boxes

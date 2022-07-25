@@ -3,7 +3,7 @@
 // Imports
 /////////////////////////////////////////////////////////////////////////////////////
 // Packages
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -28,15 +28,12 @@ export function Pagination({ showCountries }) {
 
   const navigate = useNavigate();
   useEffect(() => {
-    // Locally store initial page 1
-    // if (!localStorage.getItem("page")) localStorage.setItem("page", 1);
-
     // Navigate when page in store state changes
     navigate(`/home?page=${storedPage}`, { replace: true });
   }, [storedPage]);
 
   ///////////////////////////////////////////////////////////////////////////////////
-
+  // Read page from query or store state
   function useQuery() {
     const { search } = useLocation();
 
@@ -45,28 +42,19 @@ export function Pagination({ showCountries }) {
   const query = useQuery().get("page");
 
   const page = useMemo(() => {
-    return query ? Number(query) : 1;
+    return query ? Number(query) : storedPage;
   }, [query]);
 
-  // const [page, setPage] = useState(
-  //   query ? Number(query) : 1 //Number(localStorage.getItem("page"))
-  // );
-
-  // useEffect(() => setPage(() => storedPage), [storedPage]);
-
-  // useEffect(() => {
-  //   if (query) setPage(Number(query));
-  //   else navigate(`/home?page=1`, { replace: true });
-  // }, [query]);
-
+  ///////////////////////////////////////////////////////////////////////////////////
+  // HANDLERS
+  // Change page when clicked from button
   function handlePage(e) {
     const newPage = Number(e.target.innerText);
 
     dispatch(setStoredPage(newPage));
-    // setPage(() => newPage);
-    // navigate(`/home?page=${newPage}`, { replace: false });
   }
 
+  // Clear filters and reset page when click "NoRes" button
   function handleClear() {
     dispatch(
       setFilterOptions({
@@ -115,7 +103,9 @@ export function Pagination({ showCountries }) {
           })
         ) : (
           // Button: clears filters when no results are found
-          <button onClick={handleClear}>Sin resultados: Limpiar</button>
+          <button name="NoRes" onClick={handleClear}>
+            Sin resultados: Limpiar
+          </button>
         )}
       </div>
 

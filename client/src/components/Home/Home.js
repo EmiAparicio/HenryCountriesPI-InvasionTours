@@ -1,57 +1,63 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useMemo, useState } from "react";
+////////////////////////////////////////////////////////////////////////////////
+// Imports
+////////////////////////////////////////////////////////////////////////////////
+// Packages
+import { useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  getCountries,
-  setAllActivitiesTypes,
-  setFilterOptions,
-  setOrderOptions,
-  setStoredPage,
-} from "../../redux/actions";
 
+// Application files
 import { SearchCountry } from "../SearchCountry";
 import { Pagination } from "./Pagination/Pagination";
 import { Shuffler } from "../Shuffler";
 import { ConfigRender } from "./ConfigRender";
 import { alphabeticOrder } from "../../controllers";
 import { ClearButton } from "./ClearButton";
-import { useNavigate } from "react-router-dom";
+import {
+  getCountries,
+  setAllActivitiesTypes,
+  setFilterOptions,
+  setOrderOptions,
+} from "../../redux/actions";
 
 ////////////////////////////////////////////////////////////////////////////////
+// Code
 ////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-
+// Component: displays and filters/orders countries
 export function Home() {
   const dispatch = useDispatch();
 
-  const nameSelection = useSelector((state) => state.nameSelection);
-
+  //////////////////////////////////////////////////////////////////////////////
+  // Data manipulation
   const allCountries = useSelector((state) => state.allCountries);
   const selectedCountries = useSelector((state) => state.selectedCountries);
+  const nameSelection = useSelector((state) => state.nameSelection);
 
+  // Get countries from db if not in store
   useEffect(() => {
     if (!allCountries.length) dispatch(getCountries());
   }, [allCountries]);
 
+  // Change rendered countries when name has been selected from SearchCountry.js
   const renderCountries = useMemo(() => {
     return nameSelection === "" ? [...allCountries] : [...selectedCountries];
   }, [allCountries, selectedCountries]);
 
+  // Obtain configuration settings from store
   const orderConfig = useSelector((state) => state.orderConfig);
   const filterConfig = useSelector((state) => state.filterConfig);
 
+  // Filtered/Ordered array from renderCountries manipulation
   const configuredCountries = useMemo(() => {
+    // Apply filters
     const filteredRender = renderCountries.filter(
       (c) =>
+        // Filter CONTINENT
         (filterConfig.continent.length
           ? c.continent === filterConfig.continent
           : true) &&
+        // Filter ACTIVITY
         (filterConfig.activity.length
           ? c.Activities.reduce((bool, act) => {
               return bool || act.name === filterConfig.activity;
@@ -59,15 +65,19 @@ export function Home() {
           : true)
     );
 
+    // Apply order
     let configuredRender = filteredRender;
 
+    // Order ALPHABET
     if (orderConfig.length && orderConfig[0] === "alphabet") {
       configuredRender = alphabeticOrder(
         filteredRender,
         orderConfig[1],
         "name"
       );
-    } else if (orderConfig.length && orderConfig[0] === "population") {
+    }
+    // Order POPULATION
+    if (orderConfig.length && orderConfig[0] === "population") {
       configuredRender = configuredRender.sort((a, b) => {
         const [A, B] = [a.population, b.population];
 
@@ -86,14 +96,11 @@ export function Home() {
     return configuredRender;
   }, [orderConfig, filterConfig, renderCountries]);
 
-  /////////////////////////////////////////
-
+  //////////////////////////////////////////////////////////////////////////////
+  // Setting filters/order available options
   const allActivitiesTypes = useSelector((state) => state.allActivitiesTypes);
 
-  useEffect(() => {
-    dispatch(getCountries());
-  }, [allActivitiesTypes.length]);
-
+  // Store existing activity names
   useEffect(() => {
     let activities = [...allActivitiesTypes];
     renderCountries.forEach((c) => {
@@ -104,14 +111,23 @@ export function Home() {
     dispatch(setAllActivitiesTypes(activities));
   }, [renderCountries]);
 
+  // If new activity has been added, retreive data from db again
+  useEffect(() => {
+    dispatch(getCountries());
+  }, [allActivitiesTypes.length]);
+
+  // Set filters options depending on rendered (not filtered) countries
   const filters = useMemo(() => {
     let [continents, activities] = [[], [...allActivitiesTypes]];
     let partialActivities = [];
 
+    // If no countries after filters, no options will be available
     if (configuredCountries.length)
       renderCountries.forEach((c) => {
+        // Filter Continent options
         if (!continents.includes(c.continent)) continents.push(c.continent);
 
+        // Filter Activity options
         if (renderCountries.length !== allCountries.length) {
           c.Activities?.forEach((a) => {
             if (!partialActivities.includes(a.name))
@@ -126,12 +142,11 @@ export function Home() {
       continents: alphabeticOrder(continents, "asc"),
       activities: alphabeticOrder(activities, "asc"),
     };
-  }, [renderCountries, configuredCountries.length, nameSelection]);
-  // console.log(filters.activities.length);
+  }, [renderCountries, configuredCountries.length]);
 
-  /////////////////////////////////////////
-  /////////////////////////////////////////
-  // Components properties
+  //////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
+  // COMPONENTS PROPERTIES
   const defaultValues = useMemo(() => {
     return {
       continent: filterConfig.continent
@@ -235,29 +250,40 @@ export function Home() {
     return false;
   }, [filterConfig, orderConfig, nameSelection]);
 
+  //////////////////////////////////////////////////////////////////////////////
+  // Render
+  //////////////////////////////////////////////////////////////////////////////
   return (
     <>
+      {/* Shuffle displayed countries BUTTON */}
       {shufflerHidder && <Shuffler countries={[...allCountries]} />}
       <SearchCountry />
 
+      {/* ------------------------------------------------------------------ */}
+      {/* Clear BUTTONS */}
+      {/* ------------------------------------------------------------------ */}
+      {/* FILTERS Clear */}
       <ClearButton
         type="filter"
         disabled={disabledClearButton.filter}
         text="Limpiar filtros"
       />
-
+      {/* ORDER Clear */}
       <ClearButton
         type="order"
         disabled={disabledClearButton.order}
         text="Quitar orden"
       />
-
+      {/* ALL Clear */}
       <ClearButton
         type="all"
         disabled={disabledClearButton.all}
         text="Limpiar todo"
       />
-
+      {/* ------------------------------------------------------------------ */}
+      {/* FILTERS AND ORDERS */}
+      {/* ------------------------------------------------------------------ */}
+      {/* Filter: CONTINENT */}
       <ConfigRender
         name="continent"
         label="Continente: "
@@ -268,6 +294,7 @@ export function Home() {
         options={options.continent}
         setConfigOptions={setFilterOptions}
       />
+      {/* Filter: ACTIVITY */}
       <ConfigRender
         name="activity"
         label="Actividad turística: "
@@ -278,6 +305,7 @@ export function Home() {
         options={options.activity}
         setConfigOptions={setFilterOptions}
       />
+      {/* Order: ALPHABET */}
       <ConfigRender
         name="alphabet"
         label="Alfabéticamente: "
@@ -288,6 +316,7 @@ export function Home() {
         options={options.order}
         setConfigOptions={setOrderOptions}
       />
+      {/* Order: POPULATION */}
       <ConfigRender
         name="population"
         label="Población: "
@@ -298,6 +327,7 @@ export function Home() {
         options={options.order}
         setConfigOptions={setOrderOptions}
       />
+      {/* Pagination component: displays countries */}
       <Pagination showCountries={configuredCountries} />
     </>
   );

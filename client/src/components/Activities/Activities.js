@@ -1,58 +1,55 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState, useMemo } from "react";
+//////////////////////////////////////////////////////////////////////////////////
+// Imports
+//////////////////////////////////////////////////////////////////////////////////
+// Packages
+import { useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import {
-  getCountries,
-  setOrderOptions,
-  setFilterOptions,
-  createActivity,
-  setAllActivitiesTypes,
-  setStoredPage,
-  setCountriesId,
-} from "../../redux/actions";
-
+// Application files
 import { alphabeticOrder } from "../../controllers";
-
 import { CreatedActivities } from "./CreatedActivities";
 import { SearchCountry } from "../SearchCountry";
 import { Form } from "./Form";
+import {
+  getCountries,
+  createActivity,
+  setAllActivitiesTypes,
+  setCountriesId,
+} from "../../redux/actions";
 
-////////////////////////////////////////////////////////////////////////////////
-
+//////////////////////////////////////////////////////////////////////////////////
+// Code
+//////////////////////////////////////////////////////////////////////////////////
+// Component: create/associate activities with countries
 export function Activities() {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(setOrderOptions([]));
-    dispatch(
-      setFilterOptions({
-        continent: "",
-        activity: "",
-      })
-    );
-  }, []);
-
-  const countriesId = useSelector((state) => state.countriesId);
+  ////////////////////////////////////////////////////////////////////////////////
+  // Data manipulation
   const allCountries = useSelector((state) => state.allCountries);
   const selectedCountries = useSelector((state) => state.selectedCountries);
   const nameSelection = useSelector((state) => state.nameSelection);
-  const createdActivity = useSelector((state) => state.createdActivity);
-  const allActivitiesTypes = useSelector((state) => state.allActivitiesTypes);
 
   const countryOptions = useMemo(() => {
+    // Get countries from db if not in store
     if (!allCountries.length) dispatch(getCountries());
 
+    // Change rendered countries when name has been selected from SearchCountry.js
     return nameSelection === ""
       ? alphabeticOrder([...allCountries], "asc", "name")
       : alphabeticOrder([...selectedCountries], "asc", "name");
   }, [allCountries, selectedCountries]);
 
-  let [dummyAct, setDummyAct] = useState(allActivitiesTypes);
+  ////////////////////////////////////////////////////////////////////////////////
+  // Check existing activities and store added ones
+  const allActivitiesTypes = useSelector((state) => state.allActivitiesTypes);
+  const createdActivity = useSelector((state) => state.createdActivity);
   const existingActivities = useMemo(() => {
-    let activities = [...dummyAct];
+    let activities = [...allActivitiesTypes];
 
-    if (!dummyAct.length) {
+    // If no activity types are stored, check in allCountries
+    if (!activities.length) {
       allCountries.forEach((c) => {
         c.Activities?.forEach((a) => {
           if (!activities.includes(a.name)) activities.push(a.name);
@@ -60,56 +57,25 @@ export function Activities() {
       });
     }
 
+    // Only if new activity name is created, store it
     if (
       createdActivity.activity &&
       !activities.includes(createdActivity.activity.name)
     )
       activities.push(createdActivity.activity.name);
 
-    setDummyAct(() => alphabeticOrder(activities, "asc"));
     return alphabeticOrder(activities, "asc");
   }, [allCountries, createdActivity]);
 
+  // Update stored activity types
   useEffect(() => {
     dispatch(setAllActivitiesTypes(existingActivities));
   }, [existingActivities]);
 
-  function handleCheckAll(e) {
-    e.preventDefault();
+  ////////////////////////////////////////////////////////////////////////////////
+  // Set "Select all" button text
+  const countriesId = useSelector((state) => state.countriesId);
 
-    const boolean = selectAll === "Seleccionar todo" ? true : false;
-    let cId = [...countriesId];
-    countryOptions.forEach((c) => {
-      // Check or uncheck all depending on 'boolean'
-      document.getElementById(c.id).firstChild.checked = boolean;
-
-      // Add or remove country id to activity
-
-      cId = boolean
-        ? !cId.find((pc) => pc === c.id)
-          ? [...cId, c.id]
-          : cId
-        : cId.filter((p) => p !== c.id);
-
-      dispatch(setCountriesId(cId));
-    });
-  }
-
-  function handleNewCountryActivity(etarget) {
-    const checkbox = etarget;
-    let cId = [...countriesId];
-    if (checkbox.checked) cId = [...cId, checkbox.parentElement.id];
-    else cId = cId.filter((c) => c !== checkbox.parentElement.id);
-
-    dispatch(setCountriesId(cId));
-  }
-  function handleLabelClick(id) {
-    document.getElementById(id).firstChild.checked =
-      !document.getElementById(id).firstChild.checked;
-    handleNewCountryActivity(document.getElementById(id).firstChild);
-  }
-
-  // Set "Select all" button value
   const selectAll = useMemo(() => {
     return !countryOptions.length
       ? "Seleccionar todo"
@@ -126,12 +92,71 @@ export function Activities() {
       : "Seleccionar todo";
   }, [countriesId, countryOptions]);
 
+  ////////////////////////////////////////////////////////////////////////////////
+  // HANDLERS
+  // Single country picked
+  function handleNewCountryActivity(etarget) {
+    const checkbox = etarget;
+    let cId = [...countriesId];
+    if (checkbox.checked) cId = [...cId, checkbox.parentElement.id];
+    else cId = cId.filter((c) => c !== checkbox.parentElement.id);
+
+    dispatch(setCountriesId(cId));
+  }
+
+  // Check box when click on label
+  function handleLabelClick(id) {
+    document.getElementById(id).firstChild.checked =
+      !document.getElementById(id).firstChild.checked;
+    handleNewCountryActivity(document.getElementById(id).firstChild);
+  }
+
+  // Check/Uncheck all rendered countries boxes
+  function handleCheckAll(e) {
+    e.preventDefault();
+
+    // Check or uncheck all depending on Button value
+    const boolean = selectAll === "Seleccionar todo" ? true : false;
+    let cId = [...countriesId];
+    countryOptions.forEach((c) => {
+      document.getElementById(c.id).firstChild.checked = boolean;
+
+      // Add or remove country id to new activity settings
+      cId = boolean
+        ? !cId.find((pc) => pc === c.id)
+          ? [...cId, c.id]
+          : cId
+        : cId.filter((p) => p !== c.id);
+
+      dispatch(setCountriesId(cId));
+    });
+  }
+
+  // When changing rendering, keep checked countries
+  useEffect(() => {
+    allCountries.forEach((c) => {
+      if (
+        document.getElementById(c.id) &&
+        countriesId.some((id) => id === c.id)
+      )
+        document.getElementById(c.id).firstChild.checked = true;
+    });
+  }, [countryOptions]);
+
+  ////////////////////////////////////////////////////////////////////////////////
+  // CREATED ACTIVITY COMPONENT settings
   const createdActivityComponent = useMemo(() => {
+    // If new activity is set
     if (createdActivity.activity) {
+      // Get locally stored countries associated
+      const localCountriesId = JSON.parse(localStorage.getItem("countriesId"));
+
+      // Text settings
       const creationEffect = createActivity.created
         ? "Creada y añadida"
         : "Añadida";
-      const localCountriesId = JSON.parse(localStorage.getItem("countriesId"));
+
+      const join = localCountriesId.length > 1 ? "a los países" : "al país";
 
       const addedCountries = localCountriesId.reduce((str, localCountry, i) => {
         return (
@@ -141,8 +166,7 @@ export function Activities() {
         );
       }, "");
 
-      const join = localCountriesId.length > 1 ? "a los países" : "al país";
-
+      // Return data
       return {
         active: true,
         name: createdActivity.activity?.name,
@@ -154,18 +178,12 @@ export function Activities() {
     } else return { active: false };
   }, [createdActivity]);
 
-  useEffect(() => {
-    allCountries.forEach((c) => {
-      if (
-        document.getElementById(c.id) &&
-        countriesId.some((id) => id === c.id)
-      )
-        document.getElementById(c.id).firstChild.checked = true;
-    });
-  }, [countryOptions]); // eslint-disable-line react-hooks/exhaustive-deps
-
+  ////////////////////////////////////////////////////////////////////////////////
+  // Render
+  ////////////////////////////////////////////////////////////////////////////////
   return (
     <>
+      {/* Render existing activities if any */}
       {existingActivities.length ? (
         <div>
           <span>Actividades existentes:</span>
@@ -177,14 +195,18 @@ export function Activities() {
         <></>
       )}
 
+      {/* Activity creation form */}
       <Form countriesId={countriesId} />
 
+      {/* Countries searching */}
       <SearchCountry />
 
+      {/* Select all actual countries for activity association */}
       <button onClick={handleCheckAll} disabled={!countryOptions.length}>
         {selectAll}
       </button>
 
+      {/* Pop-up component after new activity is set */}
       {createdActivityComponent.active ? (
         <CreatedActivities
           name={createdActivityComponent.name}
@@ -197,6 +219,7 @@ export function Activities() {
         <></>
       )}
 
+      {/* Display checkboxes for countries to choose */}
       <div>
         <span>Países: </span>
         {!countryOptions.length
