@@ -30,6 +30,7 @@ function validateStoredData(req, res, next) {
               subregion: c.subregion,
               area: c.area,
               population: c.population,
+              latlng: c.latlng,
             };
           });
           Country.bulkCreate(countriesDB).then(() => {

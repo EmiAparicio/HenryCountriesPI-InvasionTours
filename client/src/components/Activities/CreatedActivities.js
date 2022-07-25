@@ -28,7 +28,7 @@ export function CreatedActivities({
     localStorage.removeItem("countriesId");
   }
 
-  // Makes sure localStorage cleanse is getting done when leaving page
+  // Makes sure localStorage cleaning is getting done when leaving page
   useEffect(() => {
     return () => handleClose();
   }, []);

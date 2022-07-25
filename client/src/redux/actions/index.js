@@ -1,23 +1,35 @@
+// Import packages
 import axios from "axios";
 
-export const GET_COUNTRIES = "GET_COUNTRIES",
-  SELECT_COUNTRIES = "SELECT_COUNTRIES",
+////////////////////////////////////////////////////////////////////////////
+// Export ACTION TYPES
+
+// HOME
+export const SET_PAGE = "SET_PAGE",
+  MODIFY_COUNTRIES = "MODIFY_COUNTRIES",
   SET_ORDER_OPTIONS = "SET_ORDER_OPTIONS",
-  SET_FILTER_OPTIONS = "SET_FILTER_OPTIONS",
-  GET_COUNTRY_DETAIL = "GET_COUNTRY_DETAIL",
+  SET_FILTER_OPTIONS = "SET_FILTER_OPTIONS";
+
+// COUNTRY DETAIL
+export const GET_COUNTRY_DETAIL = "GET_COUNTRY_DETAIL";
+
+// ACTIVITIES
+export const SET_COUNTRIES_ID = "SET_COUNTRIES_ID",
   CREATE_ACTIVITY = "CREATE_ACTIVITY",
   SET_ALL_ACTIVITIES_TYPES = "SET_ALL_ACTIVITIES_TYPES";
 
-// HOME action types
-export const SET_PAGE = "SET_PAGE",
-  MODIFY_COUNTRIES = "MODIFY_COUNTRIES";
+// GENERAL
+export const SET_CLEAR_SEARCH = "SET_CLEAR_SEARCH",
+  GET_COUNTRIES = "GET_COUNTRIES",
+  SELECT_COUNTRIES = "SELECT_COUNTRIES";
 
-// ACTIVITIES action types
-export const SET_COUNTRIES_ID = "SET_COUNTRIES_ID";
+////////////////////////////////////////////////////////////////////////////
+// Export FUNCTIONS TO DISPATCH
+////////////////////////////////////////////////////////////////////////////
 
-// GENERAL action types
-export const SET_CLEAR_SEARCH = "SET_CLEAR_SEARCH";
-
+////////////////////////////////////////////////////////////////////////////
+// GENERAL
+// Get countries from db, all or selected by name as URL query
 export function getCountries(name = "?") {
   return function (dispatch) {
     fetch(
@@ -40,22 +52,46 @@ export function getCountries(name = "?") {
   };
 }
 
+// Store selected country name
 export function setNameSelection(name = "") {
   return { type: SELECT_COUNTRIES, payload: name };
 }
 
+// Toggle country search cleaning
+export function setClearSearch(bool) {
+  return { type: SET_CLEAR_SEARCH, payload: bool };
+}
+
+////////////////////////////////////////////////////////////////////////////
+// HOME
+// Store selected page (pagination)
+export function setStoredPage(page) {
+  return { type: SET_PAGE, payload: page };
+}
+
+// Store ORDER selected
 export function setOrderOptions(order) {
   return { type: SET_ORDER_OPTIONS, payload: order };
 }
 
+// Store FILTERS selected
 export function setFilterOptions(filter) {
   return { type: SET_FILTER_OPTIONS, payload: filter };
 }
 
+// Function called when Shuffling All Countries
+export function modifyCountries(countries) {
+  return { type: MODIFY_COUNTRIES, payload: countries };
+}
+
+////////////////////////////////////////////////////////////////////////////
+// COUNTRY DETAIL
+// Get country details, selected by id in params
 export function getCountryDetail(id) {
   return async function (dispatch) {
     if (id) {
       const resp = await axios.get(`http://localhost:3001/countries/${id}`);
+
       dispatch({
         type: GET_COUNTRY_DETAIL,
         payload: resp.data,
@@ -64,6 +100,9 @@ export function getCountryDetail(id) {
   };
 }
 
+////////////////////////////////////////////////////////////////////////////
+// ACTIVITIES
+// Post activity to add/associate in db
 export function createActivity(activity) {
   return activity
     ? function (dispatch) {
@@ -76,22 +115,12 @@ export function createActivity(activity) {
     : { type: CREATE_ACTIVITY, payload: {} };
 }
 
+// Store all activity types (names)
 export function setAllActivitiesTypes(activities) {
   return { type: SET_ALL_ACTIVITIES_TYPES, payload: activities };
 }
 
-export function setStoredPage(page) {
-  return { type: SET_PAGE, payload: page };
-}
-
-export function modifyCountries(countries) {
-  return { type: MODIFY_COUNTRIES, payload: countries };
-}
-
-export function setClearSearch(bool) {
-  return { type: SET_CLEAR_SEARCH, payload: bool };
-}
-
+// Store countries ids to be associated to added activity
 export function setCountriesId(ids) {
   return { type: SET_COUNTRIES_ID, payload: ids };
 }

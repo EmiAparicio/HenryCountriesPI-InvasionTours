@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 // Application files
 import { getCountryDetail } from "../../redux/actions";
 import { Activity } from "./Activity";
+import { Maps } from "./Maps";
 
 ////////////////////////////////////////////////////////////////////////////////
 // Code
@@ -39,6 +40,7 @@ export function Detail() {
           <span>Población: {country?.population}</span>
           <span>Continente: {country?.continent}</span>
           <div>
+            {/* Show activities if any */}
             <span>Turismo: {!country.Activities ? "Sin actividades" : ""}</span>
 
             {country?.Activities?.map((a, id) => {
@@ -56,8 +58,12 @@ export function Detail() {
           </div>
         </div>
       ) : (
+        // Error when wrong country id in URL params
         <span>No existe un país con el código {countryId}</span>
       )}
+
+      {/* Google Maps Component */}
+      <Maps />
     </>
   );
 }

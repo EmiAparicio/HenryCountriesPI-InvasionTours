@@ -1,4 +1,7 @@
-// Import action types
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Imports
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Action types
 import {
   GET_COUNTRIES,
   SELECT_COUNTRIES,
@@ -19,32 +22,36 @@ import {
   SET_CLEAR_SEARCH,
 } from "../actions";
 
-///////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Code
-///////////////////////////////////////////////////////////////////////////////
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Store state properties
 const initialState = {
-  allCountries: [], // All countries from back: /countries
-  nameSelection: "", // Name filter
-  selectedCountries: [], // Selected countries from back: /countries?name
+  // HOME
+  page: localStorage.getItem("page") ? Number(localStorage.getItem("page")) : 1, // Actual page of countries shown
   orderConfig: [], // Order configuration: ["population/alphabet", "asc, desc"]
   filterConfig: {
     // Filters applied
     continent: "", // Show only countries of this continent
     activity: "", // Show only countries with this activity
   },
+
+  // COUNTRY DETAIL
   countryDetail: {}, // Selected country details from back: /countries/:id
+
+  // ACTIVITIES
+  countriesId: [], // Selected coutries to associate new activity
+
+  // GENERAL
+  allCountries: [], // All countries from back: /countries
+  nameSelection: "", // Name filter
+  selectedCountries: [], // Selected countries from back: /countries?name
+  clearSearch: false, // Toggle country searching input cleaning
   createdActivity: {}, // New created or assigned activity
   allActivitiesTypes: [], // All activities different names
-
-  // HOME
-  page: localStorage.getItem("page") ? Number(localStorage.getItem("page")) : 1, // Actual page of countries shown
-  // ACTIVITIES
-  countriesId: [],
-  // GENERAL
-  clearSearch: false,
 };
 
+// Reducer to be imported by store/index.js
 export default function rootReducer(state = initialState, action) {
   switch (action.type) {
     case GET_COUNTRIES:
