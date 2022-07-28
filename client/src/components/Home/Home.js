@@ -21,6 +21,15 @@ import {
   setOrderOptions,
 } from "../../redux/actions";
 
+// CSS
+import homeMain from "../../styles/components/Home/Home.module.css";
+
+import configMain from "../../styles/components/Home/ConfigRender.module.css";
+
+const home = homeMain; //homeMain invadedHome
+
+const config = configMain; // configMain invadedConfig
+
 ////////////////////////////////////////////////////////////////////////////////
 // Code
 ////////////////////////////////////////////////////////////////////////////////
@@ -198,7 +207,7 @@ export function Home() {
         filters.continents.length > 1 ? (
           filters.continents.map((c) => {
             return (
-              <option value={c} key={c}>
+              <option value={c} key={c} className={`${config.option}`}>
                 {c}
               </option>
             );
@@ -210,7 +219,7 @@ export function Home() {
         filters.activities.length > 1 ? (
           filters.activities.map((a) => {
             return (
-              <option value={a} key={a}>
+              <option value={a} key={a} className={`${config.option}`}>
                 {a}
               </option>
             );
@@ -220,8 +229,12 @@ export function Home() {
         ),
       order: (
         <>
-          <option value="asc">Ascendente</option>
-          <option value="desc">Descendente</option>
+          <option value="asc" className={`${config.option}`}>
+            Ascendente
+          </option>
+          <option value="desc" className={`${config.option}`}>
+            Descendente
+          </option>
         </>
       ),
     };
@@ -254,81 +267,105 @@ export function Home() {
   // Render
   //////////////////////////////////////////////////////////////////////////////
   return (
-    <>
-      {/* Shuffle displayed countries BUTTON */}
-      {shufflerHidder && <Shuffler countries={[...allCountries]} />}
-      <SearchCountry />
+    <div>
+      <div className={`${home.container}`}>
+        <div className={`${home.filters}`}>
+          <div className={`${home.clearFilters}`}>
+            {/* FILTERS Clear */}
+            <ClearButton
+              type="filter"
+              disabled={disabledClearButton.filter}
+              text="Limpiar filtros"
+            />
+          </div>
+          <div className={`${home.continentFilter}`}>
+            {/* Filter: CONTINENT */}
+            <ConfigRender
+              name="continent"
+              label="Continente: "
+              configType="filter"
+              disabled={filters.continents.length <= 1}
+              defaultValue={defaultValues.continent}
+              defaultOption={defaultOptions.continent}
+              options={options.continent}
+              setConfigOptions={setFilterOptions}
+            />
+          </div>
+          <div className={`${home.activityFilter}`}>
+            {/* Filter: ACTIVITY */}
+            <ConfigRender
+              name="activity"
+              label="Actividad: "
+              configType="filter"
+              disabled={filters.activities.length <= 1}
+              defaultValue={defaultValues.activity}
+              defaultOption={defaultOptions.activity}
+              options={options.activity}
+              setConfigOptions={setFilterOptions}
+            />
+          </div>
+        </div>
+        <div className={`${home.order}`}>
+          <div className={`${home.clearOrder}`}>
+            {/* ORDER Clear */}
+            <ClearButton
+              type="order"
+              disabled={disabledClearButton.order}
+              text="Quitar orden"
+            />
+          </div>
+          <div className={`${home.alphabetOrder}`}>
+            {/* Order: ALPHABET */}
+            <ConfigRender
+              name="alphabet"
+              label="Alfabéticamente: "
+              configType="order"
+              disabled={configuredCountries.length <= 1}
+              defaultValue={defaultValues.alphabet}
+              defaultOption={defaultOptions.order}
+              options={options.order}
+              setConfigOptions={setOrderOptions}
+            />
+          </div>
+          <div className={`${home.populationOrder}`}>
+            {/* Order: POPULATION */}
+            <ConfigRender
+              name="population"
+              label="Población: "
+              configType="order"
+              disabled={configuredCountries.length <= 1}
+              defaultValue={defaultValues.population}
+              defaultOption={defaultOptions.order}
+              options={options.order}
+              setConfigOptions={setOrderOptions}
+            />
+          </div>
+        </div>
+        <div className={`${home.country}`}>
+          {/* Shuffle displayed countries BUTTON */}
+          {
+            <Shuffler
+              countries={[...allCountries]}
+              shufflerHidder={shufflerHidder}
+            />
+          }
 
-      {/* ------------------------------------------------------------------ */}
-      {/* Clear BUTTONS */}
-      {/* ------------------------------------------------------------------ */}
-      {/* FILTERS Clear */}
-      <ClearButton
-        type="filter"
-        disabled={disabledClearButton.filter}
-        text="Limpiar filtros"
-      />
-      {/* ORDER Clear */}
-      <ClearButton
-        type="order"
-        disabled={disabledClearButton.order}
-        text="Quitar orden"
-      />
-      {/* ALL Clear */}
-      <ClearButton
-        type="all"
-        disabled={disabledClearButton.all}
-        text="Limpiar todo"
-      />
-      {/* ------------------------------------------------------------------ */}
-      {/* FILTERS AND ORDERS */}
-      {/* ------------------------------------------------------------------ */}
-      {/* Filter: CONTINENT */}
-      <ConfigRender
-        name="continent"
-        label="Continente: "
-        configType="filter"
-        disabled={filters.continents.length <= 1}
-        defaultValue={defaultValues.continent}
-        defaultOption={defaultOptions.continent}
-        options={options.continent}
-        setConfigOptions={setFilterOptions}
-      />
-      {/* Filter: ACTIVITY */}
-      <ConfigRender
-        name="activity"
-        label="Actividad turística: "
-        configType="filter"
-        disabled={filters.activities.length <= 1}
-        defaultValue={defaultValues.activity}
-        defaultOption={defaultOptions.activity}
-        options={options.activity}
-        setConfigOptions={setFilterOptions}
-      />
-      {/* Order: ALPHABET */}
-      <ConfigRender
-        name="alphabet"
-        label="Alfabéticamente: "
-        configType="order"
-        disabled={configuredCountries.length <= 1}
-        defaultValue={defaultValues.alphabet}
-        defaultOption={defaultOptions.order}
-        options={options.order}
-        setConfigOptions={setOrderOptions}
-      />
-      {/* Order: POPULATION */}
-      <ConfigRender
-        name="population"
-        label="Población: "
-        configType="order"
-        disabled={configuredCountries.length <= 1}
-        defaultValue={defaultValues.population}
-        defaultOption={defaultOptions.order}
-        options={options.order}
-        setConfigOptions={setOrderOptions}
-      />
+          <div className={`${home.clearAll}`}>
+            {/* ALL Clear */}
+            <ClearButton
+              type="all"
+              disabled={disabledClearButton.all}
+              text="Limpiar todo"
+            />
+          </div>
+
+          {/* Search country by name */}
+          <SearchCountry />
+        </div>
+      </div>
+
       {/* Pagination component: displays countries */}
       <Pagination showCountries={configuredCountries} />
-    </>
+    </div>
   );
 }

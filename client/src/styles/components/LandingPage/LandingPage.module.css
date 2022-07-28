@@ -1,0 +1,87 @@
+.bgImage {
+  user-select: none;
+  background-image: url("../../images/countriesMain.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: drop-shadow(0 0 1px black) drop-shadow(0 0 30px rgb(98, 80, 35))
+    drop-shadow(0 0 5px rgb(98, 80, 35));
+  width: 95vw;
+  height: 95vh;
+  overflow: visible;
+
+  display: flex;
+  align-items: flex-end;
+}
+
+.bgColor {
+  display: flex;
+  background-color: rgb(80, 167, 218);
+  width: 100vw;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+
+.enter {
+  width: 17vw;
+  height: 22vh;
+  filter: none;
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 700;
+  font-size: 4rem;
+  color: rgb(55, 52, 53);
+  transition: filter 1s;
+  position: absolute;
+  bottom: 10vh;
+  left: 2vw;
+
+  animation: enterButtonAnimation 1s infinite;
+}
+
+@keyframes enterButtonAnimation {
+  from {
+    filter: drop-shadow(0 2px 2px);
+    bottom: 10vh;
+  }
+  50% {
+    filter: drop-shadow(0 5px 2px);
+    bottom: 10.2vh;
+  }
+  to {
+    filter: drop-shadow(0 2px 2px);
+    bottom: 10vhvh;
+  }
+}
+
+.enter:hover {
+  bottom: 10vh;
+  animation: enterButtonPreAnimationHover 1s ease 0s 1,
+    enterButtonAnimationHover 2s ease 1s infinite;
+}
+
+@keyframes enterButtonPreAnimationHover {
+  from {
+    filter: drop-shadow(0 5px 2px);
+    bottom: 10vh;
+  }
+  to {
+    filter: drop-shadow(0 45px 2px);
+    bottom: 13.5vh;
+  }
+}
+
+@keyframes enterButtonAnimationHover {
+  from {
+    filter: drop-shadow(0 45px 2px);
+    bottom: 13.5vh;
+  }
+  50% {
+    filter: drop-shadow(0 35px 2px);
+    bottom: 12.5vh;
+  }
+  to {
+    filter: drop-shadow(0 45px 2px);
+    bottom: 13.5vh;
+  }
+}

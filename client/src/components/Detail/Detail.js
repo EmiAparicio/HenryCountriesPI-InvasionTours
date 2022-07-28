@@ -28,7 +28,7 @@ export function Detail() {
 
   // Render
   return (
-    <>
+    <div>
       {country ? (
         <div>
           <span>
@@ -64,6 +64,6 @@ export function Detail() {
 
       {/* Google Maps Component */}
       <Maps />
-    </>
+    </div>
   );
 }

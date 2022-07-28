@@ -16,6 +16,10 @@ import {
   getCountries,
 } from "../../redux/actions";
 
+// CSS
+import landing from "../../styles/components/LandingPage/LandingPage.module.css";
+import planeButton from "../../styles/images/planeButton.png";
+
 ////////////////////////////////////////////////////////////////////////////
 // Code
 ////////////////////////////////////////////////////////////////////////////
@@ -58,8 +62,26 @@ export function LandingPage() {
   // Render
   //////////////////////////////////////////////////////////////////////////
   return (
-    <div>
-      <Link to="/home">Home</Link>
+    <div className={`${landing.bgColor}`}>
+      <div className={`${landing.bgImage}`} />
+      <div className={`${landing.enter}`}>
+        <Link
+          to="/home"
+          style={{
+            textDecoration: "none",
+            display: "block",
+            width: "100%",
+            height: "100%",
+          }}
+        >
+          <img
+            src={planeButton}
+            alt="Enter Button"
+            style={{ width: "100%" }}
+            // className={`${landing.enter}`}
+          />
+        </Link>
+      </div>
     </div>
   );
 }

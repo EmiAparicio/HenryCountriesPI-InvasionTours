@@ -12,6 +12,12 @@ import {
   setStoredPage,
 } from "../../redux/actions";
 
+// CSS
+
+import clearButtonMain from "../../styles/components/Home/ClearButton.module.css"
+
+const clearButton = clearButtonMain; // clearButtonMain
+
 /////////////////////////////////////////////////////////////////////////////
 // Code
 /////////////////////////////////////////////////////////////////////////////
@@ -34,7 +40,7 @@ export function ClearButton({ type, disabled, text }) {
 
   // Render
   return (
-    <button disabled={disabled} onClick={handleClick}>
+    <button disabled={disabled} onClick={handleClick} className={disabled ? `${clearButton.buttonHidden}` : `${clearButton.button}`}>
       {text}
     </button>
   );

@@ -1,0 +1,47 @@
+.container {
+  width: 90%;
+  display: flex;
+  justify-content: center;
+}
+
+.input {
+  font-size: 2vh;
+  width: 80%;
+  border-radius: 10px;
+  border-style: hidden;
+  padding: 2% 0 2%;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.input::placeholder {
+  color: rgb(0, 26, 91);
+}
+
+.input::selection {
+  color: rgb(0, 26, 91);
+}
+
+.input:focus {
+  outline: none;
+  color: white;
+  background-color: rgb(40, 80, 159);
+  filter: drop-shadow(0 0 10px rgb(217, 241, 255))
+    drop-shadow(0 0 10px rgb(217, 241, 255))
+    drop-shadow(0 0 10px rgb(217, 241, 255));
+}
+
+.input:focus::placeholder {
+  color: rgb(152, 212, 247);
+}
+
+.input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  position: absolute;
+  right: 2%;
+  background-color: rgb(255, 119, 0);
+  border: 3px solid rgb(224, 149, 0);
+  height: 1vh;
+  width: 1vh;
+  border-radius: 50%;
+}

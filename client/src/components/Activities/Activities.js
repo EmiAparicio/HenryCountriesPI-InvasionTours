@@ -182,7 +182,7 @@ export function Activities() {
   // Render
   ////////////////////////////////////////////////////////////////////////////////
   return (
-    <>
+    <div>
       {/* Render existing activities if any */}
       {existingActivities.length ? (
         <div>
@@ -238,6 +238,6 @@ export function Activities() {
               );
             })}
       </div>
-    </>
+    </div>
   );
 }

@@ -3,11 +3,16 @@
 // Imports
 ////////////////////////////////////////////////////////////////////////////////
 // Packages
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 // Application files
 import { setStoredPage } from "../../redux/actions";
+
+// CSS
+import configMain from "../../styles/components/Home/ConfigRender.module.css";
+
+const config = configMain; // configMain invadedConfig
 
 ////////////////////////////////////////////////////////////////////////////////
 // Code
@@ -33,19 +38,25 @@ export function ConfigRender({
 
   //////////////////////////////////////////////////////////////////////////////
   // Set default options when needed
+
+  const [cssLabel, setCssLabel] = useState(false); // Clean label CSS
   useEffect(() => {
     // When Component is filter
     if (configType === "filter")
-      if (!filterConfig[name].length)
+      if (!filterConfig[name].length) {
         // If "name" filter is empty, set default value for it
         configRef.current.value = "";
+        setCssLabel(true);
+      } else setCssLabel(false);
 
     // When Component is order
     if (configType === "order") {
       // Sets default order value when another order is set:
       // i.e. "alphabet" -> "Sin orden" if "population" order is set
-      if (!orderConfig.length || orderConfig[0] !== name)
+      if (!orderConfig.length || orderConfig[0] !== name) {
         configRef.current.value = "";
+        setCssLabel(true);
+      } else setCssLabel(false);
     }
   }, [filterConfig, orderConfig]);
 
@@ -88,8 +99,12 @@ export function ConfigRender({
   // Render
   //////////////////////////////////////////////////////////////////////////////
   return (
-    <div>
-      <label htmlFor={name} onClick={handleSingleClear}>
+    <div className={`${config.container}`}>
+      <label
+        htmlFor={name}
+        onClick={handleSingleClear}
+        className={cssLabel ? `${config.label}` : `${config.labelClean}`}
+      >
         {label}
       </label>
       <select
@@ -98,8 +113,11 @@ export function ConfigRender({
         disabled={disabled}
         defaultValue={defaultValue}
         onChange={handleConfig}
+        className={`${config.select}`}
       >
-        <option value="">{defaultOption}</option>
+        <option value="" className={`${config.option}`}>
+          {defaultOption}
+        </option>
         {options}
       </select>
     </div>

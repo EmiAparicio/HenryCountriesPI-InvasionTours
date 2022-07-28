@@ -28,9 +28,18 @@ export function CreatedActivities({
     localStorage.removeItem("countriesId");
   }
 
+  // Automatically closes component after 15 secs
+  let closeProcess = null;
+  useEffect(() => {
+    closeProcess = setInterval(() => handleClose(), 15000);
+  }, [closeProcess]);
+
   // Makes sure localStorage cleaning is getting done when leaving page
   useEffect(() => {
-    return () => handleClose();
+    return () => {
+      clearInterval(closeProcess);
+      handleClose();
+    };
   }, []);
 
   // Render

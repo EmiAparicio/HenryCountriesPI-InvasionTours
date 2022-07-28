@@ -15,6 +15,11 @@ import {
   setStoredPage,
 } from "../../../redux/actions";
 
+// CSS
+import paginationMain from "../../../styles/components/Home/Pagination/Pagination.module.css";
+
+const pagination = paginationMain; // paginationMain invadedPagination
+
 /////////////////////////////////////////////////////////////////////////////////////
 // Code
 /////////////////////////////////////////////////////////////////////////////////////
@@ -76,8 +81,8 @@ export function Pagination({ showCountries }) {
   // Render
   ///////////////////////////////////////////////////////////////////////////////////
   return (
-    <div>
-      <div>
+    <div className={`${pagination.container}`}>
+      <div className={`${pagination.pagesContainer}`}>
         {page < 1 || page >= paginationArray.length ? (
           <span>Página no válida</span> // When wrong page query in URL manually
         ) : showCountries.length ? (
@@ -91,10 +96,21 @@ export function Pagination({ showCountries }) {
                 (id <= page + 1 && id >= page - 1) ? (
                 <div key={id}>
                   {/* Button with page number */}
-                  <button onClick={handlePage}>{p}</button>
+                  <button
+                    onClick={handlePage}
+                    className={
+                      id === page
+                        ? `${pagination.selectedPage} ${pagination.buttons}`
+                        : `${pagination.buttons}`
+                    }
+                  >
+                    {p}
+                  </button>
                 </div>
               ) : id <= page + 2 && id >= page - 2 ? ( // Pages ±2 buttons with "..."
-                <div key={id}>...</div>
+                <div key={id} className={`${pagination.pages}`}>
+                  ...
+                </div>
               ) : (
                 // Doesn't display other pages buttons
                 <React.Fragment key={id}></React.Fragment>
@@ -103,9 +119,15 @@ export function Pagination({ showCountries }) {
           })
         ) : (
           // Button: clears filters when no results are found
-          <button name="NoRes" onClick={handleClear}>
-            Sin resultados: Limpiar
-          </button>
+          <div className={`${pagination.noResultsContainer}`}>
+            <button
+              name="NoRes"
+              onClick={handleClear}
+              className={`${pagination.noResults}`}
+            >
+              Sin resultados: Limpiar
+            </button>
+          </div>
         )}
       </div>
 

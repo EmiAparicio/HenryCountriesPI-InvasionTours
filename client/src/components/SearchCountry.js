@@ -15,6 +15,11 @@ import {
   setStoredPage,
 } from "../redux/actions";
 
+// CSS
+import searchMain from "../styles/components/SearchCountry.module.css";
+
+const search = searchMain; //searchMain invadedSearch
+
 ///////////////////////////////////////////////////////////////////////////////
 // Code
 ///////////////////////////////////////////////////////////////////////////////
@@ -66,7 +71,7 @@ export function SearchCountry() {
   // Render
   /////////////////////////////////////////////////////////////////////////////
   return (
-    <div>
+    <div className={`${search.container}`}>
       <input
         autoComplete="off"
         type="search"
@@ -74,6 +79,7 @@ export function SearchCountry() {
         onChange={handleInputChange}
         value={selectCountry}
         onBlur={() => setErrors(() => ({ err: "" }))}
+        className={`${search.input}`}
       />
       {errors.err && <p>{errors.err}</p>}
     </div>

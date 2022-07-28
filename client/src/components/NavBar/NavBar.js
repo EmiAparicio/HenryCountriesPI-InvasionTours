@@ -3,6 +3,16 @@ import { useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
 import { Link, NavLink } from "react-router-dom";
 
+// CSS
+import navbarMain from "../../styles/components/NavBar/NavBar.module.css";
+import navbarInvaded from "../../styles/components/NavBar/NavBarTest.module.css";
+import mainLogo from "../../styles/images/mainLogo.png";
+import invadedLogo from "../../styles/images/invadedLogo.png";
+import invadedTest from "../../styles/images/invadedTest.png";
+
+const logo = mainLogo; //mainLogo invadedLogo invadedTest
+const navbar = navbarMain; //navbarInvaded navbarMain
+
 //////////////////////////////////////////////////////////////
 // Code
 //////////////////////////////////////////////////////////////
@@ -13,16 +23,46 @@ export function NavBar() {
 
   // Render
   return (
-    <>
-      <Link to="/">
-        <img src="" alt="logo" />
-      </Link>
-      <NavLink to={`/home?page=${page}`}>Países</NavLink>
-      <NavLink to="/activities">Crear actividad</NavLink>
-      <NavLink to="/about">Info</NavLink>
+    <div className={`${navbar.container}`}>
+      <div className={`${navbar.barContainer}`}>
+        <div className={`${navbar.bar}`}>
+          <Link to="/" className={`${navbar.logo}`}>
+            <img src={logo} className={`${navbar.logoImg}`} alt="logo" />
+          </Link>
+          <div className={`${navbar.barOptions}`}>
+            <NavLink
+              to={`/home?page=${page}`}
+              style={{ textDecoration: "none" }}
+              className={({ isActive }) =>
+                isActive ? `${navbar.navLinkActive}` : undefined
+              }
+            >
+              Países
+            </NavLink>
+            <NavLink
+              to="/activities"
+              style={{ textDecoration: "none" }}
+              className={({ isActive }) =>
+                isActive ? `${navbar.navLinkActive}` : undefined
+              }
+            >
+              Turismo
+            </NavLink>
+            <NavLink
+              to="/about"
+              style={{ textDecoration: "none" }}
+              className={({ isActive }) =>
+                isActive ? `${navbar.navLinkActive}` : undefined
+              }
+            >
+              Sobre mí
+            </NavLink>
+          </div>
+        </div>
+      </div>
 
       {/*Outlet: required component when nesting Routes*/}
       <Outlet />
-    </>
+    </div>
   );
 }

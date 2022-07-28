@@ -1,0 +1,91 @@
+.container {
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 3vh;
+}
+
+.label {
+  margin-top: 1vh;
+  margin-bottom: 1vh;
+  display: block;
+  height: 4vh;
+  color: rgb(0, 26, 91);
+  text-shadow: 0 0 10px rgb(152, 212, 247);
+}
+
+.labelClean {
+  display: block;
+  margin-top: 0.5vh;
+  margin-bottom: 1.5vh;
+  height: 4vh;
+  color: white;
+  text-shadow: 0 0.5vh rgb(80, 167, 218);
+  cursor: pointer;
+  animation: labelCleanAnimation 2s infinite;
+}
+
+.labelClean:hover {
+  animation: paused;
+  margin-top: 0.5vh;
+  margin-bottom: 1.5vh;
+  text-shadow: 0 0.5vh rgb(80, 167, 218);
+}
+.labelClean:active {
+  margin-top: 1vh;
+  margin-bottom: 1vh;
+  text-shadow: 0 0 10px rgb(152, 212, 247);
+}
+
+@keyframes labelCleanAnimation {
+  from {
+    margin-top: 0.5vh;
+    margin-bottom: 1.5vh;
+    text-shadow: 0 0.5vh rgb(80, 167, 218);
+  }
+  15% {
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+    text-shadow: 0 0 10px rgb(152, 212, 247);
+  }
+  30% {
+    margin-top: 0.5vh;
+    margin-bottom: 1.5vh;
+    text-shadow: 0 0.5vh rgb(80, 167, 218);
+  }
+  to {
+    margin-top: 0.5vh;
+    margin-bottom: 1.5vh;
+    text-shadow: 0 0.5vh rgb(80, 167, 218);
+  }
+}
+
+.select {
+  width: 200px;
+  padding: 2% 5% 2%;
+  font-size: 2vh;
+  border-radius: 10px;
+  border-style: hidden;
+  background-color: rgba(255, 255, 255, 0.4);
+  color: rgb(0, 26, 91);
+  text-align: center;
+}
+
+.option {
+  font-size: 1.5vh;
+  color: rgb(0, 26, 91);
+  border-style: hidden;
+  border-radius: 10px;
+  background-color: rgba(80, 127, 218, 1);
+}
+
+.select:focus {
+  outline: none;
+  color: white;
+  background-color: rgb(40, 80, 159);
+  filter: drop-shadow(0 0 5px rgb(80, 167, 218))
+    drop-shadow(0 0 5px rgb(80, 167, 218))
+    drop-shadow(0 0 5px rgb(80, 167, 218));
+}

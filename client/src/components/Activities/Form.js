@@ -176,7 +176,7 @@ export function Form() {
   // Render
   //////////////////////////////////////////////////////////////////////////////
   return (
-    <>
+    <div>
       <form onSubmit={handleSubmit}>
         {/* ---------------------------------------------------------------- */}
         {/* Name */}
@@ -254,6 +254,6 @@ export function Form() {
           value="Añadir actividad"
         />
       </form>
-    </>
+    </div>
   );
 }
