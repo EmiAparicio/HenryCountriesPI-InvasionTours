@@ -7,7 +7,6 @@
 }
 
 .mainText {
-
   animation: mainTextAnimation 1s 1;
   position: absolute;
   margin-left: auto;
@@ -103,7 +102,7 @@
   font-family: "Ubuntu";
   width: 200px;
   padding: 2% 0 2%;
-  padding-left: 12%;
+  padding-left: 9%;
   font-size: 2vh;
   border-radius: 10px;
   border-style: hidden;
@@ -153,6 +152,7 @@
 
 .durationRange:hover {
   filter: drop-shadow(0 0 6px black) drop-shadow(0 0 6px black);
+  cursor: pointer;
 }
 
 .seasonContainer {
@@ -198,15 +198,18 @@
   color: rgb(255, 119, 0);
   text-shadow: 0 0 4px rgb(0, 26, 91), 0 0 4px rgb(0, 26, 91);
   font-size: 1.2rem;
+  height: 1.3rem;
   text-align: center;
 }
 
 .errorHidden {
   margin-top: 10px;
+  height: 1.3rem;
   visibility: hidden;
 }
 
 .buttonContainer {
+  z-index: 100;
   position: absolute;
   margin-left: auto;
   margin-right: auto;

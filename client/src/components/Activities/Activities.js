@@ -18,6 +18,12 @@ import {
   setCountriesId,
 } from "../../redux/actions";
 
+// CSS
+import { LetRender } from "../LetRender";
+import activitiesMain from "../../styles/components/Activities/Activities.module.css";
+
+const activitiesStyle = activitiesMain; // activitiesMain invadedActivities
+
 //////////////////////////////////////////////////////////////////////////////////
 // Code
 //////////////////////////////////////////////////////////////////////////////////
@@ -173,7 +179,10 @@ export function Activities() {
         difficulty: createdActivity.activity?.difficulty,
         duration: createdActivity.activity?.duration,
         season: createdActivity.activity?.season,
-        countries: `${creationEffect} ${join}: ${addedCountries}`,
+        countries: {
+          text: `${creationEffect} ${join}: `,
+          added: `${addedCountries}`,
+        },
       };
     } else return { active: false };
   }, [createdActivity]);
@@ -183,16 +192,58 @@ export function Activities() {
   ////////////////////////////////////////////////////////////////////////////////
   return (
     <div>
+      <LetRender />
       {/* Activity creation form */}
-      <Form existingActivities={existingActivities}/>
+      <Form existingActivities={existingActivities} />
 
-      {/* Countries searching */}
-      <SearchCountry />
+      <div className={`${activitiesStyle.container}`}>
+        {/* Countries searching */}
+        <div className={`${activitiesStyle.searchContainer}`}>
+          <SearchCountry style={{ width: "300px" }} />
+        </div>
 
-      {/* Select all actual countries for activity association */}
-      <button onClick={handleCheckAll} disabled={!countryOptions.length}>
-        {selectAll}
-      </button>
+        {/* Select all actual countries for activity association */}
+        <div className={`${activitiesStyle.buttonContainer}`}>
+          <button
+            onClick={handleCheckAll}
+            disabled={!countryOptions.length}
+            className={
+              !countryOptions.length
+                ? `${activitiesStyle.buttonHidden}`
+                : `${activitiesStyle.button}`
+            }
+          >
+            {selectAll}
+          </button>
+        </div>
+
+        {/* Display checkboxes for countries to choose */}
+        <div className={`${activitiesStyle.countries}`}>
+          <span>Países: </span>
+          <div className={`${activitiesStyle.countryContainer}`}>
+            {!countryOptions.length
+              ? "No hay opciones"
+              : countryOptions.map((c) => {
+                  return (
+                    <div key={c.id} id={c.id}>
+                      <input
+                        type="checkbox"
+                        value={c.name}
+                        name={c.name}
+                        onChange={(e) => handleNewCountryActivity(e.target)}
+                      />
+                      <label
+                        onClick={() => handleLabelClick(c.id)}
+                        // style={{ display: "inline-block", width: "95%" }}
+                      >
+                        {c.name}
+                      </label>
+                    </div>
+                  );
+                })}
+          </div>
+        </div>
+      </div>
 
       {/* Pop-up component after new activity is set */}
       {createdActivityComponent.active ? (
@@ -206,26 +257,6 @@ export function Activities() {
       ) : (
         <></>
       )}
-
-      {/* Display checkboxes for countries to choose */}
-      <div>
-        <span>Países: </span>
-        {!countryOptions.length
-          ? "No hay opciones"
-          : countryOptions.map((c) => {
-              return (
-                <div key={c.id} id={c.id}>
-                  <input
-                    type="checkbox"
-                    value={c.name}
-                    name={c.name}
-                    onChange={(e) => handleNewCountryActivity(e.target)}
-                  />
-                  <label onClick={() => handleLabelClick(c.id)}>{c.name}</label>
-                </div>
-              );
-            })}
-      </div>
     </div>
   );
 }

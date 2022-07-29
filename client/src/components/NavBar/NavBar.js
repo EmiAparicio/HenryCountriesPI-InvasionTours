@@ -21,6 +21,7 @@ export function NavBar() {
   // Get page from store to allow going back to the same point
   const page = useSelector((state) => state.page);
 
+
   // Render
   return (
     <div className={`${navbar.container}`}>
@@ -52,10 +53,10 @@ export function NavBar() {
               to="/about"
               style={{ textDecoration: "none" }}
               className={({ isActive }) =>
-                isActive ? `${navbar.navLinkActive}` : undefined
+                isActive ? `${navbar.navLinkActive}` : `${navbar.navExtra}`
               }
             >
-              Sobre mí
+              ?
             </NavLink>
           </div>
         </div>

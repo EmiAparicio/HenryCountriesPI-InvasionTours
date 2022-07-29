@@ -9,6 +9,11 @@ import { useEffect } from "react";
 // Application files
 import { createActivity } from "../../redux/actions";
 
+// CSS
+import activityMain from "../../styles/components/Activities/CreatedActivities.module.css";
+
+const activityStyle = activityMain; // activityMain invadedActivity
+
 ////////////////////////////////////////////////////////////////////////////
 // Code
 ////////////////////////////////////////////////////////////////////////////
@@ -31,13 +36,14 @@ export function CreatedActivities({
   // Automatically closes component after 15 secs
   let closeProcess = null;
   useEffect(() => {
-    closeProcess = setInterval(() => handleClose(), 3000);
+    closeProcess = setInterval(() => handleClose(), 300000);
   }, [closeProcess]);
 
   useEffect(() => {
-    if (!createActivity.name){
-    clearInterval(closeProcess);
-    handleClose();}
+    if (!createActivity.name) {
+      clearInterval(closeProcess);
+      handleClose();
+    }
   }, [createdActivity]);
 
   // Makes sure localStorage cleaning is getting done when leaving page
@@ -51,13 +57,30 @@ export function CreatedActivities({
 
   // Render
   return (
-    <div>
-      <button onClick={handleClose}>X</button>
+    <div className={`${activityStyle.container}`}>
+      <button onClick={handleClose} className={`${activityStyle.button}`}>
+        Cerrar
+      </button>
       <span>Actividad: {name}</span>
-      <span>Dificultad: {difficulty}</span>
-      <span>Duración: {duration} días</span>
+      <span>
+        {" "}
+        Dificultad:{" "}
+        {difficulty === 1
+          ? "Visita"
+          : difficulty === 2
+          ? "Esparcimiento"
+          : difficulty === 3
+          ? "Aventura"
+          : difficulty === 4
+          ? "Profesional"
+          : "Competitiva"}
+      </span>
+      <span>
+        Duración: {duration} {duration === 1 ? "día" : "días"}
+      </span>
       <span>Temporada: {season}</span>
-      <p>{countries}</p>
+      <span className={`${activityStyle.countriesSpan}`}>{countries.text}</span>
+      <p className={`${activityStyle.countriesContainer}`}>{countries.added}</p>
     </div>
   );
 }

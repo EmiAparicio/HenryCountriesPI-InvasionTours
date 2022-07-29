@@ -29,9 +29,9 @@
   outline: none;
   color: white;
   background-color: rgb(40, 80, 159);
-  filter: drop-shadow(0 -5px 5px rgb(217, 241, 255))
-    drop-shadow(0 -5px 5px rgb(217, 241, 255))
-    drop-shadow(0 -5px 5px rgb(217, 241, 255));
+  filter: drop-shadow(0 -1px 5px rgb(217, 241, 255))
+    drop-shadow(0 -1px 5px rgb(217, 241, 255))
+    drop-shadow(0 -1px 5px rgb(217, 241, 255));
 }
 
 .input:focus::placeholder {
@@ -50,15 +50,18 @@
 }
 
 .error {
-  position: absolute;
-  top: 34vh;
+    font-family: "Ubuntu";
+  margin-top: 10px;
   z-index: 50;
   color: rgb(255, 119, 0);
   text-shadow: 0 0 4px rgb(0, 26, 91), 0 0 4px rgb(0, 26, 91);
   font-size: 1.2rem;
+  height: 1.3rem;
   text-align: center;
 }
 
 .errorHidden {
+  margin-top: 10px;
+  height: 1.3rem;
   visibility: hidden;
 }

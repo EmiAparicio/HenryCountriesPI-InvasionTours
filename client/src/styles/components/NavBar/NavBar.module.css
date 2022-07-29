@@ -69,8 +69,6 @@
   font-size: 4vh;
 }
 
-
-
 .barOptions a {
   width: 17vw;
   color: white;
@@ -88,4 +86,36 @@
 .barOptions .navLinkActive {
   font-size: 5vh;
   text-shadow: 0 0.5vh rgb(80, 167, 218);
+}
+
+.barOptions .navExtra {
+  animation: navExtraAnimation 2s cubic-bezier(0.74, 0.31, 0.95, 0.56) infinite;
+}
+
+@keyframes navExtraAnimation {
+  from {
+    filter: drop-shadow(0 0 0px rgb(80, 218, 85))
+      drop-shadow(0 0 0px rgb(80, 218, 85));
+  }
+  90% {
+    filter: drop-shadow(0 0 5px rgb(80, 218, 85))
+      drop-shadow(0 0 5px rgb(80, 218, 85));
+  }
+
+  95% {
+    filter: drop-shadow(0 0 15px rgb(96, 245, 101))
+      drop-shadow(0 0 8px rgb(96, 245, 101));
+  }
+
+  97% {
+    filter: drop-shadow(0 0 20px rgb(96, 245, 101));
+  }
+  99% {
+    filter: drop-shadow(0 0 20px rgb(96, 245, 101));
+  }
+
+  to {
+    filter: drop-shadow(0 0 0px rgb(80, 218, 85))
+      drop-shadow(0 0 0px rgb(80, 218, 85));
+  }
 }

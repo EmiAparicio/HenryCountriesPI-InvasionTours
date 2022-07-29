@@ -22,6 +22,7 @@ import {
 } from "../../redux/actions";
 
 // CSS
+import { LetRender } from "../LetRender";
 import homeMain from "../../styles/components/Home/Home.module.css";
 
 import configMain from "../../styles/components/Home/ConfigRender.module.css";
@@ -268,6 +269,7 @@ export function Home() {
   //////////////////////////////////////////////////////////////////////////////
   return (
     <div>
+      <LetRender />
       <div className={`${home.container}`}>
         <div className={`${home.filters}`}>
           <div className={`${home.clearFilters}`}>

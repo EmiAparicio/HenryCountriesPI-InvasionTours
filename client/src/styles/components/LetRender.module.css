@@ -1,0 +1,30 @@
+.letRender {
+  z-index: 200;
+  position: absolute;
+  width: 100%;
+  height: 87vh;
+  background: rgb(0, 0, 0);
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 1) -14.9425287%,
+    rgba(0, 26, 91, 1) -12.6436782%,
+    rgba(80, 127, 218, 1) 11.4942529%,
+    rgba(80, 167, 218, 1) 25.2873563%,
+    rgba(80, 167, 218, 1) 97.7011494%,
+    rgba(34, 22, 0, 1) 100%
+  );
+  animation: renderAnimation 0.5s 0.5s linear 1;
+}
+
+@keyframes renderAnimation {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(0, 1);
+  }
+}
+
+.letRenderHide {
+  display: none;
+}

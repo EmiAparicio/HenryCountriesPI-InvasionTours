@@ -56,8 +56,6 @@ export function Form({ existingActivities }) {
   }
 
   // Clear activity name when click on label
-  const activityNameRef = useRef();
-
   function handleNameClear() {
     setSelectActivity("");
   }
@@ -190,18 +188,6 @@ export function Form({ existingActivities }) {
   //////////////////////////////////////////////////////////////////////////////
   return (
     <div style={{ userSelect: "none" }}>
-      <div className={`${form.buttonContainer}`}>
-        <input
-          type="submit"
-          disabled={!countriesId.length || !selectActivity.length}
-          value="Añadir actividad"
-          className={
-            !countriesId.length || !selectActivity.length
-              ? `${form.buttonHidden}`
-              : `${form.button}`
-          }
-        />
-      </div>
       <div style={{ height: "2vh" }}>
         <div
           className={
@@ -214,6 +200,19 @@ export function Form({ existingActivities }) {
         </div>
       </div>
       <form onSubmit={handleSubmit} className={`${form.formContainer}`}>
+        <div className={`${form.buttonContainer}`}>
+          <input
+            type="submit"
+            disabled={!countriesId.length || !selectActivity.length}
+            value="Añadir actividad"
+            className={
+              !countriesId.length || !selectActivity.length
+                ? `${form.buttonHidden}`
+                : `${form.button}`
+            }
+          />
+        </div>
+
         {/* ---------------------------------------------------------------- */}
         {/* Name */}
         {/* ---------------------------------------------------------------- */}
@@ -311,7 +310,11 @@ export function Form({ existingActivities }) {
           <label htmlFor="duration" className={`${form.label}`}>
             Duración:
           </label>
-          <label> {document.getElementById("duration")?.value} días</label>
+          <label>
+            {" "}
+            {document.getElementById("duration")?.value}{" "}
+            {document.getElementById("duration")?.value === "1" ? "día" : "días"}
+          </label>
           <input
             type="range"
             name="duration"

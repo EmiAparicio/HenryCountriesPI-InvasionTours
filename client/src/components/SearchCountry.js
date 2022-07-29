@@ -72,13 +72,6 @@ export function SearchCountry() {
   /////////////////////////////////////////////////////////////////////////////
   return (
     <div className={`${search.container}`}>
-      {
-        <p
-          className={errors.err ? `${search.error}` : ` ${search.errorHidden}`}
-        >
-          {errors.err}
-        </p>
-      }
       <input
         autoComplete="off"
         type="search"
@@ -88,6 +81,13 @@ export function SearchCountry() {
         onBlur={() => setErrors(() => ({ err: "" }))}
         className={`${search.input}`}
       />
+      {
+        <p
+          className={errors.err ? `${search.error}` : ` ${search.errorHidden}`}
+        >
+          {errors.err || "No error"}
+        </p>
+      }
     </div>
   );
 }

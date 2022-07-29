@@ -47,9 +47,11 @@ export function Pagination({ showCountries }) {
   const query = useQuery().get("page");
 
   const page = useMemo(() => {
+    if (query) dispatch(setStoredPage(Number(query)));
     return query ? Number(query) : storedPage;
   }, [query]);
 
+  console.log(page);
   ///////////////////////////////////////////////////////////////////////////////////
   // HANDLERS
   // Change page when clicked from button

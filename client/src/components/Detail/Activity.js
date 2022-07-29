@@ -18,7 +18,7 @@ export function Activity({ name, difficulty, duration, season }) {
           ? "Profesional"
           : "Competitiva"}
       </span>
-      <span>Duración: {duration} días</span>
+      <span>Duración: {duration} {duration === 1 ? "día" : "días"}</span>
       <span>Temporada: {season}</span>
     </div>
   );
