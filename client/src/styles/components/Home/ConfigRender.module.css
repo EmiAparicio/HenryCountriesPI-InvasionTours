@@ -1,4 +1,5 @@
 .container {
+  font-family: "Ubuntu";
   user-select: none;
   display: flex;
   flex-direction: column;
@@ -63,6 +64,7 @@
 }
 
 .select {
+  font-family: "Ubuntu";
   width: 200px;
   padding: 2% 5% 2%;
   font-size: 2vh;

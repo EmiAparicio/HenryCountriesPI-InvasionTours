@@ -1,7 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // Import packages
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+
+// CSS
+import mapStyle from "../../styles/components/Detail/Detail.module.css";
+
+import mapIcon from "../../styles/images/googlemaps.png";
 
 ////////////////////////////////////////////////////////////////////
 // Component: show Google Maps centered in selected country
@@ -39,14 +44,30 @@ export function Maps() {
   }
 
   // Check/instance google map when country details arrive
+  const [gmap, setGmap] = useState({ gmap: true, toggle: false });
   useEffect(() => {
     googleChecker();
+    if (window.google) setGmap((prev) => ({ ...prev, gmap: true }));
   }, [country]);
 
   // Render
   return (
-    <div>
-      <div ref={mapContainer} style={{ width: 500, height: 500 }} />
-    </div>
+    // <div className={`${mapStyle.mapContainer}`}>
+    <>
+      <button
+        onClick={() => {
+          setGmap({ gmap: false, toggle: true });
+        }}
+        className={gmap.gmap ? `${mapStyle.button}` : `${mapStyle.buttonHide}`}
+      >
+        <img src={mapIcon} alt="GMapsButton" className={`${mapStyle.icon}`} />
+      </button>
+
+      <div
+        ref={mapContainer}
+        className={gmap.toggle ? `${mapStyle.map}` : `${mapStyle.mapHide}`}
+      />
+      {/* </div> */}
+    </>
   );
 }

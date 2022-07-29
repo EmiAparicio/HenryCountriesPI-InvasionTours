@@ -183,20 +183,8 @@ export function Activities() {
   ////////////////////////////////////////////////////////////////////////////////
   return (
     <div>
-      {/* Render existing activities if any */}
-      {existingActivities.length ? (
-        <div>
-          <span>Actividades existentes:</span>
-          {existingActivities.map((a, id) => {
-            return <div key={id}>{a}</div>;
-          })}
-        </div>
-      ) : (
-        <></>
-      )}
-
       {/* Activity creation form */}
-      <Form countriesId={countriesId} />
+      <Form existingActivities={existingActivities}/>
 
       {/* Countries searching */}
       <SearchCountry />

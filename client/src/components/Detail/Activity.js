@@ -6,8 +6,19 @@ export function Activity({ name, difficulty, duration, season }) {
   return (
     <div>
       <span>Actividad: {name}</span>
-      <span>Dificultad: {difficulty}</span>
-      <span>Duración: {duration}</span>
+      <span>
+        Dificultad:{" "}
+        {difficulty === 1
+          ? "Visita"
+          : difficulty === 2
+          ? "Esparcimiento"
+          : difficulty === 3
+          ? "Aventura"
+          : difficulty === 4
+          ? "Profesional"
+          : "Competitiva"}
+      </span>
+      <span>Duración: {duration} días</span>
       <span>Temporada: {season}</span>
     </div>
   );

@@ -15,7 +15,7 @@ export function Country({ name, continent, flag, id }) {
           <img src={flag} alt="country flag" className={`${country.flag}`} />
         </Link>
       </div>
-      <span className={`${country.span} ${country.spanFix}`}>
+      <span className={`${country.span}`}>
         Nombre: <br />
         <span>{name}</span>
       </span>

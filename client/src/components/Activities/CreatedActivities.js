@@ -3,7 +3,7 @@
 // Imports
 ////////////////////////////////////////////////////////////////////////////
 // Packages
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 
 // Application files
@@ -21,21 +21,28 @@ export function CreatedActivities({
   countries,
 }) {
   const dispatch = useDispatch();
+  const createdActivity = useSelector((state) => state.createdActivity);
 
   // Removes related countries from localStorage, added by Form.js
   function handleClose() {
     dispatch(createActivity());
-    localStorage.removeItem("countriesId");
   }
 
   // Automatically closes component after 15 secs
   let closeProcess = null;
   useEffect(() => {
-    closeProcess = setInterval(() => handleClose(), 15000);
+    closeProcess = setInterval(() => handleClose(), 3000);
   }, [closeProcess]);
+
+  useEffect(() => {
+    if (!createActivity.name){
+    clearInterval(closeProcess);
+    handleClose();}
+  }, [createdActivity]);
 
   // Makes sure localStorage cleaning is getting done when leaving page
   useEffect(() => {
+    localStorage.removeItem("countriesId");
     return () => {
       clearInterval(closeProcess);
       handleClose();

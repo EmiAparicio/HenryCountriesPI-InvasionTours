@@ -8,11 +8,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { validateLetters } from "../../controllers";
 import { createActivity, setCountriesId } from "../../redux/actions";
 
+// CSS
+import formMain from "../../styles/components/Activities/Form.module.css";
+
+const form = formMain; // formMain invadedForm
+
 ////////////////////////////////////////////////////////////////////////////////
 // Code
 ////////////////////////////////////////////////////////////////////////////////
 // Component: form to be filled in order to create/associate an activity
-export function Form() {
+export function Form({ existingActivities }) {
   const dispatch = useDispatch();
 
   // Hide error message when losing focus
@@ -48,6 +53,13 @@ export function Form() {
 
       return newState;
     });
+  }
+
+  // Clear activity name when click on label
+  const activityNameRef = useRef();
+
+  function handleNameClear() {
+    setSelectActivity("");
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -152,6 +164,7 @@ export function Form() {
       countriesId: [...countriesId],
     };
 
+    dispatch(createActivity());
     dispatch(createActivity(activity));
 
     // Reset all used data
@@ -176,83 +189,190 @@ export function Form() {
   // Render
   //////////////////////////////////////////////////////////////////////////////
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        {/* ---------------------------------------------------------------- */}
-        {/* Name */}
-        {/* ---------------------------------------------------------------- */}
-        <label htmlFor="activity">Nombre: </label>
-        <input
-          type="search"
-          name="activity"
-          placeholder='"Actividad"'
-          autoComplete="off"
-          onChange={handleActivityChange}
-          onBlur={handleBlur}
-          value={selectActivity}
-        />
-        {errors.activity.err && <p>{errors.activity.err}</p>}
-        {/* ---------------------------------------------------------------- */}
-        {/* Difficulty */}
-        {/* ---------------------------------------------------------------- */}
-        <label htmlFor="difficulty">Dificultad: </label>
-        <div name="difficulty" onChange={handleDifficultyChange}>
-          <input
-            ref={diffRef}
-            type="radio"
-            id="diff1"
-            name="difficulty"
-            value={1}
-            defaultChecked
-          />
-          <label>Visita</label>
-          <input type="radio" id="diff2" name="difficulty" value={2} />
-          <label>Esparcimiento</label>
-          <input type="radio" id="diff3" name="difficulty" value={3} />
-          <label>Aventura</label>
-          <input type="radio" id="diff4" name="difficulty" value={4} />
-          <label>Profesional</label>
-          <input type="radio" id="diff5" name="difficulty" value={5} />
-          <label>Competitiva</label>
-        </div>
-        {errors.difficulty.err && <p>{errors.difficulty.err}</p>}
-        {/* ---------------------------------------------------------------- */}
-        {/* Duration */}
-        {/* ---------------------------------------------------------------- */}
-        <label htmlFor="duration">
-          Duración: {document.getElementById("duration")?.value} días{" "}
-        </label>
-        <input
-          type="range"
-          name="duration"
-          id="duration"
-          min={1}
-          max={30}
-          autoComplete="off"
-          onChange={handleDurationChange}
-          onBlur={handleBlur}
-          value={selectDuration}
-        />
-        {errors.duration.err && <p>{errors.duration.err}</p>}
-        {/* ---------------------------------------------------------------- */}
-        {/* Season */}
-        {/* ---------------------------------------------------------------- */}
-        <label htmlFor="season">Temporada: </label>
-        <select name="season" onChange={handleSeasonChange} onBlur={handleBlur}>
-          <option value="Verano">Verano</option>
-          <option value="Otoño">Otoño</option>
-          <option value="Invierno">Invierno</option>
-          <option value="Primavera">Primavera</option>
-        </select>
-        {errors.season.err && <p>{errors.season.err}</p>}
-        {/* ---------------------------------------------------------------- */}
-        {/* Submit Button */}
-        {/* ---------------------------------------------------------------- */}
+    <div style={{ userSelect: "none" }}>
+      <div className={`${form.buttonContainer}`}>
         <input
           type="submit"
           disabled={!countriesId.length || !selectActivity.length}
           value="Añadir actividad"
+          className={
+            !countriesId.length || !selectActivity.length
+              ? `${form.buttonHidden}`
+              : `${form.button}`
+          }
         />
+      </div>
+      <div style={{ height: "2vh" }}>
+        <div
+          className={
+            !(!countriesId.length || !selectActivity.length)
+              ? `${form.mainTextHidden}`
+              : `${form.mainText}`
+          }
+        >
+          Añadir actividad
+        </div>
+      </div>
+      <form onSubmit={handleSubmit} className={`${form.formContainer}`}>
+        {/* ---------------------------------------------------------------- */}
+        {/* Name */}
+        {/* ---------------------------------------------------------------- */}
+        <div className={`${form.nameContainer}`}>
+          <label
+            htmlFor="activity"
+            onClick={handleNameClear}
+            className={
+              !selectActivity.length
+                ? `${form.label}`
+                : `${form.nameLabelClean}`
+            }
+          >
+            Nombre:{" "}
+          </label>
+          <input
+            list="existingActivities"
+            name="activity"
+            placeholder='"Actividad"'
+            autoComplete="off"
+            onChange={handleActivityChange}
+            onBlur={handleBlur}
+            value={selectActivity}
+            className={`${form.name}`}
+          />
+          <datalist id="existingActivities">
+            {existingActivities.map((a, id) => {
+              return <option key={id} value={a} />;
+            })}
+          </datalist>
+          {
+            <p
+              className={
+                errors.activity.err ? `${form.error}` : `${form.errorHidden}`
+              }
+            >
+              {errors.activity.err || "No error"}
+            </p>
+          }
+        </div>
+        {/* ---------------------------------------------------------------- */}
+        {/* Difficulty */}
+        {/* ---------------------------------------------------------------- */}
+        <div className={`${form.difficultyContainer}`}>
+          <label htmlFor="difficulty" className={`${form.label}`}>
+            Dificultad:{" "}
+          </label>
+          <div
+            name="difficulty"
+            onChange={handleDifficultyChange}
+            className={`${form.difficultyLabelsContainer}`}
+          >
+            <label>
+              <input
+                ref={diffRef}
+                type="radio"
+                id="diff1"
+                name="difficulty"
+                value={1}
+                defaultChecked
+              />{" "}
+              Visita
+            </label>
+            <label>
+              <input type="radio" id="diff2" name="difficulty" value={2} />{" "}
+              Esparcimiento
+            </label>
+            <label>
+              <input type="radio" id="diff3" name="difficulty" value={3} />{" "}
+              Aventura
+            </label>
+            <label>
+              <input type="radio" id="diff4" name="difficulty" value={4} />{" "}
+              Profesional
+            </label>
+            <label>
+              <input type="radio" id="diff5" name="difficulty" value={5} />{" "}
+              Competitiva
+            </label>
+          </div>
+          {
+            <p
+              className={
+                errors.difficulty.err ? `${form.error}` : `${form.errorHidden}`
+              }
+            >
+              {errors.difficulty.err || "No error"}
+            </p>
+          }
+        </div>
+        {/* ---------------------------------------------------------------- */}
+        {/* Duration */}
+        {/* ---------------------------------------------------------------- */}
+        <div className={`${form.durationContainer}`}>
+          <label htmlFor="duration" className={`${form.label}`}>
+            Duración:
+          </label>
+          <label> {document.getElementById("duration")?.value} días</label>
+          <input
+            type="range"
+            name="duration"
+            id="duration"
+            min={1}
+            max={30}
+            autoComplete="off"
+            onChange={handleDurationChange}
+            onBlur={handleBlur}
+            value={selectDuration}
+            className={`${form.durationRange}`}
+          />
+          {
+            <p
+              className={
+                errors.duration.err ? `${form.error}` : `${form.errorHidden}`
+              }
+            >
+              {errors.duration.err || "No error"}
+            </p>
+          }
+        </div>
+        {/* ---------------------------------------------------------------- */}
+        {/* Season */}
+        {/* ---------------------------------------------------------------- */}
+        <div className={`${form.seasonContainer}`}>
+          <label htmlFor="season" className={`${form.label}`}>
+            Temporada:{" "}
+          </label>
+          <select
+            name="season"
+            onChange={handleSeasonChange}
+            onBlur={handleBlur}
+            className={`${form.seasonSelect}`}
+          >
+            <option value="Verano" className={`${form.seasonOption}`}>
+              Verano
+            </option>
+            <option value="Otoño" className={`${form.seasonOption}`}>
+              Otoño
+            </option>
+            <option value="Invierno" className={`${form.seasonOption}`}>
+              Invierno
+            </option>
+            <option value="Primavera" className={`${form.seasonOption}`}>
+              Primavera
+            </option>
+          </select>
+          {
+            <p
+              className={
+                errors.season.err ? `${form.error}` : `${form.errorHidden}`
+              }
+            >
+              {errors.season.err || "No error"}
+            </p>
+          }
+        </div>
+        {/* ---------------------------------------------------------------- */}
+        {/* Submit Button */}
+        {/* ---------------------------------------------------------------- */}
       </form>
     </div>
   );

@@ -1,4 +1,5 @@
 .bgImage {
+  font-family: "Ubuntu";
   background-image: url("./images/countries.png");
   background-size: contain;
   background-repeat: no-repeat;
