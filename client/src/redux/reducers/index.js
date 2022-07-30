@@ -20,6 +20,9 @@ import {
 
   // GENERAL
   SET_CLEAR_SEARCH,
+
+  // ALIEN
+  SET_ALIEN_MODE,
 } from "../actions";
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,6 +52,10 @@ const initialState = {
   clearSearch: false, // Toggle country searching input cleaning
   createdActivity: {}, // New created or assigned activity
   allActivitiesTypes: [], // All activities different names
+
+  // ALIEN
+  activateCode: "ALIEN",
+  alienMode: false,
 };
 
 // Reducer to be imported by store/index.js
@@ -89,6 +96,9 @@ export default function rootReducer(state = initialState, action) {
       return { ...state, allCountries: action.payload };
     case SET_CLEAR_SEARCH:
       return { ...state, clearSearch: action.payload };
+
+    case SET_ALIEN_MODE:
+      return { ...state, alienMode: action.payload };
     default:
       return state;
   }

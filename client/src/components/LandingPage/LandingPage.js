@@ -4,7 +4,7 @@
 ////////////////////////////////////////////////////////////////////////////
 // Packages
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 // Application files
@@ -17,8 +17,11 @@ import {
 } from "../../redux/actions";
 
 // CSS
-import landing from "../../styles/components/LandingPage/LandingPage.module.css";
-import planeButton from "../../styles/images/planeButton.png";
+import landingMain from "../../styles/components/LandingPage/LandingPage.module.css";
+import invadedLanding from "../../styles/components/LandingPage/LandingPageI.module.css";
+import planeButtonMain from "../../styles/images/planeButton.png";
+import ovniButton from "../../styles/images/ovniButton.png";
+import { setAlienMode } from "../../redux/actions";
 
 ////////////////////////////////////////////////////////////////////////////
 // Code
@@ -44,12 +47,31 @@ export function LandingPage() {
   }, []);
 
   // Alien surprise
+  const activateCode = useSelector((state) => state.activateCode);
+  const alienMode = useSelector((state) => state.alienMode);
+
+  useEffect(() => {
+    const storedMode = localStorage.getItem("alienMode");
+    if (storedMode === "true") dispatch(setAlienMode(true));
+  }, []);
+
+  const mode = useMemo(() => {
+    return alienMode;
+  }, [alienMode]);
+
   const handleKeyboard = (e) => {
     e.preventDefault();
     if (e.repeat) return;
 
     // Handle both, `ctrl` and `meta`.
-    if (e.metaKey || e.ctrlKey) console.log(e.key);
+    if ((e.metaKey || e.ctrlKey) && e.key === "x") {
+      const code = window.prompt("Ingresa el código invertido:");
+      if (code === activateCode) dispatch(setAlienMode(true));
+      else if (code !== "" && code !== null)
+        window.alert("Código desconocido...");
+    } else if ((e.metaKey || e.ctrlKey) && e.key === "z") {
+      dispatch(setAlienMode(false));
+    }
   };
 
   useEffect(() => {
@@ -58,6 +80,13 @@ export function LandingPage() {
     return () => document.removeEventListener("keydown", handleKeyboard);
   });
 
+  const landing = useMemo(() => {
+    return mode ? invadedLanding : landingMain;
+  }, [mode]);
+  const planeButton = useMemo(() => {
+    return mode ? ovniButton : planeButtonMain;
+  }, [mode]);
+
   //////////////////////////////////////////////////////////////////////////
   // Render
   //////////////////////////////////////////////////////////////////////////
@@ -65,20 +94,11 @@ export function LandingPage() {
     <div className={`${landing.bgColor}`}>
       <div className={`${landing.bgImage}`} />
       <div className={`${landing.enter}`}>
-        <Link
-          to="/home"
-          style={{
-            textDecoration: "none",
-            display: "block",
-            width: "100%",
-            height: "100%",
-          }}
-        >
+        <Link to="/home" className={`${landing.link}`}>
           <img
             src={planeButton}
             alt="Enter Button"
-            style={{ width: "100%" }}
-            // className={`${landing.enter}`}
+            className={`${landing.button}`}
           />
         </Link>
       </div>

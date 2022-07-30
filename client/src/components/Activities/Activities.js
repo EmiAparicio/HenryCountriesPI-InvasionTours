@@ -221,26 +221,32 @@ export function Activities() {
         <div className={`${activitiesStyle.countries}`}>
           <span>Países: </span>
           <div className={`${activitiesStyle.countryContainer}`}>
-            {!countryOptions.length
-              ? "No hay opciones"
-              : countryOptions.map((c) => {
-                  return (
-                    <div key={c.id} id={c.id}>
-                      <input
-                        type="checkbox"
-                        value={c.name}
-                        name={c.name}
-                        onChange={(e) => handleNewCountryActivity(e.target)}
-                      />
-                      <label
-                        onClick={() => handleLabelClick(c.id)}
-                        // style={{ display: "inline-block", width: "95%" }}
-                      >
-                        {c.name}
-                      </label>
-                    </div>
-                  );
-                })}
+            {!allCountries.length ? (
+              <span className={`${activitiesStyle.loading}`}>
+                Cargando datos...
+              </span>
+            ) : !countryOptions.length ? (
+              <span>"No hay opciones"</span>
+            ) : (
+              countryOptions.map((c) => {
+                return (
+                  <div key={c.id} id={c.id}>
+                    <input
+                      type="checkbox"
+                      value={c.name}
+                      name={c.name}
+                      onChange={(e) => handleNewCountryActivity(e.target)}
+                    />
+                    <label
+                      onClick={() => handleLabelClick(c.id)}
+                      // style={{ display: "inline-block", width: "95%" }}
+                    >
+                      {c.name}
+                    </label>
+                  </div>
+                );
+              })
+            )}
           </div>
         </div>
       </div>

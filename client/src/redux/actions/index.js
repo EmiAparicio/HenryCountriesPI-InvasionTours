@@ -23,6 +23,9 @@ export const SET_CLEAR_SEARCH = "SET_CLEAR_SEARCH",
   GET_COUNTRIES = "GET_COUNTRIES",
   SELECT_COUNTRIES = "SELECT_COUNTRIES";
 
+// ALIEN
+export const SET_ALIEN_MODE = "SET_ALIEN_MODE";
+
 ////////////////////////////////////////////////////////////////////////////
 // Export FUNCTIONS TO DISPATCH
 ////////////////////////////////////////////////////////////////////////////
@@ -123,4 +126,11 @@ export function setAllActivitiesTypes(activities) {
 // Store countries ids to be associated to added activity
 export function setCountriesId(ids) {
   return { type: SET_COUNTRIES_ID, payload: ids };
+}
+
+////////////////////////////////////////////////////////////////////////////
+// ALIEN
+export function setAlienMode(bool) {
+  localStorage.setItem("alienMode", bool);
+  return { type: SET_ALIEN_MODE, payload: bool };
 }

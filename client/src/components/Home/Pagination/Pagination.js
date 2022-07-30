@@ -5,7 +5,7 @@
 // Packages
 import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 // Application files
 import { ShowCountries } from "./ShowCountries";
@@ -26,6 +26,7 @@ const pagination = paginationMain; // paginationMain invadedPagination
 // Component: divide shown countries in pages
 export function Pagination({ showCountries }) {
   const dispatch = useDispatch();
+  const allCountries = useSelector((state) => state.allCountries);
 
   ///////////////////////////////////////////////////////////////////////////////////
   // Page changes reaction
@@ -51,7 +52,6 @@ export function Pagination({ showCountries }) {
     return query ? Number(query) : storedPage;
   }, [query]);
 
-  console.log(page);
   ///////////////////////////////////////////////////////////////////////////////////
   // HANDLERS
   // Change page when clicked from button
@@ -86,7 +86,9 @@ export function Pagination({ showCountries }) {
     <div className={`${pagination.container}`}>
       <div className={`${pagination.pagesContainer}`}>
         {page < 1 || page >= paginationArray.length ? (
-          <span>Página no válida</span> // When wrong page query in URL manually
+          <Link to="/home" className={`${pagination.noPageLink}`}>
+            Página no válida
+          </Link> // When wrong page query in URL manually
         ) : showCountries.length ? (
           // Pagination buttons
           paginationArray.map((p, id) => {
@@ -122,13 +124,19 @@ export function Pagination({ showCountries }) {
         ) : (
           // Button: clears filters when no results are found
           <div className={`${pagination.noResultsContainer}`}>
-            <button
-              name="NoRes"
-              onClick={handleClear}
-              className={`${pagination.noResults}`}
-            >
-              Sin resultados: Limpiar
-            </button>
+            {allCountries.length ? (
+              <button
+                name="NoRes"
+                onClick={handleClear}
+                className={`${pagination.noResults}`}
+              >
+                Sin resultados: Limpiar
+              </button>
+            ) : (
+              <span className={`${pagination.loading}`}>
+                Cargando datos...
+              </span>
+            )}
           </div>
         )}
       </div>

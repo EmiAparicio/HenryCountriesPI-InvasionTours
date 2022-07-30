@@ -50,7 +50,7 @@ export function NavBar() {
               Turismo
             </NavLink>
             <NavLink
-              to="/about"
+              to="/extra"
               style={{ textDecoration: "none" }}
               className={({ isActive }) =>
                 isActive ? `${navbar.navLinkActive}` : `${navbar.navExtra}`

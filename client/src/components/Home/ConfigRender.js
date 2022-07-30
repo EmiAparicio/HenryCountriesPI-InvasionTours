@@ -82,17 +82,23 @@ export function ConfigRender({
   // CLEAR single config handler
   function handleSingleClear() {
     // When Component is filter
-    if (configType === "filter")
+    if (configType === "filter") {
+      // Reset page after filter
+      if (filterConfig[name]) dispatch(setStoredPage(1));
+      // Reset page after filter
       dispatch(setConfigOptions({ name, [name]: "" }));
+    }
 
     // When Component is order
-    if (configType === "order") dispatch(setConfigOptions([]));
+    if (configType === "order") {
+      // Reset page after filter
+      if (orderConfig.includes(name)) dispatch(setStoredPage(1));
+
+      dispatch(setConfigOptions([]));
+    }
 
     // Sets config value to default
     configRef.current.value = "";
-
-    // Reset page after filter
-    dispatch(setStoredPage(1));
   }
 
   //////////////////////////////////////////////////////////////////////////////

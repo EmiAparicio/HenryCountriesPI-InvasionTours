@@ -14,6 +14,17 @@
   bottom: 5%;
 }
 
+.loading {
+  display: block;
+  width: 100%;
+  position: absolute;
+  text-align: center;
+  top: 50vh;
+  font-family: "Ubuntu";
+  font-size: 3vh;
+  color: rgb(0, 26, 91);
+}
+
 .container span {
   white-space: pre-wrap;
   display: flex;

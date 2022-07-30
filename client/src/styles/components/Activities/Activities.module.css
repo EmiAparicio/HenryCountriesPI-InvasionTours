@@ -7,6 +7,12 @@
   width: 50vw;
 }
 
+.loading {
+  font-family: "Ubuntu";
+  font-size: 3vh;
+  color: rgb(0, 26, 91);
+}
+
 .searchContainer {
   display: flex;
   justify-content: center;

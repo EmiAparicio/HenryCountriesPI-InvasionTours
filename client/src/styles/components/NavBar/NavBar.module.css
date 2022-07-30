@@ -30,6 +30,7 @@
 }
 
 .logo {
+  z-index: 500;
   user-select: none;
   height: 100%;
   margin-left: 3vw;

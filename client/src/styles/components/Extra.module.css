@@ -1,0 +1,41 @@
+.container {
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  max-width: 60vw;
+  padding-top: 5vh;
+  padding-bottom: 5vh;
+  padding-left: 3vw;
+  padding-right: 3vw;
+  border-radius: 20px;
+
+  background-color: rgba(255, 255, 255, 0.4);
+  margin-top: 22vh;
+  font-family: "Ubuntu";
+  font-size: 2.8vh;
+  color: rgb(0, 26, 91);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.p {
+  text-align: center;
+}
+
+.ol {
+  margin-top: 5%;
+}
+
+.link {
+  text-decoration: none;
+  color: rgb(0, 26, 91);
+  text-shadow: 0 0 3px rgb(255, 255, 255);
+}
+
+.code {
+  color: rgb(0, 26, 91);
+  text-shadow: 0 0 10px rgb(80, 218, 85), 0 0 10px rgb(80, 218, 85);
+}
