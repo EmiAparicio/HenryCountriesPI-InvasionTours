@@ -3,6 +3,7 @@
 //////////////////////////////////////////////////////////////////////////////
 const express = require("express");
 const routes = require("./routes/index.js");
+const cors = require("cors");
 
 require("./db.js");
 
@@ -14,6 +15,7 @@ const server = express();
 server.name = "API";
 
 // Middlewares
+server.use(cors());
 server.use(express.urlencoded({ extended: true, limit: "50mb" }));
 server.use(express.json({ limit: "50mb" }));
 

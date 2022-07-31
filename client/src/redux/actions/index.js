@@ -35,12 +35,8 @@ export const SET_ALIEN_MODE = "SET_ALIEN_MODE",
 // Get countries from db, all or selected by name as URL query
 export function getCountries(name = "?") {
   return function (dispatch) {
-    fetch(
-      `http://localhost:3001/countries${
-        name !== "?" && name !== "" ? `?name=${name}` : ""
-      }`
-    )
-      .then((response) => response.json())
+    axios
+      .get(`/countries${name !== "?" && name !== "" ? `?name=${name}` : ""}`)
       .then((countries) => {
         dispatch({
           type: GET_COUNTRIES,
@@ -48,8 +44,8 @@ export function getCountries(name = "?") {
             name !== "?"
               ? name === ""
                 ? { partial: true, countries: [] }
-                : { partial: true, countries }
-              : { partial: false, countries },
+                : { partial: true, countries: countries.data }
+              : { partial: false, countries: countries.data },
         });
       });
   };
@@ -93,7 +89,7 @@ export function modifyCountries(countries) {
 export function getCountryDetail(id) {
   return async function (dispatch) {
     if (id) {
-      const resp = await axios.get(`http://localhost:3001/countries/${id}`);
+      const resp = await axios.get(`/countries/${id}`);
 
       dispatch({
         type: GET_COUNTRY_DETAIL,
@@ -110,18 +106,14 @@ export function createActivity(activity, alienMode = false) {
   return activity
     ? alienMode
       ? function (dispatch) {
-          axios
-            .post("http://localhost:3001/invasions", activity)
-            .then((resp) => {
-              dispatch({ type: CREATE_ACTIVITY, payload: resp.data });
-            });
+          axios.post("/invasions", activity).then((resp) => {
+            dispatch({ type: CREATE_ACTIVITY, payload: resp.data });
+          });
         }
       : function (dispatch) {
-          axios
-            .post("http://localhost:3001/activities", activity)
-            .then((resp) => {
-              dispatch({ type: CREATE_ACTIVITY, payload: resp.data });
-            });
+          axios.post("/activities", activity).then((resp) => {
+            dispatch({ type: CREATE_ACTIVITY, payload: resp.data });
+          });
         }
     : { type: CREATE_ACTIVITY, payload: {} };
 }
@@ -140,9 +132,7 @@ export function setAlienMode(bool) {
 export function getInvadedCountries(ids, disconnect) {
   if (ids?.length) {
     const getArray = ids.map((id) =>
-      axios
-        .get(`http://localhost:3001/countries/${id}`)
-        .then((resp) => resp.data)
+      axios.get(`/countries/${id}`).then((resp) => resp.data)
     );
 
     Promise.all(getArray).then((resp) => {
@@ -161,13 +151,11 @@ export function getInvadedCountries(ids, disconnect) {
     });
   } else {
     if (disconnect) {
-      fetch(`http://localhost:3001/invasions/ALL`, {
-        method: "DELETE",
-      }).then(() => {
+      axios.delete(`/invasions/ALL`).then(() => {
         localStorage.removeItem("invadedCountries");
       });
     } else
-      axios.delete(`http://localhost:3001/invasions/NEILA`).then(() => {
+      axios.delete(`/invasions/NEILA`).then(() => {
         localStorage.removeItem("invadedCountries");
       });
   }

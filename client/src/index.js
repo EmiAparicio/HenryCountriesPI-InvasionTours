@@ -6,6 +6,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
+import dotenv from "dotenv";
+import axios from "axios";
 
 // Application files
 import { App } from "./App";
@@ -16,6 +18,9 @@ import "./index.css";
 /////////////////////////////////////////////////
 // Code
 /////////////////////////////////////////////////
+
+axios.defaults.baseURL = process.env.REACT_APP_API || "http://127.0.0.1:3001/";
+
 // App render - Redux store provide
 ReactDOM.render(
   <React.StrictMode>

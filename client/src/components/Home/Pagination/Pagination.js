@@ -96,7 +96,7 @@ export function Pagination({ showCountries }) {
     <div className={`${pagination.container}`}>
       <div className={`${pagination.pagesContainer}`}>
         {page < 1 || page >= paginationArray.length ? (
-          <Link to="/home" className={`${pagination.noPageLink}`}>
+          <Link to="/home?page=1" className={`${pagination.noPageLink}`}>
             Página no válida
           </Link> // When wrong page query in URL manually
         ) : showCountries.length ? (

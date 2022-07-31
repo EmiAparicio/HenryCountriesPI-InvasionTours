@@ -10,6 +10,7 @@ import {
   createActivity,
   setAlienMode,
   setCountriesId,
+  setStoredPage,
 } from "../../redux/actions";
 
 // CSS
@@ -185,6 +186,7 @@ export function Form({ existingActivities }) {
     setSelectSeason("Verano");
     // dispatch(setClearSearch(true)); // Clear country search when submit
     dispatch(setCountriesId([]));
+    dispatch(setStoredPage(1));
 
     // Uncheck all countries boxes
     allCountries.forEach((c) => {
