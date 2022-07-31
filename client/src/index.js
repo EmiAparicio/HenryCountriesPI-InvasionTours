@@ -19,6 +19,7 @@ import "./index.css";
 // Code
 ///////////////////////////////////////////////////////////////////////////////
 
+dotenv.config();
 axios.defaults.baseURL = process.env.REACT_APP_API || "http://127.0.0.1:3001/";
 
 // App render - Redux store provide

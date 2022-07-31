@@ -91,9 +91,11 @@ export function getCountryDetail(id) {
     if (id) {
       const resp = await axios.get(`/countries/${id}`);
 
+      const payload = resp.data || { msj: "not found" };
+
       dispatch({
         type: GET_COUNTRY_DETAIL,
-        payload: resp.data,
+        payload,
       });
     } else dispatch({ type: GET_COUNTRY_DETAIL, payload: {} });
   };

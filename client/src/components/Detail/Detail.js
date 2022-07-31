@@ -47,16 +47,17 @@ export function Detail() {
   if (alienMode && country.Invasions?.find((i) => i.name === "NEILA")) {
     NEILAinvaded = true;
   }
-  console.log(alienMode);
 
   // Render
   return (
     <>
-      {!country.name ? (
-        <span className={`${detail.loading}`}>Cargando datos...</span>
+      {country?.msj ? (
+        <span className={`${detail.loading}`}>
+          No existe un país con el código {countryId}
+        </span>
       ) : (
         <div className={`${detail.container}`}>
-          {country ? (
+          {country?.flag ? (
             <>
               <div className={`${detail.detailContainer}`}>
                 <div className={`${detail.flagContainer}`}>
@@ -162,7 +163,7 @@ export function Detail() {
             </>
           ) : (
             // Error when wrong country id in URL params
-            <span>No existe un país con el código {countryId}</span>
+            <span className={`${detail.loading}`}>Cargando datos...</span>
           )}
         </div>
       )}
