@@ -9,7 +9,7 @@
   background-repeat: no-repeat;
   background-position: center;
   filter: drop-shadow(0 0 1px black) drop-shadow(0 0 1px black)
-    drop-shadow(0 0 30px rgb(98, 80, 35)) drop-shadow(0 0 5px rgb(98, 80, 35));
+    drop-shadow(0 0 5px rgb(80, 218, 85)) drop-shadow(0 0 5px rgb(80, 218, 85));
   width: 95vw;
   height: 95vh;
   overflow: visible;
@@ -18,13 +18,87 @@
   align-items: flex-end;
 }
 
+.bgImageComplete {
+  user-select: none;
+  background-image: url("../../images/countries.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  width: 95vw;
+  height: 95vh;
+  overflow: visible;
+
+  display: flex;
+  align-items: flex-end;
+
+  animation: bgAnimation 1s infinite;
+}
+
+@keyframes bgAnimation {
+  from {
+    filter: drop-shadow(0 0 3px rgb(80, 218, 85))
+      drop-shadow(0 0 1px rgb(80, 218, 85));
+  }
+  90% {
+    filter: drop-shadow(0 0 5px rgb(80, 218, 85))
+      drop-shadow(0 0 5px rgb(80, 218, 85));
+  }
+
+  95% {
+    filter: drop-shadow(0 0 15px rgb(96, 245, 101))
+      drop-shadow(0 0 8px rgb(96, 245, 101));
+  }
+
+  97% {
+    filter: drop-shadow(0 0 20px rgb(96, 245, 101));
+  }
+  99% {
+    filter: drop-shadow(0 0 20px rgb(96, 245, 101));
+  }
+
+  to {
+    filter: drop-shadow(0 0 3px rgb(80, 218, 85))
+      drop-shadow(0 0 1px rgb(80, 218, 85));
+  }
+}
+
 .bgColor {
   display: flex;
-  background-color: rgb(80, 167, 218);
+  background: rgba(59, 0, 91, 1);
+  background: linear-gradient(
+    180deg,
+    rgba(59, 0, 91, 1) 0%,
+    rgba(184, 80, 218, 1) 28%,
+    rgba(218, 80, 145, 1) 60%,
+    rgba(80, 167, 218, 1) 100%
+  );
   width: 100vw;
   height: 100vh;
   justify-content: center;
   align-items: center;
+}
+
+.bgColorComplete {
+  display: flex;
+
+  width: 100vw;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  animation: bgColorAnimation 5s infinite;
+}
+
+@keyframes bgColorAnimation {
+  from {
+    background: rgba(59, 0, 91, 1);
+  }
+  50% {
+    background: rgb(128, 39, 177);
+  }
+  to {
+    background: rgba(59, 0, 91, 1);
+  }
 }
 
 .link {
@@ -47,7 +121,7 @@
   transition: filter 1s;
   position: absolute;
   bottom: var(--buttonPositionY);
-  left: 7vw;
+  left: 5vw;
 
   animation: enterButtonAnimation 1s infinite;
 }

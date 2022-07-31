@@ -59,11 +59,13 @@ sequelize.models = Object.fromEntries(capsEntries);
 // Create models associations
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // Destructure models from sequelize "models" property
-const { Country, Activity } = sequelize.models;
+const { Country, Activity, Invasion } = sequelize.models;
 
 // Models associations
 Country.belongsToMany(Activity, { through: "Country_Activity" });
 Activity.belongsToMany(Country, { through: "Country_Activity" });
+Country.belongsToMany(Invasion, { through: "Country_Invasion" });
+Invasion.belongsToMany(Country, { through: "Country_Invasion" });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // Exports

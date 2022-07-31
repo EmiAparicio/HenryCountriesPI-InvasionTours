@@ -2,16 +2,19 @@
 // Imports
 ////////////////////////////////////////////////////////////////////////////////
 // Packages
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { validateLetters } from "../../controllers";
-import { createActivity, setCountriesId } from "../../redux/actions";
+import {
+  createActivity,
+  setAlienMode,
+  setCountriesId,
+} from "../../redux/actions";
 
 // CSS
 import formMain from "../../styles/components/Activities/Form.module.css";
-
-const form = formMain; // formMain invadedForm
+import invadedForm from "../../styles/components/Activities/FormI.module.css";
 
 ////////////////////////////////////////////////////////////////////////////////
 // Code
@@ -19,6 +22,16 @@ const form = formMain; // formMain invadedForm
 // Component: form to be filled in order to create/associate an activity
 export function Form({ existingActivities }) {
   const dispatch = useDispatch();
+
+  // Alien
+  const alienMode = useSelector((state) => state.alienMode);
+  const storedMode =
+    localStorage.getItem("alienMode") === "true" ? true : false;
+  dispatch(setAlienMode(storedMode));
+
+  let form = useMemo(() => {
+    return alienMode ? invadedForm : formMain;
+  }, [alienMode]);
 
   // Hide error message when losing focus
   const [errors, setErrors] = // Error messages depending on input
@@ -163,7 +176,7 @@ export function Form({ existingActivities }) {
     };
 
     dispatch(createActivity());
-    dispatch(createActivity(activity));
+    dispatch(createActivity(activity, alienMode));
 
     // Reset all used data
     setSelectActivity("");
@@ -196,7 +209,7 @@ export function Form({ existingActivities }) {
               : `${form.mainText}`
           }
         >
-          Añadir actividad
+          {alienMode ? "Planear invasión" : "Añadir actividad"}
         </div>
       </div>
       <form onSubmit={handleSubmit} className={`${form.formContainer}`}>
@@ -204,7 +217,7 @@ export function Form({ existingActivities }) {
           <input
             type="submit"
             disabled={!countriesId.length || !selectActivity.length}
-            value="Añadir actividad"
+            value={alienMode ? "Planear invasión" : "Añadir actividad"}
             className={
               !countriesId.length || !selectActivity.length
                 ? `${form.buttonHidden}`
@@ -231,7 +244,7 @@ export function Form({ existingActivities }) {
           <input
             list="existingActivities"
             name="activity"
-            placeholder='"Actividad"'
+            placeholder={alienMode ? '"Ejecución"' : '"Actividad"'}
             autoComplete="off"
             onChange={handleActivityChange}
             onBlur={handleBlur}
@@ -274,23 +287,23 @@ export function Form({ existingActivities }) {
                 value={1}
                 defaultChecked
               />{" "}
-              Visita
+              {alienMode ? "Reconocimiento" : "Visita"}
             </label>
             <label>
               <input type="radio" id="diff2" name="difficulty" value={2} />{" "}
-              Esparcimiento
+              {alienMode ? "Encuentro cercano" : "Esparcimiento"}
             </label>
             <label>
               <input type="radio" id="diff3" name="difficulty" value={3} />{" "}
-              Aventura
+              {alienMode ? "Invasión" : "Aventura"}
             </label>
             <label>
               <input type="radio" id="diff4" name="difficulty" value={4} />{" "}
-              Profesional
+              {alienMode ? "Dominio total del mundo!" : "Profesional"}
             </label>
             <label>
               <input type="radio" id="diff5" name="difficulty" value={5} />{" "}
-              Competitiva
+              {alienMode ? "Destrucción absoluta" : "Competitiva"}
             </label>
           </div>
           {
@@ -313,7 +326,9 @@ export function Form({ existingActivities }) {
           <label>
             {" "}
             {document.getElementById("duration")?.value}{" "}
-            {document.getElementById("duration")?.value === "1" ? "día" : "días"}
+            {document.getElementById("duration")?.value === "1"
+              ? "día"
+              : "días"}
           </label>
           <input
             type="range"

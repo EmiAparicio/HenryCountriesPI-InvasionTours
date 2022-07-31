@@ -2,7 +2,7 @@
 // Imports
 ///////////////////////////////////////////////////////////////////////////////
 // Packages
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 
@@ -10,6 +10,7 @@ import { useLocation } from "react-router-dom";
 import { validateLetters } from "../controllers";
 import {
   getCountries,
+  setAlienMode,
   setClearSearch,
   setNameSelection,
   setStoredPage,
@@ -17,8 +18,7 @@ import {
 
 // CSS
 import searchMain from "../styles/components/SearchCountry.module.css";
-
-const search = searchMain; //searchMain invadedSearch
+import invadedSearch from "../styles/components/SearchCountryI.module.css";
 
 ///////////////////////////////////////////////////////////////////////////////
 // Code
@@ -26,6 +26,19 @@ const search = searchMain; //searchMain invadedSearch
 // Component: search input for filtering countries by name
 export function SearchCountry() {
   const dispatch = useDispatch();
+
+  /////////////////////////////////////////////////////////////////////////////
+  // Alien
+  const alienMode = useSelector((state) => state.alienMode);
+  const storedMode =
+    localStorage.getItem("alienMode") === "true" ? true : false;
+  dispatch(setAlienMode(storedMode));
+
+  let search = useMemo(() => {
+    return alienMode ? invadedSearch : searchMain;
+  }, [alienMode]);
+
+  /////////////////////////////////////////////////////////////////////////////
 
   const nameSelection = useSelector((state) => state.nameSelection);
   const [selectCountry, setSelectCountry] = useState(nameSelection);

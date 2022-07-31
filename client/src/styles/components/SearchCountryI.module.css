@@ -18,24 +18,24 @@
 }
 
 .input::placeholder {
-  color: rgb(0, 26, 91);
+  color: rgba(59, 0, 91, 1);
 }
 
 .input::selection {
-  color: rgb(0, 26, 91);
+  color: rgba(59, 0, 91, 1);
 }
 
 .input:focus {
   outline: none;
   color: white;
-  background-color: rgb(40, 80, 159);
-  filter: drop-shadow(0 -1px 5px rgb(217, 241, 255))
-    drop-shadow(0 -1px 5px rgb(217, 241, 255))
-    drop-shadow(0 -1px 5px rgb(217, 241, 255));
+  background-color: rgb(105, 43, 138);
+  filter: drop-shadow(0 -1px 5px rgb(152, 247, 165))
+    drop-shadow(0 -1px 5px rgb(152, 247, 165))
+    drop-shadow(0 -1px 5px rgb(152, 247, 165));
 }
 
 .input:focus::placeholder {
-  color: rgb(152, 212, 247);
+  color: rgb(152, 247, 165);
 }
 
 .input::-webkit-search-cancel-button {
@@ -43,7 +43,7 @@
   position: absolute;
   right: 2%;
   background-color: rgb(255, 119, 0);
-  border: 3px solid rgb(224, 149, 0);
+  border: 3px solid rgb(80, 218, 85);
   height: 1vh;
   width: 1vh;
   border-radius: 50%;
@@ -53,8 +53,8 @@
   font-family: "Ubuntu";
   margin-top: 10px;
   z-index: 50;
-  color: rgb(255, 119, 0);
-  text-shadow: 0 0 4px rgb(0, 26, 91), 0 0 4px rgb(0, 26, 91);
+  color: rgb(80, 218, 85);
+  text-shadow: 0 0 4px rgba(59, 0, 91, 1), 0 0 4px rgba(59, 0, 91, 1);
   font-size: 1.2rem;
   height: 1.3rem;
   text-align: center;

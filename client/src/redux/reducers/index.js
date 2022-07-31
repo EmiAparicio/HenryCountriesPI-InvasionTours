@@ -9,7 +9,6 @@ import {
   SET_ORDER_OPTIONS,
   GET_COUNTRY_DETAIL,
   CREATE_ACTIVITY,
-  SET_ALL_ACTIVITIES_TYPES,
 
   // HOME
   SET_PAGE,
@@ -51,7 +50,6 @@ const initialState = {
   selectedCountries: [], // Selected countries from back: /countries?name
   clearSearch: false, // Toggle country searching input cleaning
   createdActivity: {}, // New created or assigned activity
-  allActivitiesTypes: [], // All activities different names
 
   // ALIEN
   activateCode: "ALIEN",
@@ -85,18 +83,12 @@ export default function rootReducer(state = initialState, action) {
       return { ...state, countriesId: action.payload };
     case CREATE_ACTIVITY:
       return { ...state, createdActivity: action.payload };
-    case SET_ALL_ACTIVITIES_TYPES:
-      return {
-        ...state,
-        allActivitiesTypes: action.payload,
-      };
     case SET_PAGE:
       return { ...state, page: action.payload };
     case MODIFY_COUNTRIES:
       return { ...state, allCountries: action.payload };
     case SET_CLEAR_SEARCH:
       return { ...state, clearSearch: action.payload };
-
     case SET_ALIEN_MODE:
       return { ...state, alienMode: action.payload };
     default:

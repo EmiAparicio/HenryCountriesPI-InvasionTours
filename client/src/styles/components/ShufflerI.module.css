@@ -1,0 +1,76 @@
+.container {
+  user-select: none;
+  margin-top: 1vh;
+  font-size: 2.5vh;
+}
+.shuffler {
+  font-family: "Ubuntu";
+  font-size: 2.5vh;
+  border-style: hidden;
+  color: rgb(80, 218, 85);
+  border-radius: 10px;
+  padding: 5px 10px 5px;
+  background-color: rgba(59, 0, 91, 1);
+  cursor: pointer;
+
+  animation: buttonAnimation 0.5s 1;
+}
+
+.shuffler:hover {
+  transition: transform 0.2s;
+  transform: scale(1.1);
+}
+
+@keyframes buttonAnimation {
+  from {
+    transform: scale(0);
+  }
+
+  40% {
+    transform: scale(1.3);
+  }
+
+  60% {
+    transform: scale(0.8);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+.shufflerHide {
+  font-size: 2.5vh;
+  color: rgb(80, 218, 85);
+  border-radius: 10px;
+  padding: 5px 10px 5px;
+  background-color: rgba(59, 0, 91, 1);
+
+  transform: scale(0);
+  animation: buttonAnimationHide 0.5s 1;
+}
+
+@keyframes buttonAnimationHide {
+  from {
+    transform: scale(1);
+  }
+
+  40% {
+    transform: scale(0.8);
+  }
+
+  60% {
+    transform: scale(1.3);
+  }
+
+  to {
+    transform: scale(0);
+  }
+}
+
+.shuffler:active {
+  transform: scale(0.95);
+  color: rgb(152, 247, 165);
+  filter: drop-shadow(0 0 5px rgb(80, 218, 85))
+    drop-shadow(0 0 5px rgb(80, 218, 85)) drop-shadow(0 0 5px rgb(80, 218, 85));
+}

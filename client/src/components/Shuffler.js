@@ -2,16 +2,16 @@
 // Imports
 /////////////////////////////////////////////////////////////////////
 // Packages
-import { useDispatch } from "react-redux";
+import { useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 // Application files
 import { shuffle } from "../controllers";
-import { modifyCountries } from "../redux/actions";
+import { modifyCountries, setAlienMode } from "../redux/actions";
 
 // CSS
 import shufflerMain from "../styles/components/Shuffler.module.css";
-
-const shuffler = shufflerMain; // shufflerMain invadeMain
+import invadedshuffler from "../styles/components/ShufflerI.module.css";
 
 /////////////////////////////////////////////////////////////////////
 // Code
@@ -20,10 +20,22 @@ const shuffler = shufflerMain; // shufflerMain invadeMain
 export function Shuffler({ countries, shufflerHidder }) {
   const dispatch = useDispatch();
 
+  // Alien
+  const alienMode = useSelector((state) => state.alienMode);
+  const storedMode =
+    localStorage.getItem("alienMode") === "true" ? true : false;
+  dispatch(setAlienMode(storedMode));
+
+  let shuffler = useMemo(() => {
+    return alienMode ? invadedshuffler : shufflerMain;
+  }, [alienMode]);
+
+  // Handler
   function handleClick() {
     dispatch(modifyCountries(shuffle(countries)));
   }
 
+  // Render
   return (
     <div className={`${shuffler.container}`}>
       <button

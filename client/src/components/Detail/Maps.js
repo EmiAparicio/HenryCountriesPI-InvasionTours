@@ -1,16 +1,31 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // Import packages
-import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setAlienMode } from "../../redux/actions";
 
 // CSS
-import mapStyle from "../../styles/components/Detail/Detail.module.css";
+import detailMain from "../../styles/components/Detail/Detail.module.css";
+import invadedDetail from "../../styles/components/Detail/DetailI.module.css";
 
 import mapIcon from "../../styles/images/googlemaps.png";
 
 ////////////////////////////////////////////////////////////////////
 // Component: show Google Maps centered in selected country
 export function Maps() {
+  //////////////////////////////////////////////////////////////////////////////
+  // Alien
+  const dispatch = useDispatch();
+  const alienMode = useSelector((state) => state.alienMode);
+  const storedMode =
+    localStorage.getItem("alienMode") === "true" ? true : false;
+  dispatch(setAlienMode(storedMode));
+
+  let mapStyle = useMemo(() => {
+    return alienMode ? invadedDetail : detailMain;
+  }, [alienMode]);
+  //////////////////////////////////////////////////////////////////////////////
+
   const mapContainer = useRef();
   const country = useSelector((state) => state.countryDetail);
 

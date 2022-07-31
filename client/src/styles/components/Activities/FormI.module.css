@@ -1,0 +1,298 @@
+.formContainer {
+  display: flex;
+  justify-content: space-around;
+  font-size: 3vh;
+  height: 18vh;
+  margin-top: 9vh;
+}
+
+.mainText {
+  animation: mainTextAnimation 1s 1;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  top: 18.7vh;
+
+  font-family: "Ubuntu";
+  font-size: 2.5vh;
+  color: rgb(80, 218, 85);
+}
+
+.mainTextHidden {
+  visibility: hidden;
+}
+
+@keyframes mainTextAnimation {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.nameContainer {
+  font-family: "Ubuntu";
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 300px;
+}
+
+.label {
+  margin-top: 1vh;
+  margin-bottom: 1vh;
+  display: block;
+  height: 4vh;
+  color: rgb(59, 0, 91);
+  text-shadow: 0 0 10px rgb(152, 212, 247);
+}
+
+.nameLabelClean {
+  display: block;
+  margin-top: 0.5vh;
+  margin-bottom: 1.5vh;
+  height: 4vh;
+  color: white;
+  cursor: pointer;
+  animation: labelCleanAnimation 2s infinite;
+}
+
+.nameLabelClean:hover {
+  animation: paused;
+  margin-top: 0.5vh;
+  margin-bottom: 1.5vh;
+  text-shadow: 0 0.5vh rgb(80, 218, 85);
+}
+.nameLabelClean:active {
+  margin-top: 1vh;
+  margin-bottom: 1vh;
+  text-shadow: 0 0 10px rgb(152, 212, 247);
+}
+
+@keyframes labelCleanAnimation {
+  from {
+    margin-top: 0.5vh;
+    margin-bottom: 1.5vh;
+    text-shadow: 0 0.5vh rgb(80, 218, 85);
+  }
+  15% {
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+    text-shadow: 0 0 10px rgb(80, 218, 85);
+  }
+  30% {
+    margin-top: 0.5vh;
+    margin-bottom: 1.5vh;
+    text-shadow: 0 0.5vh rgb(80, 167, 218);
+  }
+  to {
+    margin-top: 0.5vh;
+    margin-bottom: 1.5vh;
+    text-shadow: 0 0.5vh rgb(80, 167, 218);
+  }
+}
+
+.name {
+  font-family: "Ubuntu";
+  width: 200px;
+  padding: 2% 0 2%;
+  font-size: 2vh;
+  border-radius: 10px;
+  border-style: hidden;
+  background-color: rgba(255, 255, 255, 0.4);
+  color: rgb(59, 0, 91);
+  text-align: center;
+}
+
+.name:focus {
+  outline: none;
+  color: white;
+  background-color: rgb(105, 43, 138);
+  filter: drop-shadow(0 0 5px rgb(80, 218, 85))
+    drop-shadow(0 0 5px rgb(80, 218, 85)) drop-shadow(0 0 5px rgb(80, 218, 85));
+}
+
+.name::placeholder {
+  color: rgba(59, 0, 91, 1);
+}
+
+.name:focus::placeholder {
+  color: rgb(152, 247, 165);
+}
+
+.difficultyContainer {
+  font-family: "Ubuntu";
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 300px;
+}
+
+.difficultyLabelsContainer {
+  font-size: 2vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.durationContainer {
+  font-family: "Ubuntu";
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 300px;
+}
+
+.durationRange:hover {
+  filter: drop-shadow(0 0 6px rgb(80, 218, 85))
+    drop-shadow(0 0 6px rgb(80, 218, 85));
+  cursor: pointer;
+}
+
+.seasonContainer {
+  font-family: "Ubuntu";
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 300px;
+}
+
+.seasonSelect {
+  font-family: "Ubuntu";
+  width: 200px;
+  padding: 2% 5% 2%;
+  font-size: 2vh;
+  border-radius: 10px;
+  border-style: hidden;
+  background-color: rgba(255, 255, 255, 0.4);
+  color: rgb(59, 0, 91);
+  text-align: center;
+}
+
+.seasonOption {
+  font-size: 1.5vh;
+  color: rgb(59, 0, 91);
+  border-style: hidden;
+  border-radius: 10px;
+  background-color: rgba(184, 80, 218, 1);
+}
+
+.seasonSelect:focus {
+  outline: none;
+  color: white;
+  background-color: rgb(105, 43, 138);
+  filter: drop-shadow(0 0 5px rgba(218, 80, 145, 1))
+    drop-shadow(0 0 5px rgba(218, 80, 145, 1))
+    drop-shadow(0 0 5px rgba(218, 80, 145, 1));
+}
+
+.error {
+  margin-top: 10px;
+  z-index: 50;
+  color: rgb(80, 218, 85);
+  text-shadow: 0 0 4px rgb(59, 0, 91), 0 0 4px rgb(59, 0, 91);
+  font-size: 1.2rem;
+  height: 1.3rem;
+  text-align: center;
+}
+
+.errorHidden {
+  margin-top: 10px;
+  height: 1.3rem;
+  visibility: hidden;
+}
+
+.buttonContainer {
+  z-index: 100;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  top: 18vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button {
+  z-index: 10;
+  font-family: "Ubuntu";
+  max-height: 5vh;
+  user-select: none;
+  font-size: 2.5vh;
+  border-style: hidden;
+  color: rgb(80, 218, 85);
+  border-radius: 10px;
+  padding: 5px 10px 5px;
+  background-color: rgb(59, 0, 91);
+  cursor: pointer;
+
+  animation: buttonAnimation 0.5s 1;
+}
+
+.button:hover {
+  z-index: 10;
+  transition: transform 0.2s;
+  transform: scale(1.1);
+}
+
+.button:active {
+  z-index: 10;
+  transform: scale(0.95);
+  color: rgb(152, 247, 165);
+  filter: drop-shadow(0 0 5px rgb(80, 218, 85))
+    drop-shadow(0 0 5px rgb(80, 218, 85)) drop-shadow(0 0 5px rgb(80, 218, 85));
+}
+
+@keyframes buttonAnimation {
+  from {
+    transform: scale(0);
+  }
+
+  40% {
+    transform: scale(1.3);
+  }
+
+  60% {
+    transform: scale(0.8);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+.buttonHidden {
+  z-index: 10;
+  font-size: 2.5vh;
+  color: rgb(80, 218, 85);
+  border-radius: 10px;
+  padding: 5px 10px 5px;
+  background-color: rgb(59, 0, 91);
+
+  transform: scale(0);
+  animation: buttonAnimationHide 0.5s 1;
+}
+
+@keyframes buttonAnimationHide {
+  from {
+    transform: scale(1);
+  }
+
+  40% {
+    transform: scale(0.8);
+  }
+
+  60% {
+    transform: scale(1.3);
+  }
+
+  to {
+    transform: scale(0);
+  }
+}

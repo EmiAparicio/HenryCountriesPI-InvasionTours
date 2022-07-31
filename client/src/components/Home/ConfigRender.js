@@ -3,16 +3,15 @@
 // Imports
 ////////////////////////////////////////////////////////////////////////////////
 // Packages
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 // Application files
-import { setStoredPage } from "../../redux/actions";
+import { setAlienMode, setStoredPage } from "../../redux/actions";
 
 // CSS
 import configMain from "../../styles/components/Home/ConfigRender.module.css";
-
-const config = configMain; // configMain invadedConfig
+import invadedConfig from "../../styles/components/Home/ConfigRenderI.module.css";
 
 ////////////////////////////////////////////////////////////////////////////////
 // Code
@@ -29,6 +28,19 @@ export function ConfigRender({
   setConfigOptions,
 }) {
   const dispatch = useDispatch();
+
+  //////////////////////////////////////////////////////////////////////////////
+  // Alien
+  const alienMode = useSelector((state) => state.alienMode);
+  const storedMode =
+    localStorage.getItem("alienMode") === "true" ? true : false;
+  dispatch(setAlienMode(storedMode));
+
+  let config = useMemo(() => {
+    return alienMode ? invadedConfig : configMain;
+  }, [alienMode]);
+
+  //////////////////////////////////////////////////////////////////////////////
 
   const configRef = useRef(); // Used later to set default option as active
 

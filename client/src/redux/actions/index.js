@@ -15,8 +15,7 @@ export const GET_COUNTRY_DETAIL = "GET_COUNTRY_DETAIL";
 
 // ACTIVITIES
 export const SET_COUNTRIES_ID = "SET_COUNTRIES_ID",
-  CREATE_ACTIVITY = "CREATE_ACTIVITY",
-  SET_ALL_ACTIVITIES_TYPES = "SET_ALL_ACTIVITIES_TYPES";
+  CREATE_ACTIVITY = "CREATE_ACTIVITY";
 
 // GENERAL
 export const SET_CLEAR_SEARCH = "SET_CLEAR_SEARCH",
@@ -24,7 +23,8 @@ export const SET_CLEAR_SEARCH = "SET_CLEAR_SEARCH",
   SELECT_COUNTRIES = "SELECT_COUNTRIES";
 
 // ALIEN
-export const SET_ALIEN_MODE = "SET_ALIEN_MODE";
+export const SET_ALIEN_MODE = "SET_ALIEN_MODE",
+  GET_INVADED_COUNTRIES = "GET_INVADED_COUNTRIES";
 
 ////////////////////////////////////////////////////////////////////////////
 // Export FUNCTIONS TO DISPATCH
@@ -106,21 +106,24 @@ export function getCountryDetail(id) {
 ////////////////////////////////////////////////////////////////////////////
 // ACTIVITIES
 // Post activity to add/associate in db
-export function createActivity(activity) {
+export function createActivity(activity, alienMode = false) {
   return activity
-    ? function (dispatch) {
-        axios
-          .post("http://localhost:3001/activities", activity)
-          .then((resp) => {
-            dispatch({ type: CREATE_ACTIVITY, payload: resp.data });
-          });
-      }
+    ? alienMode
+      ? function (dispatch) {
+          axios
+            .post("http://localhost:3001/invasions", activity)
+            .then((resp) => {
+              dispatch({ type: CREATE_ACTIVITY, payload: resp.data });
+            });
+        }
+      : function (dispatch) {
+          axios
+            .post("http://localhost:3001/activities", activity)
+            .then((resp) => {
+              dispatch({ type: CREATE_ACTIVITY, payload: resp.data });
+            });
+        }
     : { type: CREATE_ACTIVITY, payload: {} };
-}
-
-// Store all activity types (names)
-export function setAllActivitiesTypes(activities) {
-  return { type: SET_ALL_ACTIVITIES_TYPES, payload: activities };
 }
 
 // Store countries ids to be associated to added activity
@@ -133,4 +136,41 @@ export function setCountriesId(ids) {
 export function setAlienMode(bool) {
   localStorage.setItem("alienMode", bool);
   return { type: SET_ALIEN_MODE, payload: bool };
+}
+export function getInvadedCountries(ids, disconnect) {
+  if (ids?.length) {
+    const getArray = ids.map((id) =>
+      axios
+        .get(`http://localhost:3001/countries/${id}`)
+        .then((resp) => resp.data)
+    );
+
+    Promise.all(getArray).then((resp) => {
+      const invadedCountries = resp.map((r) => {
+        return {
+          id: r.id,
+          name: r.name,
+          capital: r.capital,
+        };
+      });
+
+      localStorage.setItem(
+        "invadedCountries",
+        JSON.stringify(invadedCountries)
+      );
+    });
+  } else {
+    if (disconnect) {
+      fetch(`http://localhost:3001/invasions/ALL`, {
+        method: "DELETE",
+      }).then(() => {
+        localStorage.removeItem("invadedCountries");
+      });
+    } else
+      axios.delete(`http://localhost:3001/invasions/NEILA`).then(() => {
+        localStorage.removeItem("invadedCountries");
+      });
+  }
+
+  return { type: "" };
 }

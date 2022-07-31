@@ -10,6 +10,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 // Application files
 import { ShowCountries } from "./ShowCountries";
 import {
+  setAlienMode,
   setClearSearch,
   setFilterOptions,
   setStoredPage,
@@ -17,8 +18,7 @@ import {
 
 // CSS
 import paginationMain from "../../../styles/components/Home/Pagination/Pagination.module.css";
-
-const pagination = paginationMain; // paginationMain invadedPagination
+import invadedPagination from "../../../styles/components/Home/Pagination/PaginationI.module.css";
 
 /////////////////////////////////////////////////////////////////////////////////////
 // Code
@@ -27,6 +27,16 @@ const pagination = paginationMain; // paginationMain invadedPagination
 export function Pagination({ showCountries }) {
   const dispatch = useDispatch();
   const allCountries = useSelector((state) => state.allCountries);
+
+  // Alien
+  const alienMode = useSelector((state) => state.alienMode);
+  const storedMode =
+    localStorage.getItem("alienMode") === "true" ? true : false;
+  dispatch(setAlienMode(storedMode));
+
+  let pagination = useMemo(() => {
+    return alienMode ? invadedPagination : paginationMain;
+  }, [alienMode]);
 
   ///////////////////////////////////////////////////////////////////////////////////
   // Page changes reaction
@@ -133,9 +143,7 @@ export function Pagination({ showCountries }) {
                 Sin resultados: Limpiar
               </button>
             ) : (
-              <span className={`${pagination.loading}`}>
-                Cargando datos...
-              </span>
+              <span className={`${pagination.loading}`}>Cargando datos...</span>
             )}
           </div>
         )}

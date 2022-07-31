@@ -4,15 +4,14 @@
 ////////////////////////////////////////////////////////////////////////////
 // Packages
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 // Application files
-import { createActivity } from "../../redux/actions";
+import { createActivity, setAlienMode } from "../../redux/actions";
 
 // CSS
 import activityMain from "../../styles/components/Activities/CreatedActivities.module.css";
-
-const activityStyle = activityMain; // activityMain invadedActivity
+import invadedActivity from "../../styles/components/Activities/CreatedActivitiesI.module.css";
 
 ////////////////////////////////////////////////////////////////////////////
 // Code
@@ -27,6 +26,16 @@ export function CreatedActivities({
 }) {
   const dispatch = useDispatch();
   const createdActivity = useSelector((state) => state.createdActivity);
+
+  // Alien
+  const alienMode = useSelector((state) => state.alienMode);
+  const storedMode =
+    localStorage.getItem("alienMode") === "true" ? true : false;
+  dispatch(setAlienMode(storedMode));
+
+  let activityStyle = useMemo(() => {
+    return alienMode ? invadedActivity : activityMain;
+  }, [alienMode]);
 
   // Removes related countries from localStorage, added by Form.js
   function handleClose() {
@@ -61,18 +70,30 @@ export function CreatedActivities({
       <button onClick={handleClose} className={`${activityStyle.button}`}>
         Cerrar
       </button>
-      <span>Actividad: {name}</span>
+      <span>
+        {alienMode ? "Ejecución" : "Actividad"}: {name}
+      </span>
       <span>
         {" "}
         Dificultad:{" "}
         {difficulty === 1
-          ? "Visita"
+          ? alienMode
+            ? "Reconocimiento"
+            : "Visita"
           : difficulty === 2
-          ? "Esparcimiento"
+          ? alienMode
+            ? "Encuentro cercano"
+            : "Esparcimiento"
           : difficulty === 3
-          ? "Aventura"
+          ? alienMode
+            ? "Invasión"
+            : "Aventura"
           : difficulty === 4
-          ? "Profesional"
+          ? alienMode
+            ? "Dominio total del mundo!"
+            : "Profesional"
+          : alienMode
+          ? "Destrucción absoluta"
           : "Competitiva"}
       </span>
       <span>

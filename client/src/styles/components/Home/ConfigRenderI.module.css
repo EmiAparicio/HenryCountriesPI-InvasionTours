@@ -1,0 +1,93 @@
+.container {
+  font-family: "Ubuntu";
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 3vh;
+}
+
+.label {
+  margin-top: 1vh;
+  margin-bottom: 1vh;
+  display: block;
+  height: 4vh;
+  color: rgb(59, 0, 91);
+  text-shadow: 0 0 10px rgb(152, 212, 247);
+}
+
+.labelClean {
+  display: block;
+  margin-top: 0.5vh;
+  margin-bottom: 1.5vh;
+  height: 4vh;
+  color: white;
+  cursor: pointer;
+  animation: labelCleanAnimation 2s infinite;
+}
+
+@keyframes labelCleanAnimation {
+  from {
+    margin-top: 0.5vh;
+    margin-bottom: 1.5vh;
+    text-shadow: 0 0.5vh rgb(80, 218, 85);
+  }
+  15% {
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+    text-shadow: 0 0 10px rgb(80, 218, 85);
+  }
+  30% {
+    margin-top: 0.5vh;
+    margin-bottom: 1.5vh;
+    text-shadow: 0 0.5vh rgb(80, 167, 218);
+  }
+  to {
+    margin-top: 0.5vh;
+    margin-bottom: 1.5vh;
+    text-shadow: 0 0.5vh rgb(80, 167, 218);
+  }
+}
+
+.labelClean:hover {
+  animation: paused;
+  margin-top: 0.5vh;
+  margin-bottom: 1.5vh;
+  text-shadow: 0 0.5vh rgb(80, 218, 85);
+}
+
+.labelClean:active {
+  margin-top: 1vh;
+  margin-bottom: 1vh;
+  text-shadow: 0 0 10px rgb(116, 221, 120), 0 0 10px rgb(116, 221, 120);
+}
+
+.select {
+  font-family: "Ubuntu";
+  width: 200px;
+  padding: 2% 5% 2%;
+  font-size: 2vh;
+  border-radius: 10px;
+  border-style: hidden;
+  background-color: rgba(255, 255, 255, 0.4);
+  color: rgb(59, 0, 91);
+  text-align: center;
+}
+
+.option {
+  font-size: 1.5vh;
+  color: rgb(59, 0, 91);
+  border-style: hidden;
+  border-radius: 10px;
+  background-color: rgba(184, 80, 218, 1);
+}
+
+.select:focus {
+  outline: none;
+  color: white;
+  background-color: rgb(105, 43, 138);
+  filter: drop-shadow(0 0 5px rgba(218, 80, 145, 1))
+    drop-shadow(0 0 5px rgba(218, 80, 145, 1))
+    drop-shadow(0 0 5px rgba(218, 80, 145, 1));
+}

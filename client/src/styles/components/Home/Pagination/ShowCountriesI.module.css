@@ -1,0 +1,47 @@
+.container {
+  font-family: "Ubuntu";
+  width: 90vw;
+  height: 100%;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: 2%;
+  overflow-x: auto;
+}
+
+.planeContainer {
+  display: flex;
+  justify-content: center;
+  width: 18%;
+  height: 48%;
+}
+
+.plane {
+  width: 60%;
+}
+
+.plane img {
+  user-select: none;
+  width: 100%;
+  object-fit: fill;
+  margin-top: 25%;
+  filter: drop-shadow(0 0 1px black);
+
+  animation: planeAnimation 3s linear infinite;
+}
+
+@keyframes planeAnimation {
+  from {
+    margin-top: 25%;
+  }
+
+  50% {
+    margin-top: 35%;
+  }
+
+  to {
+    margin-top: 25%;
+  }
+}

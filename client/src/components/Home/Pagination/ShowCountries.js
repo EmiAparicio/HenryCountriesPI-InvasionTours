@@ -3,17 +3,18 @@
 // Imports
 ////////////////////////////////////////////////////////////////////////////////
 // Packages
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 // Application files
 import { Country } from "./Country";
 
 // CSS
 import planeButton from "../../../styles/images/planeButton.png";
+import ovniButton from "../../../styles/images/ovniButton.png";
 import showCountriesMain from "../../../styles/components/Home/Pagination/ShowCountries.module.css";
-
-const showC = showCountriesMain; // showCountriesMain invadedCountries
+import invadedShowCountries from "../../../styles/components/Home/Pagination/ShowCountriesI.module.css";
+import { setAlienMode } from "../../../redux/actions";
 
 ////////////////////////////////////////////////////////////////////////////////
 // Code
@@ -22,13 +23,28 @@ const showC = showCountriesMain; // showCountriesMain invadedCountries
 export function ShowCountries({ showCountries, page }) {
   const allCountries = useSelector((state) => state.allCountries);
 
+  // Alien
+  const dispatch = useDispatch();
+
+  const alienMode = useSelector((state) => state.alienMode);
+  const storedMode =
+    localStorage.getItem("alienMode") === "true" ? true : false;
+  dispatch(setAlienMode(storedMode));
+
+  let showC = useMemo(() => {
+    return alienMode ? invadedShowCountries : showCountriesMain;
+  }, [alienMode]);
+  let button = useMemo(() => {
+    return alienMode ? ovniButton : planeButton;
+  }, [alienMode]);
+
   return (
     <div className={`${showC.container}`}>
       {/* Show plane in first page of all countries */}
       {showCountries.length === allCountries.length && page === 1 ? (
         <div className={`${showC.planeContainer}`}>
           <div className={`${showC.plane}`}>
-            <img src={planeButton} alt="Plane" />
+            <img src={button} alt="Plane" />
           </div>
         </div>
       ) : (

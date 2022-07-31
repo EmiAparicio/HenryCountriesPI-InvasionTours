@@ -2,10 +2,12 @@
 // Imports
 /////////////////////////////////////////////////////////////////////////////
 // Packages
-import { useDispatch } from "react-redux";
+import { useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 // Application files
 import {
+  setAlienMode,
   setClearSearch,
   setFilterOptions,
   setOrderOptions,
@@ -13,10 +15,8 @@ import {
 } from "../../redux/actions";
 
 // CSS
-
-import clearButtonMain from "../../styles/components/Home/ClearButton.module.css"
-
-const clearButton = clearButtonMain; // clearButtonMain
+import clearButtonMain from "../../styles/components/Home/ClearButton.module.css";
+import invadedClearButton from "../../styles/components/Home/ClearButtonI.module.css";
 
 /////////////////////////////////////////////////////////////////////////////
 // Code
@@ -24,6 +24,16 @@ const clearButton = clearButtonMain; // clearButtonMain
 // Component: clear all filters AND/OR order configurations depending on type
 export function ClearButton({ type, disabled, text }) {
   const dispatch = useDispatch();
+
+  // Alien
+  const alienMode = useSelector((state) => state.alienMode);
+  const storedMode =
+    localStorage.getItem("alienMode") === "true" ? true : false;
+  dispatch(setAlienMode(storedMode));
+
+  let clearButton = useMemo(() => {
+    return alienMode ? invadedClearButton : clearButtonMain;
+  }, [alienMode]);
 
   // Clear selected configuration type input
   function handleClick() {
@@ -40,7 +50,13 @@ export function ClearButton({ type, disabled, text }) {
 
   // Render
   return (
-    <button disabled={disabled} onClick={handleClick} className={disabled ? `${clearButton.buttonHidden}` : `${clearButton.button}`}>
+    <button
+      disabled={disabled}
+      onClick={handleClick}
+      className={
+        disabled ? `${clearButton.buttonHidden}` : `${clearButton.button}`
+      }
+    >
       {text}
     </button>
   );

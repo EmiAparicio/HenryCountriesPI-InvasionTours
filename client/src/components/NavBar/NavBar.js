@@ -1,26 +1,46 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // Import packages
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
 import { Link, NavLink } from "react-router-dom";
+import { useMemo } from "react";
 
 // CSS
 import navbarMain from "../../styles/components/NavBar/NavBar.module.css";
-import navbarInvaded from "../../styles/components/NavBar/NavBarTest.module.css";
+import navbarInvaded from "../../styles/components/NavBar/NavBarI.module.css";
+
 import mainLogo from "../../styles/images/mainLogo.png";
 import invadedLogo from "../../styles/images/invadedLogo.png";
-import invadedTest from "../../styles/images/invadedTest.png";
+import completedLogo from "../../styles/images/completedLogo.png";
 
-const logo = mainLogo; //mainLogo invadedLogo invadedTest
-const navbar = navbarMain; //navbarInvaded navbarMain
+import { setAlienMode } from "../../redux/actions";
 
 //////////////////////////////////////////////////////////////
 // Code
 //////////////////////////////////////////////////////////////
 // Component: website navigation
 export function NavBar() {
+  const dispatch = useDispatch();
   // Get page from store to allow going back to the same point
   const page = useSelector((state) => state.page);
 
+  // Alien
+  const alienMode = useSelector((state) => state.alienMode);
+  const storedMode =
+    localStorage.getItem("alienMode") === "true" ? true : false;
+  dispatch(setAlienMode(storedMode));
+
+  const completed = localStorage.getItem("completedInvasion");
+
+  let logo = useMemo(() => {
+    return alienMode ? (completed ? completedLogo : invadedLogo) : mainLogo;
+  }, [alienMode]);
+  let navbar = useMemo(() => {
+    return alienMode ? navbarInvaded : navbarMain;
+  }, [alienMode]);
+  let text = useMemo(() => {
+    return alienMode ? "Invasión" : "Turismo";
+  }, [alienMode]);
 
   // Render
   return (
@@ -47,7 +67,7 @@ export function NavBar() {
                 isActive ? `${navbar.navLinkActive}` : undefined
               }
             >
-              Turismo
+              {text}
             </NavLink>
             <NavLink
               to="/extra"

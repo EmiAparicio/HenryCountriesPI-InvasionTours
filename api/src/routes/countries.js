@@ -2,7 +2,7 @@
 // Requires
 ////////////////////////////////////////////////////////////////////////////
 const { Router } = require("express");
-const { Country, Activity } = require("../db");
+const { Country, Activity, Invasion } = require("../db");
 const { Op } = require("sequelize");
 const fetch = require("node-fetch");
 
@@ -54,7 +54,7 @@ router.get("/", validateStoredData, async (req, res) => {
             name: { [Op.iLike]: `%${name}%` },
           }
         : undefined,
-      include: Activity,
+      include: [{ model: Activity }, { model: Invasion }],
       order: ["area"],
       attributes: ["name", "flag", "continent", "population", "id"],
     });
@@ -78,7 +78,7 @@ router.get("/:id", validateStoredData, (req, res) => {
   const { id } = req.params;
 
   // Try to obtain single country with activities from db
-  Country.findByPk(id, { include: Activity })
+  Country.findByPk(id, { include: [{ model: Activity }, { model: Invasion }] })
     .then((country) => {
       // Respond with found country
       return res.status(200).json(country);

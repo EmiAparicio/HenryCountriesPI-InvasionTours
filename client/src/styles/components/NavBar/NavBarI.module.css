@@ -1,7 +1,7 @@
 .container {
   font-family: "Ubuntu";
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
 
   background: rgb(0, 0, 0);
   background: linear-gradient(
@@ -23,8 +23,6 @@
 .bar {
   display: flex;
   height: 9vh;
-  /* border: 5px double rgb(55, 52, 53);
-  border-radius: 5px; */
 }
 
 .logoImg {
@@ -33,6 +31,7 @@
 }
 
 .logo {
+  z-index: 500;
   user-select: none;
   height: 100%;
   margin-left: 3vw;
@@ -90,6 +89,7 @@
   width: 17vw;
   color: white;
   text-align: center;
+  font-family: "Ubuntu";
   transition: text-shadow 0.5s, font-size 0.5s;
 }
 
@@ -102,4 +102,36 @@
 .barOptions .navLinkActive {
   font-size: 5vh;
   text-shadow: 0 0.5vh rgb(218, 80, 145);
+}
+
+.barOptions .navExtra {
+  animation: navExtraAnimation 2s cubic-bezier(0.74, 0.31, 0.95, 0.56) infinite;
+}
+
+@keyframes navExtraAnimation {
+  from {
+    filter: drop-shadow(0 0 0px rgb(80, 218, 85))
+      drop-shadow(0 0 0px rgb(80, 218, 85));
+  }
+  90% {
+    filter: drop-shadow(0 0 5px rgb(80, 218, 85))
+      drop-shadow(0 0 5px rgb(80, 218, 85));
+  }
+
+  95% {
+    filter: drop-shadow(0 0 15px rgb(96, 245, 101))
+      drop-shadow(0 0 8px rgb(96, 245, 101));
+  }
+
+  97% {
+    filter: drop-shadow(0 0 20px rgb(96, 245, 101));
+  }
+  99% {
+    filter: drop-shadow(0 0 20px rgb(96, 245, 101));
+  }
+
+  to {
+    filter: drop-shadow(0 0 0px rgb(80, 218, 85))
+      drop-shadow(0 0 0px rgb(80, 218, 85));
+  }
 }

@@ -16,20 +16,17 @@ import { alphabeticOrder } from "../../controllers";
 import { ClearButton } from "./ClearButton";
 import {
   getCountries,
-  setAllActivitiesTypes,
+  setAlienMode,
   setFilterOptions,
   setOrderOptions,
 } from "../../redux/actions";
 
 // CSS
 import { LetRender } from "../LetRender";
-import homeMain from "../../styles/components/Home/Home.module.css";
+import home from "../../styles/components/Home/Home.module.css";
 
 import configMain from "../../styles/components/Home/ConfigRender.module.css";
-
-const home = homeMain; //homeMain invadedHome
-
-const config = configMain; // configMain invadedConfig
+import invadedConfig from "../../styles/components/Home/ConfigRenderI.module.css";
 
 ////////////////////////////////////////////////////////////////////////////////
 // Code
@@ -37,6 +34,16 @@ const config = configMain; // configMain invadedConfig
 // Component: displays and filters/orders countries
 export function Home() {
   const dispatch = useDispatch();
+
+  // Alien
+  const alienMode = useSelector((state) => state.alienMode);
+  const storedMode =
+    localStorage.getItem("alienMode") === "true" ? true : false;
+  dispatch(setAlienMode(storedMode));
+
+  let config = useMemo(() => {
+    return alienMode ? invadedConfig : configMain;
+  }, [alienMode]);
 
   //////////////////////////////////////////////////////////////////////////////
   // Data manipulation
@@ -69,9 +76,13 @@ export function Home() {
           : true) &&
         // Filter ACTIVITY
         (filterConfig.activity.length
-          ? c.Activities.reduce((bool, act) => {
-              return bool || act.name === filterConfig.activity;
-            }, false)
+          ? alienMode
+            ? c.Invasions.reduce((bool, act) => {
+                return bool || act.name === filterConfig.activity;
+              }, false)
+            : c.Activities.reduce((bool, act) => {
+                return bool || act.name === filterConfig.activity;
+              }, false)
           : true)
     );
 
@@ -108,28 +119,27 @@ export function Home() {
 
   //////////////////////////////////////////////////////////////////////////////
   // Setting filters/order available options
-  const allActivitiesTypes = useSelector((state) => state.allActivitiesTypes);
 
   // Store existing activity names
   useEffect(() => {
-    let activities = [...allActivitiesTypes];
-    renderCountries.forEach((c) => {
-      c.Activities?.forEach((a) => {
-        if (!activities.includes(a.name)) activities.push(a.name);
-      });
-    });
-    dispatch(setAllActivitiesTypes(activities));
-  }, [renderCountries]);
+    let activities = [];
 
-  // If new activity has been added, retreive data from db again
-  useEffect(() => {
-    dispatch(getCountries());
-  }, [allActivitiesTypes.length]);
+    alienMode
+      ? renderCountries.forEach((c) => {
+          c.Invations?.forEach((a) => {
+            if (!activities.includes(a.name)) activities.push(a.name);
+          });
+        })
+      : renderCountries.forEach((c) => {
+          c.Activities?.forEach((a) => {
+            if (!activities.includes(a.name)) activities.push(a.name);
+          });
+        });
+  }, [renderCountries]);
 
   // Set filters options depending on rendered (not filtered) countries
   const filters = useMemo(() => {
-    let [continents, activities] = [[], [...allActivitiesTypes]];
-    let partialActivities = [];
+    let [continents, activities] = [[], []];
 
     // If no countries after filters, no options will be available
     if (configuredCountries.length)
@@ -138,15 +148,14 @@ export function Home() {
         if (!continents.includes(c.continent)) continents.push(c.continent);
 
         // Filter Activity options
-        if (renderCountries.length !== allCountries.length) {
-          c.Activities?.forEach((a) => {
-            if (!partialActivities.includes(a.name))
-              partialActivities.push(a.name);
-          });
-          activities = [...partialActivities];
-        }
+        alienMode
+          ? c.Invasions?.forEach((a) => {
+              if (!activities.includes(a.name)) activities.push(a.name);
+            })
+          : c.Activities?.forEach((a) => {
+              if (!activities.includes(a.name)) activities.push(a.name);
+            });
       });
-    else activities = [];
 
     return {
       continents: alphabeticOrder(continents, "asc"),
@@ -192,12 +201,7 @@ export function Home() {
             ? "Sin opciones"
             : "Todo"
           : filters.continents[0],
-      activity:
-        filters.activities.length !== 1
-          ? filters.activities.length === 0
-            ? "Sin opciones"
-            : "Todo"
-          : filters.activities[0],
+      activity: filters.activities.length === 0 ? "Sin opciones" : "Todo",
       order: configuredCountries.length > 1 ? "Sin orden" : "Sin opciones",
     };
   }, [filters, configuredCountries]);
@@ -217,7 +221,7 @@ export function Home() {
           <></>
         ),
       activity:
-        filters.activities.length > 1 ? (
+        filters.activities.length > 0 ? (
           filters.activities.map((a) => {
             return (
               <option value={a} key={a} className={`${config.option}`}>
@@ -297,9 +301,9 @@ export function Home() {
             {/* Filter: ACTIVITY */}
             <ConfigRender
               name="activity"
-              label="Actividad: "
+              label={alienMode ? "Invasión: " : "Actividad: "}
               configType="filter"
-              disabled={filters.activities.length <= 1}
+              disabled={filters.activities.length < 1}
               defaultValue={defaultValues.activity}
               defaultOption={defaultOptions.activity}
               options={options.activity}

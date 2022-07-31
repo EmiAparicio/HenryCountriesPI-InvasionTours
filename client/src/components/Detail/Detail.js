@@ -2,19 +2,20 @@
 // Imports
 ////////////////////////////////////////////////////////////////////////////////
 // Packages
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 // Application files
-import { getCountryDetail } from "../../redux/actions";
+import { getCountryDetail, setAlienMode } from "../../redux/actions";
 import { Activity } from "./Activity";
 import { Maps } from "./Maps";
 
 // CSS
 import detailMain from "../../styles/components/Detail/Detail.module.css";
+import invadedDetail from "../../styles/components/Detail/DetailI.module.css";
 
-const detail = detailMain; // detailMain invadedDetail
+import ovniButton from "../../styles/images/ovniButton.png";
 
 ////////////////////////////////////////////////////////////////////////////////
 // Code
@@ -24,12 +25,29 @@ export function Detail() {
   const { countryId } = useParams();
   const dispatch = useDispatch();
 
+  //////////////////////////////////////////////////////////////////////////////
+  // Alien
+  const alienMode = useSelector((state) => state.alienMode);
+  const storedMode = localStorage.getItem("alienMode") === "true";
+  dispatch(setAlienMode(storedMode));
+
+  let detail = useMemo(() => {
+    return alienMode ? invadedDetail : detailMain;
+  }, [alienMode]);
+  //////////////////////////////////////////////////////////////////////////////
+
   const country = useSelector((state) => state.countryDetail);
 
   useEffect(() => {
     dispatch(getCountryDetail(countryId));
     return () => dispatch(getCountryDetail());
   }, [countryId, dispatch]);
+
+  let NEILAinvaded = false;
+  if (alienMode && country.Invasions?.find((i) => i.name === "NEILA")) {
+    NEILAinvaded = true;
+  }
+  console.log(alienMode);
 
   // Render
   return (
@@ -46,6 +64,13 @@ export function Detail() {
                     src={country?.flag}
                     alt="country flag"
                     className={`${detail.flag}`}
+                  />
+                  <img
+                    src={ovniButton}
+                    alt="ovni"
+                    className={
+                      NEILAinvaded ? `${detail.ovni}` : `${detail.ovniHidden}`
+                    }
                   />
                 </div>
                 <div className={`${detail.details}`}>
@@ -70,9 +95,14 @@ export function Detail() {
                     {country?.continent}
                   </span>
 
-                  {!country.Activities?.length ? (
+                  {!(
+                    country.Activities?.length ||
+                    (alienMode && country.Invasions?.length)
+                  ) ? (
                     <span className={`${detail.span}`}>
-                      Turismo: Sin actividades
+                      {alienMode
+                        ? "Invasión: Sin planes"
+                        : "Turismo: Sin actividades"}
                     </span>
                   ) : (
                     <></>
@@ -81,26 +111,46 @@ export function Detail() {
               </div>
 
               {/* Show activities if any */}
-              {country.Activities?.length ? (
+              {country.Activities?.length ||
+              (alienMode && country.Invasions?.length) ? (
                 <div>
-                  <span className={`${detail.span}`}>Turismo: </span>
+                  <span className={`${detail.span}`}>
+                    {alienMode ? "Invasión" : "Turismo"}:{" "}
+                  </span>
                   <div className={`${detail.activities}`}>
-                    {country?.Activities?.map((a, id) => {
-                      return (
-                        <div
-                          key={id}
-                          className={`${detail.details}`}
-                          style={{ width: "300px" }}
-                        >
-                          <Activity
-                            name={a.name}
-                            difficulty={a.difficulty}
-                            duration={a.duration}
-                            season={a.season}
-                          />
-                        </div>
-                      );
-                    })}
+                    {alienMode
+                      ? country?.Invasions?.map((a, id) => {
+                          return (
+                            <div
+                              key={id}
+                              className={`${detail.details}`}
+                              style={{ width: "300px" }}
+                            >
+                              <Activity
+                                name={a.name}
+                                difficulty={a.difficulty}
+                                duration={a.duration}
+                                season={a.season}
+                              />
+                            </div>
+                          );
+                        })
+                      : country?.Activities?.map((a, id) => {
+                          return (
+                            <div
+                              key={id}
+                              className={`${detail.details}`}
+                              style={{ width: "300px" }}
+                            >
+                              <Activity
+                                name={a.name}
+                                difficulty={a.difficulty}
+                                duration={a.duration}
+                                season={a.season}
+                              />
+                            </div>
+                          );
+                        })}
                   </div>
                 </div>
               ) : (
