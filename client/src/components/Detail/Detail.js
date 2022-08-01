@@ -109,7 +109,9 @@ export function Detail() {
                   ) ? (
                     <span className={`${detail.span}`}>
                       {alienMode
-                        ? "Invasión: Sin planes"
+                        ? completed
+                          ? "¡DOMINIO TOTAL DEL MUNDO!"
+                          : "Invasión: Sin planes"
                         : "Turismo: Sin actividades"}
                     </span>
                   ) : (
