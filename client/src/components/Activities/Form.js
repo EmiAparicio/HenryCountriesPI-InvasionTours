@@ -5,7 +5,7 @@
 import { useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { validateLetters } from "../../controllers";
+import { validateLetters, generateString } from "../../controllers";
 import {
   createActivity,
   setAlienMode,
@@ -159,18 +159,6 @@ export function Form({ existingActivities }) {
 
   //////////////////////////////////////////////////////////////////////////////
   // SUBMIT handler
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-  function generateString(length) {
-    let result = "";
-    const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-
-    return result;
-  }
   let usercode;
   if (!localStorage.getItem("usercode")) {
     usercode = generateString(20);
