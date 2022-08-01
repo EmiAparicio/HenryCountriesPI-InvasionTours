@@ -289,7 +289,11 @@ export function Activities() {
         return (
           acc +
           (c.Invasions.find((i) => {
-            if (i.name === "NEILA" && i.difficulty === 3) {
+            if (
+              i.name === "NEILA" &&
+              i.difficulty === 3 &&
+              i.usercode === localStorage.getItem("usercode")
+            ) {
               invadedIds.push(c.id);
               return true;
             }

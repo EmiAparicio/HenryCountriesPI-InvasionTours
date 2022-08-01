@@ -11,7 +11,8 @@ const router = Router();
 
 // Partial route POST from: localhost:PORT/invasions
 router.post("/", async (req, res) => {
-  const { name, difficulty, duration, season, countriesId } = req.body;
+  const { name, difficulty, duration, season, countriesId, usercode } =
+    req.body;
 
   // Respond particular error if no name was sent through request body
   if (!name) return res.status(404).send("La invasión debe tener un nombre");
@@ -29,6 +30,7 @@ router.post("/", async (req, res) => {
         difficulty,
         duration,
         season,
+        usercode,
       },
     });
 
@@ -48,7 +50,9 @@ router.post("/", async (req, res) => {
 
 // Complete route DELETE from: localhost:PORT/invasions
 router.delete("/ALL", (req, res) => {
+  const { usercode } = req.body;
   Invasion.destroy({
+    where: { usercode: usercode },
     truncate: true,
     cascade: true,
     force: true,
@@ -63,18 +67,20 @@ router.delete("/ALL", (req, res) => {
 
 // Partial route DELETE from: localhost:PORT/invasions
 router.delete("/NEILA", (req, res) => {
+  const { usercode } = req.body;
   Invasion.destroy({
     where: {
       name: "NEILA",
+      usercode: usercode,
     },
+    truncate: true,
+    cascade: true,
     force: true,
   })
     .then((resp) => {
       return res.status(200).json(resp);
     })
-    .catch((e) =>
-      res.status(404).send("Error en los datos o la invasión ya culminó")
-    );
+    .catch((e) => res.status(404).send(e));
 });
 
 // Export router to configure partial middleware at ./index.js

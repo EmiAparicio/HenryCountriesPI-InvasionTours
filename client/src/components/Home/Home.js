@@ -262,11 +262,12 @@ export function Home() {
       !filterConfig.continent.length &&
       !filterConfig.activity.length &&
       !orderConfig.length &&
-      !nameSelection.length
+      !nameSelection.length &&
+      allCountries.length
     )
       return true;
     return false;
-  }, [filterConfig, orderConfig, nameSelection]);
+  }, [filterConfig, orderConfig, nameSelection, allCountries]);
 
   //////////////////////////////////////////////////////////////////////////////
   // Render

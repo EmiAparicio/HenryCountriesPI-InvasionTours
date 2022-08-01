@@ -159,6 +159,24 @@ export function Form({ existingActivities }) {
 
   //////////////////////////////////////////////////////////////////////////////
   // SUBMIT handler
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  function generateString(length) {
+    let result = "";
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
+  }
+  let usercode;
+  if (!localStorage.getItem("usercode")) {
+    usercode = generateString(20);
+    localStorage.setItem("usercode", usercode);
+  } else usercode = localStorage.getItem("usercode");
+
   const diffRef = useRef(); // Difficulty 1 input reference
   const allCountries = useSelector((state) => state.allCountries);
   const countriesId = // Associated countries from Activities.js
@@ -174,6 +192,7 @@ export function Form({ existingActivities }) {
       duration: selectDuration,
       season: selectSeason,
       countriesId: [...countriesId],
+      usercode,
     };
 
     dispatch(createActivity());

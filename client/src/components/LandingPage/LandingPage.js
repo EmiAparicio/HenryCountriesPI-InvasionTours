@@ -82,9 +82,12 @@ export function LandingPage() {
     } else if ((e.metaKey || e.ctrlKey) && e.key === "z") {
       localStorage.removeItem("completedInvasion");
       localStorage.removeItem("game");
+
       dispatch(setAlienMode(false));
       dispatch(getInvadedCountries([], "disconnect"));
       dispatch(getCountries());
+
+      localStorage.removeItem("usercode");
     }
   }
 
@@ -96,7 +99,6 @@ export function LandingPage() {
 
   const completed = localStorage.getItem("completedInvasion");
 
-
   //////////////////////////////////////////////////////////////////////////
   // Render
   //////////////////////////////////////////////////////////////////////////
@@ -107,7 +109,9 @@ export function LandingPage() {
       }
     >
       <div
-        className={completed ? `${landing.bgImageComplete}` : `${landing.bgImage}`}
+        className={
+          completed ? `${landing.bgImageComplete}` : `${landing.bgImage}`
+        }
       />
       <div className={`${landing.enter}`}>
         <Link to="/home" className={`${landing.link}`}>

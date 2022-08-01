@@ -153,13 +153,21 @@ export function getInvadedCountries(ids, disconnect) {
     });
   } else {
     if (disconnect) {
-      axios.delete(`/invasions/ALL`).then(() => {
-        localStorage.removeItem("invadedCountries");
-      });
+      axios
+        .delete(`/invasions/ALL`, {
+          data: { usercode: localStorage.getItem("usercode") },
+        })
+        .then(() => {
+          localStorage.removeItem("invadedCountries");
+        });
     } else
-      axios.delete(`/invasions/NEILA`).then(() => {
-        localStorage.removeItem("invadedCountries");
-      });
+      axios
+        .delete(`/invasions/NEILA`, {
+          data: { usercode: localStorage.getItem("usercode") },
+        })
+        .then(() => {
+          localStorage.removeItem("invadedCountries");
+        });
   }
 
   return { type: "" };

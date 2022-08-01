@@ -38,5 +38,10 @@ module.exports = (sequelize) => {
       type: DataTypes.ENUM("Verano", "Otoño", "Invierno", "Primavera"),
       unique: "invasion",
     },
+    usercode: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+      unique: "invasion",
+    },
   });
 };
