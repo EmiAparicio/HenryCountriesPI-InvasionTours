@@ -78,15 +78,20 @@ router.get("/:id", validateStoredData, (req, res) => {
   const { id } = req.params;
 
   // Try to obtain single country with activities from db
-  Country.findByPk(id, { include: [{ model: Activity }, { model: Invasion }] })
-    .then((country) => {
-      // Respond with found country
-      return res.status(200).json(country);
-    })
-    .catch((e) => {
-      // Respond with particular error
-      return res.status(404).send(`No se encontró un país con ID: "${id}"`);
-    });
+  Country.findByPk(id, {
+    include: [{ model: Activity }, { model: Invasion }],
+  }).then((country) => {
+    const [body, status] =
+      country !== null
+        ? [country, 200]
+        : [{ message: `No se encontró un país con ID: ${id}` }, 404];
+
+    return res.status(status).json(body);
+  });
+  // .catch((e) => {
+  //   // Respond with particular error
+  //   return res.status(404).send(`No se encontró un país con ID: "${id}"`);
+  // });
 });
 
 // Export router to configure partial middlewares at ./index.js

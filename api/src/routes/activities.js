@@ -14,7 +14,8 @@ router.post("/", async (req, res) => {
   const { name, difficulty, duration, season, countriesId } = req.body;
 
   // Respond particular error if no name was sent through request body
-  if (!name) return res.status(404).send("La actividad debe tener un nombre");
+  if (!name || !difficulty || !duration || !season || !countriesId)
+    return res.status(404).send("Error en los datos o la actividad ya existe");
 
   try {
     // As Activity model sets a "name" as "Name",

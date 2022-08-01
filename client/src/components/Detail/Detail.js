@@ -52,7 +52,7 @@ export function Detail() {
   // Render
   return (
     <>
-      {country?.msj ? (
+      {country?.errorMessage ? (
         <span className={`${detail.loading}`}>
           No existe un país con el código {countryId}
         </span>

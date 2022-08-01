@@ -88,16 +88,25 @@ export function modifyCountries(countries) {
 // Get country details, selected by id in params
 export function getCountryDetail(id) {
   return async function (dispatch) {
-    if (id) {
-      const resp = await axios.get(`/countries/${id}`);
+    try {
+      if (id) {
+        const resp = await axios.get(`/countries/${id}`);
 
-      const payload = resp.data || { msj: "not found" };
+        const payload = resp.data;
+
+        dispatch({
+          type: GET_COUNTRY_DETAIL,
+          payload,
+        });
+      } else dispatch({ type: GET_COUNTRY_DETAIL, payload: {} });
+    } catch (e) {
+      const payload = { errorMessage: "not found" };
 
       dispatch({
         type: GET_COUNTRY_DETAIL,
         payload,
       });
-    } else dispatch({ type: GET_COUNTRY_DETAIL, payload: {} });
+    }
   };
 }
 

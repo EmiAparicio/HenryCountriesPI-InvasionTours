@@ -1,6 +1,6 @@
 const { Country, conn } = require("../../src/db.js");
 
-xdescribe("Country model", () => {
+describe("Country model", () => {
   beforeAll(() =>
     conn.authenticate().catch((err) => {
       console.error("Unable to connect to the database:", err);
