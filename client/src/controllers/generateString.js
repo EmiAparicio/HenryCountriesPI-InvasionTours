@@ -1,6 +1,7 @@
 const characters =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
+// Function: generates random combination of n(length) chars
 export default function generateString(length) {
   let result = "";
   const charactersLength = characters.length;
