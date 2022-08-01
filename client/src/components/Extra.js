@@ -91,7 +91,11 @@ export function Extra() {
             <li>
               Invade con el nombre{" "}
               <span className={`${extra.code}`}>NEILA</span> a los países
-              correspondientes a las 3 capitales que recibirás
+              correspondientes a las 3 capitales que recibirás (la plataforma de{" "}
+              <Link to="/home" className={`${extra.link}`}>
+                inspección
+              </Link>{" "}
+              tiene pistas en la bandera indicada)
             </li>
             <li>
               Cuidado con invadir otro lugar con ese código, ¡arruinarías

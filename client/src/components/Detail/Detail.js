@@ -25,8 +25,17 @@ export function Detail() {
   const { countryId } = useParams();
   const dispatch = useDispatch();
 
+  const country = useSelector((state) => state.countryDetail);
+
+  useEffect(() => {
+    dispatch(getCountryDetail(countryId));
+    return () => dispatch(getCountryDetail());
+  }, [countryId, dispatch]);
+
   //////////////////////////////////////////////////////////////////////////////
   // Alien
+  const completed = localStorage.getItem("completedInvasion");
+
   const alienMode = useSelector((state) => state.alienMode);
   const storedMode = localStorage.getItem("alienMode") === "true";
   dispatch(setAlienMode(storedMode));
@@ -34,14 +43,6 @@ export function Detail() {
   let detail = useMemo(() => {
     return alienMode ? invadedDetail : detailMain;
   }, [alienMode]);
-  //////////////////////////////////////////////////////////////////////////////
-
-  const country = useSelector((state) => state.countryDetail);
-
-  useEffect(() => {
-    dispatch(getCountryDetail(countryId));
-    return () => dispatch(getCountryDetail());
-  }, [countryId, dispatch]);
 
   let NEILAinvaded = false;
   if (alienMode && country.Invasions?.find((i) => i.name === "NEILA")) {
@@ -70,7 +71,9 @@ export function Detail() {
                     src={ovniButton}
                     alt="ovni"
                     className={
-                      NEILAinvaded ? `${detail.ovni}` : `${detail.ovniHidden}`
+                      NEILAinvaded || completed
+                        ? `${detail.ovni}`
+                        : `${detail.ovniHidden}`
                     }
                   />
                 </div>

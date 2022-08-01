@@ -104,9 +104,11 @@ export function ConfigRender({
     // When Component is order
     if (configType === "order") {
       // Reset page after filter
-      if (orderConfig.includes(name)) dispatch(setStoredPage(1));
+      if (orderConfig.includes(name)) {
+        dispatch(setStoredPage(1));
 
-      dispatch(setConfigOptions([]));
+        dispatch(setConfigOptions([]));
+      }
     }
 
     // Sets config value to default

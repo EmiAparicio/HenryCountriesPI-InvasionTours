@@ -38,8 +38,14 @@ export function NavBar() {
   let navbar = useMemo(() => {
     return alienMode ? navbarInvaded : navbarMain;
   }, [alienMode]);
-  let text = useMemo(() => {
+  let textCountries = useMemo(() => {
+    return alienMode ? "Inspección" : "Países";
+  }, [alienMode]);
+  let textActivities = useMemo(() => {
     return alienMode ? "Invasión" : "Turismo";
+  }, [alienMode]);
+  let textAlien = useMemo(() => {
+    return alienMode ? "Alien" : "?";
   }, [alienMode]);
 
   // Render
@@ -58,7 +64,7 @@ export function NavBar() {
                 isActive ? `${navbar.navLinkActive}` : undefined
               }
             >
-              Países
+              {textCountries}
             </NavLink>
             <NavLink
               to="/activities"
@@ -67,7 +73,7 @@ export function NavBar() {
                 isActive ? `${navbar.navLinkActive}` : undefined
               }
             >
-              {text}
+              {textActivities}
             </NavLink>
             <NavLink
               to="/extra"
@@ -76,7 +82,7 @@ export function NavBar() {
                 isActive ? `${navbar.navLinkActive}` : `${navbar.navExtra}`
               }
             >
-              ?
+              {textAlien}
             </NavLink>
           </div>
         </div>
