@@ -95,6 +95,10 @@ export function Detail() {
                     <span className={`${detail.span}`}>Continente: </span>
                     {country?.continent}
                   </span>
+                  <span>
+                    <span className={`${detail.span}`}>Subregión: </span>
+                    {country?.subregion}
+                  </span>
 
                   {!(
                     country.Activities?.length ||
