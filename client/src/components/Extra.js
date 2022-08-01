@@ -66,6 +66,18 @@ export function Extra() {
           <Link to="/" className={`${extra.link}`}>
             ¡INVASIÓN COMPLETADA!
           </Link>
+          <br />
+          <br />
+          <ul>
+            <li>
+              Presiona <code>ctrl + z</code> desde la{" "}
+              <Link to="/" className={`${extra.link}`}>
+                estratósfera
+              </Link>{" "}
+              para viajar a otra dimensión y continuar nuestra expansión sin
+              límites
+            </li>
+          </ul>
         </div>
       ) : (
         <div className={`${extra.container}`}>
@@ -102,6 +114,13 @@ export function Extra() {
               nuestros planes! Pero puedes solucionarlo desde el mismo lugar,
               presionando <code>ctrl + v</code> para distorsionar el
               espacio-tiempo y obtener otras capitales desde el pasado
+            </li>
+            <li>
+              No olvides presionar <code>ctrl + z</code> desde la{" "}
+              <Link to="/" className={`${extra.link}`}>
+                estratósfera
+              </Link>{" "}
+              para no dejar rastros de tu presencia en caso de peligro
             </li>
             <li>
               Contempla la victoria con nosotros desde la{" "}
