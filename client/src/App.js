@@ -13,7 +13,7 @@ import { Activities } from "./components/Activities/Activities";
 import { Extra } from "./components/Extra";
 
 // CSS
-import "./App.css";
+import { ErrorPage } from "./components/ErrorPage";
 
 ////////////////////////////////////////////////////////////////////////
 // Code
@@ -29,6 +29,7 @@ export function App() {
           <Route exact path="country/:countryId" element={<Detail />} />
           <Route exact path="activities" element={<Activities />} />
           <Route exact path="extra" element={<Extra />} />
+          <Route path="*" element={<ErrorPage />} />
         </Route>
       </Routes>
     </>
