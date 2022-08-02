@@ -67,7 +67,6 @@ export function Maps() {
 
   // Render
   return (
-    // <div className={`${mapStyle.mapContainer}`}>
     <>
       <button
         onClick={() => {
@@ -82,7 +81,6 @@ export function Maps() {
         ref={mapContainer}
         className={gmap.toggle ? `${mapStyle.map}` : `${mapStyle.mapHide}`}
       />
-      {/* </div> */}
     </>
   );
 }

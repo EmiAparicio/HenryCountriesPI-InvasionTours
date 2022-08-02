@@ -19,6 +19,7 @@ import {
 // CSS
 import paginationMain from "../../../styles/components/Home/Pagination/Pagination.module.css";
 import invadedPagination from "../../../styles/components/Home/Pagination/PaginationI.module.css";
+import { PageButton } from "./PageButton";
 
 /////////////////////////////////////////////////////////////////////////////////////
 // Code
@@ -71,6 +72,16 @@ export function Pagination({ showCountries }) {
     dispatch(setStoredPage(newPage));
   }
 
+  function handleBack(e) {
+    const newPage = page > 1 ? page - 1 : page;
+    dispatch(setStoredPage(newPage));
+  }
+
+  function handleNext(e) {
+    const newPage = page < paginationArray.length - 1 ? page + 1 : page;
+    dispatch(setStoredPage(newPage));
+  }
+
   // Clear filters and reset page when click "NoRes" button
   function handleClear() {
     dispatch(
@@ -92,10 +103,25 @@ export function Pagination({ showCountries }) {
   ///////////////////////////////////////////////////////////////////////////////////
   // Render
   ///////////////////////////////////////////////////////////////////////////////////
+  const outOfPagination = page < 1 || page >= paginationArray.length;
+
+  function showPage(id) {
+    return (
+      id === 1 ||
+      id === paginationArray.length - 1 ||
+      // (id >= page - 1 && id <= page + 1)
+      id === page
+    );
+  }
+
+  function hidePage(id, page) {
+    return id <= page + 1 && id >= page - 1;
+  }
+
   return (
     <div className={`${pagination.container}`}>
       <div className={`${pagination.pagesContainer}`}>
-        {page < 1 || page >= paginationArray.length ? (
+        {outOfPagination ? (
           <Link to="/home?page=1" className={`${pagination.noPageLink}`}>
             Página no válida
           </Link> // When wrong page query in URL manually
@@ -105,23 +131,19 @@ export function Pagination({ showCountries }) {
             // Skip case "page 0"
             if (id > 0)
               // Show first, last, actual and ±1 pages
-              return id === 1 ||
-                id === paginationArray.length - 1 ||
-                (id <= page + 1 && id >= page - 1) ? (
-                <div key={id}>
-                  {/* Button with page number */}
-                  <button
-                    onClick={handlePage}
-                    className={
-                      id === page
-                        ? `${pagination.selectedPage} ${pagination.buttons}`
-                        : `${pagination.buttons}`
-                    }
-                  >
-                    {p}
-                  </button>
-                </div>
-              ) : id <= page + 2 && id >= page - 2 ? ( // Pages ±2 buttons with "..."
+              return showPage(id) ? (
+                <PageButton
+                  key={id}
+                  id={id}
+                  page={page}
+                  handlePage={handlePage}
+                  p={p}
+                  pagination={pagination}
+                  paginationArray={paginationArray}
+                  handleBack={handleBack}
+                  handleNext={handleNext}
+                />
+              ) : hidePage(id, page) ? ( // Pages ±2 buttons with "..."
                 <div key={id} className={`${pagination.pages}`}>
                   ...
                 </div>
@@ -129,7 +151,7 @@ export function Pagination({ showCountries }) {
                 // Doesn't display other pages buttons
                 <React.Fragment key={id}></React.Fragment>
               );
-            return <React.Fragment key={id}></React.Fragment>;
+            else return <React.Fragment key={id}></React.Fragment>;
           })
         ) : (
           // Button: clears filters when no results are found

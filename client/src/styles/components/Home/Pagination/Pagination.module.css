@@ -64,6 +64,23 @@
   );
 }
 
+.buttonDisabled {
+  font-family: "Ubuntu";
+  font-size: 2vh;
+  border-style: hidden;
+  border-radius: 50%;
+  color: rgb(0, 0, 0);
+  width: 4vh;
+  height: 4vh;
+
+  background: rgb(68, 75, 92);
+  background: radial-gradient(
+    circle,
+    rgb(68, 75, 92) 50%,
+    rgba(80, 167, 218, 1) 100%
+  );
+}
+
 .buttons:hover {
   color: rgb(0, 26, 91);
   background: none;
