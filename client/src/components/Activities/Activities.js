@@ -53,6 +53,13 @@ export function Activities() {
       return storedInvaded;
     } else if (allCountries.length) {
       const randomCountries = [...allCountries]
+        .filter((c) => {
+          return (
+            c.name !== "Macau" &&
+            c.name !== "Bouvet Island" &&
+            c.name !== "Antarctica"
+          );
+        })
         .sort(() => 0.5 - Math.random())
         .slice(0, 3)
         .map((r) => r.id);
