@@ -59,7 +59,7 @@ export function Maps() {
   }
 
   // Check/instance google map when country details arrive
-  const [gmap, setGmap] = useState({ gmap: true, toggle: false });
+  const [gmap, setGmap] = useState({ gmap: false, toggle: false });
   useEffect(() => {
     googleChecker();
     if (window.google) setGmap((prev) => ({ ...prev, gmap: true }));
