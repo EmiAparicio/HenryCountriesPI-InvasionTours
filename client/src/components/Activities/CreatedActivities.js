@@ -45,7 +45,7 @@ export function CreatedActivities({
   // Automatically closes component after 15 secs
   let closeProcess = null;
   useEffect(() => {
-    closeProcess = setInterval(() => handleClose(), 300000);
+    closeProcess = setInterval(() => handleClose(), 5000);
   }, [closeProcess]);
 
   useEffect(() => {
